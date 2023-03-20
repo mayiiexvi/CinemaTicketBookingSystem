@@ -8,7 +8,7 @@ import java.util.Scanner;
 import cinemaTicketBookingSystem.Movie;
 
 /**
- * @author espin
+ * @author 
  *
  */
 public class Admin {
@@ -87,6 +87,7 @@ public class Admin {
 		Scanner keyboard = new Scanner(System.in);
 		Login login = new Login();
 		do {
+			System.out.flush();
 			System.out.println("Login Details");
 			System.out.println("------------------");
 			System.out.print("Enter Username: ");
@@ -99,7 +100,7 @@ public class Admin {
 	        	menu();
 	        }
 	        else {
-	        	System.out.println("Invalid Username/Password. Please try again");
+	        	System.out.println("Invalid Username/Password. Please try again\n");
 	        }
 		}while(!login.isValidCredentials(username, password));
 		

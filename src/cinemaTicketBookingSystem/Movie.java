@@ -4,10 +4,13 @@
 package cinemaTicketBookingSystem;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -135,12 +138,10 @@ public class Movie {
 		File file = new File("movies.txt");
 		Scanner infile = new Scanner(file);
 		String readFile = "";
-		
 		while(infile.hasNextLine()) {
 			readFile = infile.nextLine();
 			System.out.println(readFile);
 		}
-		
 		infile.close();
 
 	}
@@ -155,6 +156,18 @@ public class Movie {
 
 	}
 	
+	public static List<String> movieList() throws IOException{
+		List<String> movieList = new ArrayList<>();
+		File file = new File("movies.txt");
+		Scanner infile = new Scanner(file);
+		String readFile = "";
+		while(infile.hasNextLine()) {
+			readFile = infile.nextLine();
+			movieList.add(readFile);
+		}
+		infile.close();
+		return movieList;
+	}
 	public static void main(String[] args) throws IOException {
 	// Create separate class for Movie (movieName, synopsis, price, date, time)
 		//
