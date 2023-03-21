@@ -39,44 +39,46 @@ public class Admin {
 		
 	}
 	
-	public static void menu() {
-		System.out.println("Welcome Admin!");
-		System.out.println("--------------------------------------------");
-		System.out.println("1 - View all movies from list");
-		System.out.println("2 - Add movie to list");
-		System.out.println("3 - Update movie from list");
-		System.out.println("4 - Delete movie from list");
-		System.out.println("5 - Exit");
-		
+	public static void menu() {		
 		Scanner keyboard = new Scanner(System.in);
         String num = "";
-        boolean isValid = true;
+        int number = 0;
         
        
-    	try {
-    		System.out.print("Please enter 1-5: ");
-        	num = keyboard.next();
-        	int number = Integer.parseInt(num);
-        	if (number == 1) {
-        		System.out.println("1");
-        		Movie.viewAllNowShowing();
-        	} else if (number == 2) {
-        		System.out.println("2");
-        		addToList();
-        	} else if (number == 3) {
-        		System.out.println("3");
-        	} else if (number == 4) {
-        		System.out.println("4");
-        	} else if (number == 5) {
-        		System.out.println("Thank you for using our program!");
-        		keyboard.close();
-        		System.exit(0);
-        	} else {
-        		throw new Exception();
-        	}
-        } catch (Exception e) {
-        	System.out.println("Please only enter 1-5. Try again. Error: " + e);
-        }
+    	while (number != 5) {
+    		try {
+    			System.out.println("Welcome Admin!");
+    			System.out.println("--------------------------------------------");
+    			System.out.println("1 - View all movies from list");
+    			System.out.println("2 - Add movie to list");
+    			System.out.println("3 - Update movie from list");
+    			System.out.println("4 - Delete movie from list");
+    			System.out.println("5 - Exit");
+        		System.out.print("Please enter 1-5: ");
+        		
+            	num = keyboard.next();
+            	number = Integer.parseInt(num);
+            	if (number == 1) {
+            		System.out.println("1");
+            		Movie.viewAllNowShowing();
+            	} else if (number == 2) {
+            		System.out.println("2");
+            		addToList();
+            	} else if (number == 3) {
+            		System.out.println("3");
+            	} else if (number == 4) {
+            		System.out.println("4");
+            	} else if (number == 5) {
+            		System.out.println("Thank you for using our program!");
+            		keyboard.close();
+            		System.exit(0);
+            	} else {
+            		throw new Exception();
+            	}
+            } catch (Exception e) {
+            	System.out.println("Please only enter 1-5. Try again. Error: " + e);
+            }
+    	}
        
 	}
 	

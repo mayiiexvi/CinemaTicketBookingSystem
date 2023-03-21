@@ -17,25 +17,16 @@ public class CinemaTicketBookingSystem {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		menu();		
-	}
-	
-	public static void menu() {        
-		System.out.println("Welcome to our Cinema Ticket Booking System!");
-		System.out.println("--------------------------------------------");
-		System.out.println("1 - Login as Admin");
-		System.out.println("2 - Login as Guest");
-		System.out.println("3 - Exit");
-		
 		Scanner keyboard = new Scanner(System.in);
         String num = "";
-        boolean isValid = true;
+        int number = 0;
         
-        do {
+        while (number != 3) {
         	try {
+        		menu();		
         		System.out.print("Please enter 1/2: ");
 	        	num = keyboard.next();
-	        	int number = Integer.parseInt(num);
+	        	number = Integer.parseInt(num);
 	        	if (number == 1) {
 	        		Admin.main(null);
 	        	} else if (number == 2) {
@@ -48,11 +39,20 @@ public class CinemaTicketBookingSystem {
 	        	}
 	        } catch (Exception e) {
 	        	System.out.println("Please only enter 1 or 2. Try again.");
-	        	isValid = false;
 	        }
-        } while (!isValid);
+        };
 
         keyboard.close();
+	}
+	
+	public static void menu() {        
+		System.out.println("Welcome to our Cinema Ticket Booking System!");
+		System.out.println("--------------------------------------------");
+		System.out.println("1 - Login as Admin");
+		System.out.println("2 - Login as Guest");
+		System.out.println("3 - Exit");
+		
+		
 	}
 
 }
