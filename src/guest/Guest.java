@@ -50,7 +50,7 @@ public class Guest {
             	}	
     		}
     		 catch (Exception e) {
-    	        	System.out.println("Please Enter valid input. Try again.\nError: " + e);
+    	        	System.out.println("Please enter valid input. Try again.\nError: " + e)
 	        }
         }
 		keyboard.close();
@@ -75,8 +75,8 @@ public class Guest {
 	
 	public static int chooseAMovie() throws IOException {
 		Scanner keyboard = new Scanner(System.in);
-		String[] seats = new String[100];
-		int number = 0;
+    String[] seats = new String[100];
+    int number = 0;
 		System.out.println("Now Showing");
 		System.out.println("--------------------------------------------");
 
@@ -89,15 +89,15 @@ public class Guest {
     		System.out.print("Please enter movie ID: ");
         	number = keyboard.nextInt();
         	if (number <= Movie.movieList().size() && number >= 1) {
-        		viewSeat(seats);
-        		break;
+            viewSeat(seats);
+            break;
         	} else {
         		System.out.println("Movie ID Provided do not exist. Please try again.");
         	}
         }
+		keyboard.close();
 		return number;
-	}
-	
+	}	
 	
 	public static void viewSeat(String[] seatSelected) {
 		String[][] seats = new String [5][14];
@@ -192,8 +192,7 @@ public class Guest {
 
 	}
 	
-	
-	public static int chooseSeat(int movieId) {
+  public static int chooseSeat(int movieId) {
 		if(movieId == 0)
 		{
 			System.out.println("Select a Movie first!!");
