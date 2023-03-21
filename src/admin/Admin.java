@@ -87,7 +87,6 @@ public class Admin {
 		Scanner keyboard = new Scanner(System.in);
 		Login login = new Login();
 		do {
-			System.out.flush();
 			System.out.println("Login Details");
 			System.out.println("------------------");
 			System.out.print("Enter Username: ");
@@ -98,11 +97,13 @@ public class Admin {
 	        if(login.isValidCredentials(username, password)) {
 	        	System.out.println("Login successful");
 	        	menu();
+	        	
 	        }
 	        else {
 	        	System.out.println("Invalid Username/Password. Please try again\n");
 	        }
 		}while(!login.isValidCredentials(username, password));
+		keyboard.close();
 		
 	}
 

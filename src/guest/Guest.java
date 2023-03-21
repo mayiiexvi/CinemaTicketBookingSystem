@@ -57,11 +57,11 @@ public class Guest {
 	}
 	
 	public static void menu() {
-		System.out.println("Welcome Guest!");
+		System.out.println("\nWelcome Guest!");
 		System.out.println("--------------------------------------------");
 		System.out.println("1 - View now showing");
 		System.out.println("2 - Choose a movie");
-		System.out.println("3 - Choose your seats");
+		System.out.println("3 - Choose your seats"); //Remove this we should only show 1,2 and 5
 		System.out.println("4 - Payment");
 		System.out.println("5 - Exit");
 		System.out.print("Please enter 1-5: ");       
@@ -75,6 +75,7 @@ public class Guest {
 	
 	public static int chooseAMovie() throws IOException {
 		Scanner keyboard = new Scanner(System.in);
+		String[] seats = new String[100];
 		int number = 0;
 		System.out.println("Now Showing");
 		System.out.println("--------------------------------------------");
@@ -88,7 +89,7 @@ public class Guest {
     		System.out.print("Please enter movie ID: ");
         	number = keyboard.nextInt();
         	if (number <= Movie.movieList().size() && number >= 1) {
-        		viewSeating();
+        		viewSeat(seats);
         		break;
         	} else {
         		System.out.println("Movie ID Provided do not exist. Please try again.");
@@ -97,71 +98,100 @@ public class Guest {
 		return number;
 	}
 	
-	public static void viewSeating() {
-		char[] seats = {'e','d', 'c', 'b', 'a'};
-		for(int i = 0; i < seats.length; i++) {
-			if(seats[i] == 'a' || seats[i] == 'b') {
-				rowAB(seats[i]);
+	
+	public static void viewSeat(String[] seatSelected) {
+		String[][] seats = new String [5][14];
+		String seatLetter = null;
+		int seatsRowLength = 0;
+		System.out.println("\nCinema Hall 1"); //Will be updated to allow multiple cinema
+		System.out.println("--------------");
+		for(int row = 0; row < seats.length; row++) {
+			if(row == 0) {
+				//System.out.println(" __ __ __ __                      __ __ __ __ __ "); --will be modified
+				System.out.println("");
+				seatLetter = "e";
+				seatsRowLength = 10;
+			}else if(row == 1) {
+				//System.out.println("\n __ __ __ __    __ __ __ __ __    ___ ___ ___ ___ "); --will be modified
+				System.out.println("");
+				seatLetter = "d";
+				seatsRowLength = 14;
+			}else if(row == 2) {
+				//System.out.println("\n __ __ __ __    __ __ __ __ __    ___ ___ ___ ___ "); --will be modified
+				System.out.println("");
+				seatLetter = "c";
+				seatsRowLength = 14;
+			}else if(row ==3) {
+				//System.out.println("\n    __ __ __    __ __ __ __ __    __ ___ ___ "); --will be modified
+				System.out.println("");
+				seatLetter = "b";
+				seatsRowLength = 12;
+			}else if(row == 4) {
+				//System.out.println("\n    __ __ __    __ __ __ __ __    __ ___ ___ "); --will be modified
+				System.out.println("");
+				seatLetter = "a";
+				seatsRowLength = 12;
 			}
-			else if(seats[i] == 'e') {
-				System.out.println(" __ __ __ __                      __ __ __ __ __ ");
-				for(int seatNumber = 1; seatNumber <= 9; seatNumber++) {
-					
-					if(seatNumber == 1) {
-						System.out.printf("|%s%d|", seats[i], seatNumber);
-					}
-					else if(seatNumber == 5) {
-						System.out.printf("                    |%s%d|", seats[i], seatNumber);
-					}
-					else
-					{
-						System.out.printf("%s%d|", seats[i], seatNumber);
+			for(int column = 0; column < seatsRowLength; column++) {
+				seats[row][column] = seatLetter + column;
+				if (seatSelected.length > 0) {
+					for (String selectedSeat: seatSelected) {
+						if(seats[row][column].equals(selectedSeat)) {
+							seats[row][column] = "X";
+						}
 					}
 				}
+				
+				// ROW E
+				if (row == 0) {
+					if(column == 5) {
+						System.out.printf("|                    |%s", seats[row][column]);
+					}else {
+						if(column > 0) {
+							System.out.printf("|%s", seats[row][column]);
+							if(column == 9) {
+								System.out.printf("|");
+							}
+						}
+					}
+				}
+				// ROWS C & D
+				else if (row >= 1 && row <= 2) {
+					if(column == 5 || column == 10) {
+						System.out.printf("|  |%s", seats[row][column]);
+					}else {
+						if(column > 0) {
+							System.out.printf("|%s", seats[row][column]);
+							if(column == 13) {
+								System.out.printf("|");
+							}
+						}
+					}
+				}
+
+				// ROWS A & B
+				else if (row >= 3 && row <= 4) {
+					if(column == 4 || column == 9) {
+						System.out.printf("  |%s|", seats[row][column]);
+					}else {
+						if(column == 0) {
+							System.out.printf("   |");
+						}
+						else {
+							System.out.printf("%s|", seats[row][column]);
+						}
+					}
+				}
+				
 			}
-			else {
-				rowCD(seats[i]);
-			}
-		}
 			
+		}
 		System.out.printf("\n  ____________________________________________");
 		System.out.printf("\n |                  Screen                    |");
 		System.out.println();
+
 	}
 	
-	public static void rowAB(char row) {
-		System.out.println("\n    __ __ __    __ __ __ __ __    __ ___ ___ ");
-		for(int seatNumber = 1; seatNumber <= 11; seatNumber++) {
-			
-			if(seatNumber == 1) {
-				System.out.printf("   |%s%d|", row,seatNumber);
-			}
-			else if(seatNumber == 4 || seatNumber == 9) {
-				System.out.printf("  |%s%d|",  row,seatNumber);
-			}
-			else
-			{
-				System.out.printf("%s%d|", row, seatNumber);
-			}
-		}
-	}
-	
-	public static void rowCD(char row) {
-		System.out.println("\n __ __ __ __    __ __ __ __ __    ___ ___ ___ ___ ");
-		for(int seatNumber = 1; seatNumber <= 13; seatNumber++) {
-			
-			if(seatNumber == 1) {
-				System.out.printf("|%s%d|", row, seatNumber);
-			}
-			else if(seatNumber == 5 || seatNumber == 10) {
-				System.out.printf("  |%s%d|", row, seatNumber);
-			}
-			else
-			{
-				System.out.printf("%s%d|", row, seatNumber);
-			}
-		}
-	}
 	
 	public static int chooseSeat(int movieId) {
 		if(movieId == 0)
