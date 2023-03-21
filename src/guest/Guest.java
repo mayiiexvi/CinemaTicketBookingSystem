@@ -4,9 +4,7 @@
 package guest;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 import cinemaTicketBookingSystem.Movie;
@@ -50,7 +48,7 @@ public class Guest {
             	}	
     		}
     		 catch (Exception e) {
-    	        	System.out.println("Please enter valid input. Try again.\nError: " + e)
+    	        	System.out.println("Please enter valid input. Try again.\nError: " + e);
 	        }
         }
 		keyboard.close();
@@ -218,6 +216,7 @@ public class Guest {
 			System.out.print(seat);
 		}
 		System.out.println();
+		keyboard.close();
 		return num;
 	}
 	
@@ -249,5 +248,7 @@ public class Guest {
 		{
 			System.out.println("Your Seats are confirmed!!");
 		}
+		keyboard.close();
 	}
+	
 }
