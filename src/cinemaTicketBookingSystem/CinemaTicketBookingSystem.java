@@ -6,6 +6,7 @@ import admin.Admin;
 import java.util.Scanner;
 
 import admin.Login;
+import guest.Guest;
 
 /**
  * @author mufida
@@ -30,7 +31,7 @@ public class CinemaTicketBookingSystem {
 	        	if (number == 1) {
 	        		Admin.main(null);
 	        	} else if (number == 2) {
-	        		System.out.println("2");
+	        		Guest.main(null);
 	        	} else if (number == 3) {
 	        		System.out.println("Thank you for using our program!");
 	        		System.exit(0);
