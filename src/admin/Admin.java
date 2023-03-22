@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import cinemaTicketBookingSystem.Movie;
 import common.DatabaseConnection;
+import common.User;
 
 /**
  * @author 
@@ -18,7 +19,7 @@ public class Admin {
 	/**
 	 * @param args
 	 */
-	
+	static Connection connection;
 	public static void addToList() {
 		try {
 			Scanner keyboard = new Scanner(System.in);
@@ -86,11 +87,11 @@ public class Admin {
 	
 	public static void main(String[] args){
 		try {
-			Connection connection = DatabaseConnection.getInstance().getConnection();
+			connection = DatabaseConnection.getInstance().getConnection();
 			
 			String username;
 			String password;
-			Login userLogin;
+			User userLogin;
 			Scanner keyboard = new Scanner(System.in);
 			do {
 				System.out.println("Login Details");
@@ -99,7 +100,7 @@ public class Admin {
 		        username = keyboard.nextLine();
 		        System.out.print("Enter Password: ");
 		        password = keyboard.nextLine();
-		        userLogin = Login.isValidCredentials(connection, username, password);
+		        userLogin = User.isValidCredentials(connection, username, password);
 		        
 		        if(userLogin.getId() != 0) {
 		        	System.out.println("Welcome, " + userLogin.getFirstName());
