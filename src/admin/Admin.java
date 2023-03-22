@@ -3,9 +3,11 @@
  */
 package admin;
 
+import java.sql.Connection;
 import java.util.Scanner;
 
 import cinemaTicketBookingSystem.Movie;
+import common.DatabaseConnection;
 
 /**
  * @author 
@@ -47,7 +49,7 @@ public class Admin {
        
     	while (number != 5) {
     		try {
-    			System.out.println("Welcome Admin!");
+    			//System.out.println("Welcome Admin!");
     			System.out.println("--------------------------------------------");
     			System.out.println("1 - View all movies from list");
     			System.out.println("2 - Add movie to list");
@@ -83,29 +85,36 @@ public class Admin {
 	}
 	
 	public static void main(String[] args){
-		String username;
-		String password;
-		
-		Scanner keyboard = new Scanner(System.in);
-		Login login = new Login();
-		do {
-			System.out.println("Login Details");
-			System.out.println("------------------");
-			System.out.print("Enter Username: ");
-	        username = keyboard.nextLine();
-	        System.out.print("Enter Password: ");
-	        password = keyboard.nextLine();
-	        
-	        if(login.isValidCredentials(username, password)) {
-	        	System.out.println("Login successful");
-	        	menu();
-	        	
-	        }
-	        else {
-	        	System.out.println("Invalid Username/Password. Please try again\n");
-	        }
-		}while(!login.isValidCredentials(username, password));
-		keyboard.close();
+		try {
+			Connection connection = DatabaseConnection.getInstance().getConnection();
+			
+			String username;
+			String password;
+			Login userLogin;
+			Scanner keyboard = new Scanner(System.in);
+			do {
+				System.out.println("Login Details");
+				System.out.println("------------------");
+				System.out.print("Enter Username: ");
+		        username = keyboard.nextLine();
+		        System.out.print("Enter Password: ");
+		        password = keyboard.nextLine();
+		        userLogin = Login.isValidCredentials(connection, username, password);
+		        
+		        if(userLogin.getId() != 0) {
+		        	System.out.println("Welcome, " + userLogin.getFirstName());
+		        	menu();
+		        }
+		        else {
+		        	System.out.println("Invalid Username/Password. Please try again\n");
+		        }
+			} while(userLogin.getId() == 0);
+			
+			keyboard.close();
+		}
+		catch (Exception e) {
+			System.err.println(e.toString());
+		}
 		
 	}
 
