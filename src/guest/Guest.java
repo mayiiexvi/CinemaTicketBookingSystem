@@ -92,8 +92,9 @@ public class Guest {
         	} else {
         		System.out.println("Movie ID Provided do not exist. Please try again.");
         	}
+        	keyboard.close();
         }
-		keyboard.close();
+		
 		return number;
 	}	
 	
