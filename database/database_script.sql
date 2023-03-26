@@ -28,5 +28,17 @@ CREATE TABLE `movies` (
 
 SELECT * FROM `movies`;
 
+CREATE TABLE `seatreservation`(
+	`id` int NOT NULL AUTO_INCREMENT,
+    `movie_id` int NOT NULL,
+    `movie_time` datetime,
+    `seat_number` varchar(5) NOT NULL,
+    `reserved` boolean NOT NULL DEFAULT false,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY(`movie_id`) REFERENCES movies(`id`)
+);
+INSERT INTO `seatreservation` VALUES (1, 1 , 'a1', true);
+SELECT * FROM `seatreservation`;
+
 INSERT INTO `users` (`id`,`first_name`,`last_name`,`user_name`,`password`,`role`,`email`,`phone`) VALUES (1,'Administrator',NULL,'admin','password','ADMIN','admin@gmail.com',NULL);
 INSERT INTO `users` (`id`,`first_name`,`last_name`,`user_name`,`password`,`role`,`email`,`phone`) VALUES (2,'User Test',NULL,'user','password','USER','user@gmail.com','22695245192');
