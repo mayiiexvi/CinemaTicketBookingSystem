@@ -3,24 +3,16 @@
  */
 package admin;
 
-<<<<<<< Updated upstream
 import java.util.Scanner;
-
-import cinemaTicketBookingSystem.Movie;
-=======
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
-
-import common.Movie;
 import common.DataValidation;
 import common.DatabaseConnection;
+import common.Movie;
 import common.User;
->>>>>>> Stashed changes
-
 /**
  * @author 
  *
@@ -30,16 +22,11 @@ public class Admin {
 	/**
 	 * @param args
 	 */
-<<<<<<< Updated upstream
-	
-	public static void addToList() {
-=======
+
 	static Connection connection;
-	
-	
+
 	public static Movie takeMovieDetails() {
 		Movie movie = new Movie();
->>>>>>> Stashed changes
 		try {
 			Scanner keyboard = new Scanner(System.in);
 			
@@ -69,13 +56,8 @@ public class Admin {
        
     	while (number != 5) {
     		try {
-<<<<<<< Updated upstream
-    			System.out.println("Welcome Admin!");
-    			System.out.println("--------------------------------------------");
-=======
     			System.out.println("\n            MAIN MENU            ");
     			System.out.println("---------------------------------");
->>>>>>> Stashed changes
     			System.out.println("1 - View all movies from list");
     			System.out.println("2 - Add movie to list");
     			System.out.println("3 - Update movie from list");
@@ -145,7 +127,6 @@ public class Admin {
 	}
 	
 	public static void main(String[] args){
-<<<<<<< Updated upstream
 		String username;
 		String password;
 		
@@ -167,9 +148,8 @@ public class Admin {
 	        else {
 	        	System.out.println("Invalid Username/Password. Please try again\n");
 	        }
-		}while(!login.isValidCredentials(username, password));
+		} while(!login.isValidCredentials(username, password));
 		keyboard.close();
-=======
 		try {
 			connection = DatabaseConnection.getInstance().getConnection();
 			
@@ -200,8 +180,6 @@ public class Admin {
 		catch (Exception e) {
 			System.err.println(e.toString());
 		}
->>>>>>> Stashed changes
-		
 	}
 
 }

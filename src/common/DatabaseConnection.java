@@ -15,7 +15,7 @@ public class DatabaseConnection {
 	private Connection connection;
 	private String url = "jdbc:mysql://localhost:3306/cinematicketbookingsystem";
 	private String user = "root";
-	private String password = "Passw0rd!";
+	private String password = "root";
 
 	private DatabaseConnection() throws SQLException {
 		try {

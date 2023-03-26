@@ -66,7 +66,7 @@ public class Guest {
 	}
 	
 	public static void viewNowShowing() throws IOException {
-		Movie.viewAllNowShowing();
+		//Movie.viewAllNowShowing();
 		
 		/*To add print where user is asked if they want to proceed with choosing movie or exit*/
 	}
@@ -93,7 +93,7 @@ public class Guest {
         		System.out.println("Movie ID Provided do not exist. Please try again.");
         	}
         }
-		keyboard.close();
+		//keyboard.close();
 		return number;
 	}	
 	

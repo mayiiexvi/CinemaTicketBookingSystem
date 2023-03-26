@@ -8,8 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
 
 public class Movie {
 	private int id;
@@ -45,51 +43,60 @@ public class Movie {
 		this.releaseDate = releaseDate;
 		this.setPrice(price);
 	}
+  
 	/**
 	 * @return the id
 	 */
 	public int getId() {
 		return id;
 	}
+  
 	/**
 	 * @param id the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
+  
 	/**
 	 * @return the movieName
 	 */
 	public String getMovieName() {
 		return movieName;
 	}
+  
 	/**
 	 * @param movieName the movieName to set
 	 */
 	public void setMovieName(String movieName) {
 		this.movieName = movieName;
 	}
+  
 	/**
 	 * @return the synopsis
 	 */
 	public String getSynopsis() {
 		return synopsis;
 	}
+  
 	/**
 	 * @param synopsis the synopsis to set
 	 */
 	public void setSynopsis(String synopsis) {
 		this.synopsis = synopsis;
 	}
+  
 	/**
 	 * @return the releaseDate
 	 */
 	public String getReleaseDate() {
 		return releaseDate;
 	}
+  
 	/**
 	 * @param releaseDate the releaseDate to set
 	 */
+  
 	public void setReleaseDate(String releaseDate) {
 		this.releaseDate = releaseDate;
 	}
