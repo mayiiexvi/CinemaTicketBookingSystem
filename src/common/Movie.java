@@ -10,40 +10,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Movie {
+	
+	/*----------- Fields ----------- */
 	private int id;
 	private String movieName;
 	private String synopsis;
 	private String releaseDate;
 	private double price;
 	
-	public Movie() {
-		this.movieName = "";
-		this.synopsis = "";
-		this.releaseDate = "";
-		this.price = 0.0;
-	}
-	
-	/**
-	 * @param id
-	 * @param movieName
-	 * @param synopsis
-	 * @param releaseDate
-	 */
-	public Movie(int id, String movieName, String synopsis, String releaseDate, double price) {
-		this.id = id;
-		this.movieName = movieName;
-		this.synopsis = synopsis;
-		this.releaseDate = releaseDate;
-		this.price = price;
-	}
-	
-	public Movie(String movieName, String synopsis, String releaseDate, double price) {
-		this.movieName = movieName;
-		this.synopsis = synopsis;
-		this.releaseDate = releaseDate;
-		this.setPrice(price);
-	}
-  
+	/*----------- Getter Setter ----------- */
 	/**
 	 * @return the id
 	 */
@@ -100,13 +75,63 @@ public class Movie {
 	public void setReleaseDate(String releaseDate) {
 		this.releaseDate = releaseDate;
 	}
+	/**
+	 * 
+	 * @return
+	 */
+	public double getPrice() {
+		return price;
+	}
+	/**
+	 * 
+	 * @param price
+	 */
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	
+	/*----------- Constructors ----------- */
+	/**
+	 * Default constructor
+	 */
+	public Movie() {
+		this.movieName = "";
+		this.synopsis = "";
+		this.releaseDate = "";
+		this.price = 0.0;
+	}
+	
+	/**
+	 * Constructor with full fields
+	 * @param id
+	 * @param movieName
+	 * @param synopsis
+	 * @param releaseDate
+	 */
+	public Movie(int id, String movieName, String synopsis, String releaseDate, double price) {
+		this.id = id;
+		this.movieName = movieName;
+		this.synopsis = synopsis;
+		this.releaseDate = releaseDate;
+		this.price = price;
+	}
+	
+	public Movie(String movieName, String synopsis, String releaseDate, double price) {
+		this.movieName = movieName;
+		this.synopsis = synopsis;
+		this.releaseDate = releaseDate;
+		this.setPrice(price);
+	}
+  
+	
 	
 	public String toString() {
-		return ("ID: " + id + "\n"
-				+ "Movie name: " + movieName + "\n"
-				+ "Synopsis: " + synopsis + "\n"
-				+ "Release date: " + releaseDate + "\n"
-				+ "Price: " + price);
+		return ("ID:\t\t" + id + "\n"
+				+ "Movie name:\t" + movieName + "\n"
+				+ "Synopsis:\t" + synopsis + "\n"
+				+ "Release date:\t" + releaseDate  
+				//+"\n" + "Price: " + price
+				 );
 	}
 	
 	public static void insert(Connection connection, Movie movie) throws SQLException {
@@ -193,14 +218,20 @@ public class Movie {
 		return movies;
 	}
 	
-
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
+	public static Movie getByID(Connection connection, int movieId) throws SQLException {
+		String query = "SELECT * FROM movies WHERE id =? ";
+		PreparedStatement statement = connection.prepareStatement(query);
+		ResultSet resultSet = statement.executeQuery();
+		Movie mv = new Movie();
+		while (resultSet.next()) {
+			int id = resultSet.getInt("id");
+			String name = resultSet.getString("movie_name");
+			String synopsis = resultSet.getString("synopsis");
+			String release_date = resultSet.getString("release_date");
+			double price = resultSet.getDouble("price");
+			mv = new Movie(id, name, synopsis, release_date, price);
+		}
+		return mv;
 	}
 
 }

@@ -13,6 +13,9 @@ import common.DataValidation;
 import common.DatabaseConnection;
 import common.Movie;
 import common.MovieSeatReservation;
+import common.Showtime;
+import common.Ticket;
+import common.User;
 
 
 /**
@@ -25,9 +28,21 @@ public class Guest {
 	 * @param args
 	 */
 	static Connection connection;
+	// Text color in console 
+	public static final String ANSI_RESET = "\u001B[0m";
+	public static final String ANSI_BLACK = "\u001B[30m";
+	public static final String ANSI_RED = "\u001B[31m";
+	public static final String ANSI_GREEN = "\u001B[32m";
+	public static final String ANSI_YELLOW = "\u001B[33m";
+	public static final String ANSI_BLUE = "\u001B[34m";
+	public static final String ANSI_PURPLE = "\u001B[35m";
+	public static final String ANSI_CYAN = "\u001B[36m";
+	public static final String ANSI_WHITE = "\u001B[37m";
+	public static ArrayList<Showtime> showtimes;
 	
 	public static void main(String[] args) throws Exception{
 		connection = DatabaseConnection.getInstance().getConnection();
+		showtimes = Showtime.getAvailableShowtimes(connection);
 		ArrayList<Movie> movies = new ArrayList<>();
 		Scanner keyboard = new Scanner(System.in);
         int number = 0;
@@ -39,9 +54,9 @@ public class Guest {
         		menu();		
 	        	number = DataValidation.readPositiveInt("Please enter 1/3: ");
 	        	if (number == 1) {
-	        		viewNowShowing(movies);
+	        		viewNowShowing(showtimes);
 	        	} else if (number == 2) {
-	        		chooseAMovie(movies);
+	        		chooseAMovie();
 	        	} else if (number == 3) {
 	        		System.out.println("Thank you for using our program!");
 	                keyboard.close();
@@ -63,49 +78,48 @@ public class Guest {
 		System.out.println("3 - Exit");
 	}
 	
-	public static void viewNowShowing(ArrayList<Movie> movies) throws SQLException {
-		movies = Movie.listAll(connection);
-		if (movies.isEmpty()) {
+	public static void viewNowShowing(ArrayList<Showtime> showtimes) throws SQLException {
+		
+		if (showtimes.isEmpty()) {
 			System.out.println("\nThere are no now showing movies. You can come back as soon as we have one.");
 		} else {
 			System.out.println("\n           NOW SHOWING            ");
-			System.out.print(    "             *******            ");
-			for (int i=0; i<movies.size(); i++) {
-				System.out.println("\n" + movies.get(i));
+			System.out.println(    "             *******            ");
+			
+			for (Showtime showtime : showtimes) {
+				System.out.println("Showtime Id\t" + ANSI_BLUE + showtime.getId() + ANSI_RESET);
+				System.out.println("Showtime:\t" + showtime.getShowTimeFormatted());
+				//System.out.println("Movie Id:\t" + showtime.getMovie().getId());
+				System.out.println("Movie Name:\t" + showtime.getMovie().getMovieName());
+				//System.out.println("Release Date:\t" + showtime.getMovie().getReleaseDate());
+				System.out.println("Hall:\t\t" + showtime.getHall().getName());
+				System.out.println("Avalable Seats: " + ANSI_GREEN + showtime.getAvailableSeats() +ANSI_RESET);
+				// Show more here
+				System.out.println();
 			}
+
 		}
 		/*To add print where user is asked if they want to proceed with choosing movie or exit*/
 	}
-	public static void chooseAMovie(ArrayList<Movie> movies) throws SQLException{
-		ArrayList<Movie> movieDetails = new ArrayList<Movie>();
+	public static void chooseAMovie() throws SQLException{
 		Scanner keyboard = new Scanner(System.in);
 	    final int CINEMA_CAPACITY = 57;
-	    viewNowShowing(movies);
-		while(true){
-			System.out.print("\nPlease enter ID of the movie you want to watch: ");
-			String movieIdString = keyboard.next();
-			int movieId = Integer.parseInt(movieIdString);
-			movieDetails = Movie.listMovieDetails(connection, movieId);
-			if(movieDetails.isEmpty()) {
-				System.out.println("Movie ID Provided do not exist. Please try again.");
-			}else {
-				if(reservedSeats(movieId).length == CINEMA_CAPACITY) {
-					System.out.println("Sorry for the inconvinience. Movie is already fully booked.");
-				}else {
-					System.out.println(movieDetails.get(0));
-					viewSeat(movieId);
-					String[] numOfSeats = chooseSeat(movieId);
-					review(movies, movieDetails.get(0), numOfSeats);
-					break;
-				}
-				
-			}
-			
-			for (int i=0; i<movies.size(); i++) {
-				System.out.println("\n" + movies.get(i));
-			}
+	    viewNowShowing(showtimes);
+	    boolean flag = true;
+	    while(flag) {
+		    int showtimeID = DataValidation.readPositiveInt("\nPlease enter ID of the showtime you want to watch: ");
+		    Showtime showtime = showtimeCheckExists(showtimes, showtimeID);
+		    if(showtime != null) {
+		    	System.out.println(showtime.getMovie());
+				viewSeat(showtime.getMovie().getId());
+				String[] numOfSeats = chooseSeat(showtime.getMovie().getId());
+				review(showtime, numOfSeats);
+		    	flag = false;
+		    } else {
+		    	System.out.println("Showtime ID Provided do not exist. Please try again.");
+		    }
 	    }
-	
+	    int a =1;
 	}
 	public static String[] reservedSeats(int movieId) throws SQLException {
 		ArrayList<MovieSeatReservation> movieSeatReservation = new ArrayList<MovieSeatReservation>();
@@ -237,13 +251,13 @@ public class Guest {
 		return seats;
 	}
 	
-	public static void review(ArrayList<Movie> movies, Movie movie, String[] seats) {
+	public static void review(Showtime showtime, String[] seats) {
 		int number = 0;
-		double subtotal = movie.getPrice() *seats.length ;
+		double subtotal = showtime.getPrice() *seats.length ;
 		double tax = subtotal * 0.05;
 		double total = subtotal + tax;
 		System.out.println("Order Details");
-		System.out.println(movie);
+		System.out.println(showtime.getMovie());
 		System.out.println("Selected seats are as follows : ");
 		for (String seat : seats) {
 			System.out.println(seat);
@@ -257,10 +271,10 @@ public class Guest {
         		System.out.println("3. Cancel");
 	        	number = DataValidation.readPositiveInt("Please enter 1-3: ");
 	        	if (number == 1) {
-	        		payment(movie, seats);
+	        		payment(showtime, seats);
 	        		break;
 	        	} else if (number == 2) {
-	        		chooseAMovie(movies);
+	        		chooseAMovie();
 	        		break;
 	        	} else if (number == 3) {
 	        		System.out.println("Thank you for using our program!");
@@ -273,14 +287,27 @@ public class Guest {
         };
 		
 	}
-	public static void payment(Movie movie, String[] seats)throws SQLException {
-		if(movie.getId() == 0 || seats.length == 0)
+	public static void payment(Showtime showtime, String[] seats)throws SQLException {
+		if(showtime.getId() == 0 || seats.length == 0)
 		{
 			System.out.println("Select a Movie and choose seats first!!");
 			return;
 		}
 		Scanner keyboard = new Scanner(System.in);
-		double subtotal = movie.getPrice() * seats.length;
+		/* START Require user information */
+		System.out.println("Customer information. Leave it empty to skip for some fields");
+		String firstName = DataValidation.inputStringNotEmpty("First Name: ");
+		System.out.print("Last Name: ");
+		String lastName = keyboard.nextLine();
+		System.out.print("Phone No: ");
+		String phoneNo = keyboard.nextLine();
+		System.out.print("Email: ");
+		String email = keyboard.nextLine();
+		User customer = new User(firstName, lastName, "USER", email, phoneNo);
+		customer = User.insert(connection, customer); // Resign customer to get the ID generated
+		/* END Require user information */
+		
+		double subtotal = showtime.getPrice() * seats.length;
 		double tax = subtotal * 0.05;
 		double total = subtotal + tax;
 		System.out.println("You have to Pay $"+ total);
@@ -302,12 +329,25 @@ public class Guest {
 				System.out.println("Your Seats are confirmed!!");
 			}
 			for(String seat: seats) {
-				MovieSeatReservation movieSeatReservation = new MovieSeatReservation(movie.getId(), seat, true);
+				MovieSeatReservation movieSeatReservation = new MovieSeatReservation(showtime.getId(), seat, true);
 				MovieSeatReservation.insert(connection, movieSeatReservation);
+				
+				/* START Adding Ticket stuff*/
+				Ticket ticket = new Ticket(customer, showtime, seat);
+				Ticket.insert(connection, ticket);
+				/* END Adding Ticket stuff*/
 			}
 			
 		}
 		
+	}
+	public static Showtime showtimeCheckExists(ArrayList<Showtime> showtimes, int id) {
+		for (Showtime showtime : showtimes) {
+			if(showtime.getId() == id) {
+				return showtime;
+			}
+		}
+		return null;
 	}
 	
 }

@@ -51,4 +51,19 @@ public class DataValidation {
 		return num;
 	}
     
+	public static String inputStringNotEmpty(String prompt) {
+		Scanner keyboard = new Scanner(System.in);
+		boolean isValid = false;
+		String result = "";
+		while(!isValid) {
+			System.out.print(prompt);
+			result = keyboard.nextLine();
+    		if (result.isEmpty()) {
+    			System.out.println("This field is manatory!");
+    		} else {
+    			isValid = true;
+    		}
+		}
+		return result;
+	}
 }
