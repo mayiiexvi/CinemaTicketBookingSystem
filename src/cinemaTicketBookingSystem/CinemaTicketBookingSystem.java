@@ -2,10 +2,9 @@
  * 
  */
 package cinemaTicketBookingSystem;
-import admin.Admin;
 import java.util.Scanner;
 
-import admin.Login;
+import admin.Admin;
 import common.DataValidation;
 import guest.Guest;
 

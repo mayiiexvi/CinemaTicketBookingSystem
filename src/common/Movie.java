@@ -156,6 +156,44 @@ public class Movie {
 		}
 		return movies;
 	}
+	
+	public static ArrayList<Movie> listMovieDetails(Connection connection, int movie_id) throws SQLException {
+		String query = "SELECT * FROM movies WHERE id =?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, movie_id);
+		ResultSet resultSet = statement.executeQuery();
+		ArrayList<Movie> movies = new ArrayList<>();
+		while(resultSet.next()) {
+			String name = resultSet.getString("movie_name");
+			String synopsis = resultSet.getString("synopsis");
+			String release_date = resultSet.getString("release_date");
+			double price = resultSet.getDouble("price");
+			Movie mv = new Movie(movie_id, name, synopsis, release_date, price);
+			movies.add(mv);
+		}
+		
+		return movies;
+	}
+	
+	public static ArrayList<Movie> selectedSeats(Connection connection, int movie_id) throws SQLException {
+		String query = "SELECT * FROM seatselection WHERE movie_id =?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, movie_id);
+		ResultSet resultSet = statement.executeQuery();
+		ArrayList<Movie> movies = new ArrayList<>();
+		while(resultSet.next()) {
+			String name = resultSet.getString("movie_name");
+			String synopsis = resultSet.getString("synopsis");
+			String release_date = resultSet.getString("release_date");
+			double price = resultSet.getDouble("price");
+			Movie mv = new Movie(movie_id, name, synopsis, release_date, price);
+			movies.add(mv);
+		}
+		
+		return movies;
+	}
+	
+
 
 	public double getPrice() {
 		return price;

@@ -50,7 +50,7 @@ public class Admin {
 	public static void menu() throws SQLException {		
 		Scanner keyboard = new Scanner(System.in);
         int number = 0;
-        ArrayList<Movie> movies = Movie.listAll(connection);
+        ArrayList<Movie> movies;
        
     	while (number != 5) {
     		try {
@@ -80,6 +80,7 @@ public class Admin {
             		Movie movie = takeMovieDetails();
             		Movie.insert(connection, movie);            		
             	} else if (number == 3) {
+            		movies = Movie.listAll(connection);
             		Movie updateMovie = movies.get(0);
 
             		System.out.println("\n          UPDATE A MOVIE            ");
