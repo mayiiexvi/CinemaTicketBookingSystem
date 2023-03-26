@@ -297,7 +297,7 @@ public class Guest {
 		Scanner keyboard = new Scanner(System.in);
 		/* START Require user information */
 		System.out.println("Customer information. Leave it empty to skip for some fields");
-		String firstName = DataValidation.inputStringNotEmpty("First Name: ");
+		String firstName = DataValidation.inputStringNotEmpty("First Name(*): ");
 		System.out.print("Last Name: ");
 		String lastName = keyboard.nextLine();
 		System.out.print("Phone No: ");

@@ -10,7 +10,10 @@ public class Test {
 		// TODO Auto-generated method stub
 		Connection connection = DatabaseConnection.getInstance().getConnection();
 		//ArrayList<Hall> halls =  Hall.listAll(connection);
-		ArrayList<Showtime> showtimes = Showtime.getAvailableShowtimes(connection);
+		//ArrayList<Showtime> showtimes = Showtime.getAvailableShowtimes(connection);
+		
+		
+		DatabaseConnection.checkAndInitializeDatabase(connection);
 		
 		int a =1;
 	}

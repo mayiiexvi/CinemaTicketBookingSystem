@@ -14,7 +14,7 @@ CREATE TABLE `users` (
   `email` varchar(100) DEFAULT NULL,
   `phone` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 DROP TABLE `movies`;
 CREATE TABLE `movies` (
@@ -34,8 +34,7 @@ CREATE TABLE `seatreservation`(
     `movie_time` datetime,
     `seat_number` varchar(5) NOT NULL,
     `reserved` boolean NOT NULL DEFAULT false,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY(`movie_id`) REFERENCES movies(`id`)
+    PRIMARY KEY (`id`)
 );
 INSERT INTO `seatreservation` VALUES (1, 1 , 'a1', true);
 SELECT * FROM `seatreservation`;

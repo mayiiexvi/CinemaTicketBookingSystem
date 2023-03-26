@@ -3,8 +3,12 @@
  */
 package common;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 /**
  * @author Tich
  *
@@ -39,5 +43,179 @@ public class DatabaseConnection {
 
 		return instance;
 	}
+	
+	public static void checkAndInitializeDatabase(Connection connection) throws SQLException {
+		try {
+			DatabaseMetaData meta = connection.getMetaData();
+			ArrayList<Table> tables = initializeData();
+			for (Table table : tables) {
+				boolean isExists = false;
+				ResultSet res = meta.getTables(null, "cinematicketbookingsystem", table.getTableName(), new String[] {"TABLE"});
+				  while (res.next()) {
+				     if(res.getString("TABLE_NAME").equals(table.getTableName())) {
+				    	 isExists = true;
+				     }
+					 break;
+				  }
+				 if(!isExists) {
+		            PreparedStatement statement = connection.prepareStatement(table.getSqlCreate());
+		            statement.executeUpdate();
+		            System.out.println(table + " table created successfully!");
+		            for (String sql : table.getSqls()) {
+		            	statement = connection.prepareStatement(sql);
+			            statement.executeUpdate();
+			            System.out.println("1 row inserted");
+					}
+				 }
+			}
+		} catch (SQLException e) {
+            e.printStackTrace();
+        }
+	}
+	
+	public static ArrayList<Table> initializeData(){
+		ArrayList<Table> tables = new ArrayList<>();
+		Table tbl;
+		String tableName;
+		String sqlCreate;
+		ArrayList<String> sql;
+		// users
+		tableName = "users";
+		sqlCreate = "CREATE TABLE `users` (\r\n"
+				+ "  `id` int NOT NULL AUTO_INCREMENT,\r\n"
+				+ "  `first_name` varchar(100) DEFAULT NULL,\r\n"
+				+ "  `last_name` varchar(100) DEFAULT NULL,\r\n"
+				+ "  `user_name` varchar(100) DEFAULT NULL,\r\n"
+				+ "  `password` varchar(100) DEFAULT NULL,\r\n"
+				+ "  `role` varchar(45) DEFAULT NULL,\r\n"
+				+ "  `email` varchar(100) DEFAULT NULL,\r\n"
+				+ "  `phone` varchar(100) DEFAULT NULL,\r\n"
+				+ "  PRIMARY KEY (`id`)\r\n"
+				+ ");\r\n"
+				+ "";
+		sql= new ArrayList<>();
+		sql.add("INSERT INTO `users` (`id`,`first_name`,`last_name`,`user_name`,`password`,`role`,`email`,`phone`) VALUES (1,'Administrator',NULL,'admin','password','ADMIN','admin@gmail.com',NULL);");
+		sql.add("INSERT INTO `users` (`id`,`first_name`,`last_name`,`user_name`,`password`,`role`,`email`,`phone`) VALUES (2,'User Test',NULL,'user','password','USER','user@gmail.com','22695245192');");
+		tbl = new Table(tableName, sqlCreate, sql);
+		tables.add(tbl);
+		
+		// movies
+		tableName = "movies";
+		sqlCreate = "CREATE TABLE `movies` (\r\n"
+				+ "  `id` int NOT NULL AUTO_INCREMENT,\r\n"
+				+ "  `movie_name` varchar(100) DEFAULT NULL,\r\n"
+				+ "  `synopsis` varchar(100) DEFAULT NULL,\r\n"
+				+ "  `release_date` varchar(100) DEFAULT NULL,\r\n"
+				+ "  `price` float(10,2) DEFAULT NULL,\r\n"
+				+ "  PRIMARY KEY (`id`)\r\n"
+				+ ");"
+				+ "";
+		sql= new ArrayList<>();
+		sql.add("INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`price`) VALUES (1,'John Wick 4','With the price on his head ever increasing, legendary hit man John Wick takes his fight against...','1/1/2024',90000.00);");
+		sql.add("INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`price`) VALUES (2,'Strange Things','In 1980s Indiana, a group of young friends witness supernatural forces and secret government exploit','2/2/2024',190.00);");
+		tbl = new Table(tableName, sqlCreate, sql);
+		tables.add(tbl);
+		
+		
+		// halls
+		tableName = "halls";
+		sqlCreate = "CREATE TABLE `halls` (\r\n"
+				+ "  `id` int NOT NULL AUTO_INCREMENT,\r\n"
+				+ "  `name` varchar(100) DEFAULT NULL,\r\n"
+				+ "  `seating_rows` int DEFAULT NULL,\r\n"
+				+ "  `seating_cols` int DEFAULT NULL,\r\n"
+				+ "  PRIMARY KEY (`id`)\r\n"
+				+ "  );";
+		sql= new ArrayList<>();
+		sql.add("INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`) VALUES (1,'Galaxy 1',5,10);");
+		sql.add("INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`) VALUES (2,'Galaxy 2',6,12);");
+		sql.add("INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`) VALUES (3,'Galaxy 3',7,15);");
+		tbl = new Table(tableName, sqlCreate, sql);
+		tables.add(tbl);
+		
+		// tickets
+		tableName = "tickets";
+		sqlCreate = "CREATE TABLE `tickets` (\r\n"
+				+ "  `id` int NOT NULL AUTO_INCREMENT,\r\n"
+				+ "  `user_id` int DEFAULT NULL,\r\n"
+				+ "  `showtime_id` int DEFAULT NULL,\r\n"
+				+ "  `seat_row` int DEFAULT NULL,\r\n"
+				+ "  `seat_col` int DEFAULT NULL,\r\n"
+				+ "  `seatCode` varchar(45) DEFAULT NULL,\r\n"
+				+ "  PRIMARY KEY (`id`)\r\n"
+				+ ") ;";
+		sql= new ArrayList<>();
+		tbl = new Table(tableName, sqlCreate, sql);
+		tables.add(tbl);
+				
+		// showtime
+		tableName = "showtime";
+		sqlCreate = "CREATE TABLE `showtime` (\r\n"
+				+ "  `id` int NOT NULL AUTO_INCREMENT,\r\n"
+				+ "  `movie_id` int DEFAULT NULL,\r\n"
+				+ "  `hall_id` int DEFAULT NULL,\r\n"
+				+ "  `showtime` datetime DEFAULT NULL,\r\n"
+				+ "  `price` decimal(8,2) DEFAULT NULL,\r\n"
+				+ "  PRIMARY KEY (`id`)\r\n"
+				+ ");";
+		sql= new ArrayList<>();
+		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (1,1,1,'2023-05-01 10:10:00',60.00);");
+		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (2,1,2,'2023-05-01 23:10:00',30.00);");
+		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (3,2,1,'2023-05-02 18:10:00',25.00);");
+		tbl = new Table(tableName, sqlCreate, sql);
+		tables.add(tbl);
+		
+		// seatreservation
+		tableName = "seatreservation";
+		sqlCreate = "CREATE TABLE `seatreservation`(\r\n"
+				+ "	`id` int NOT NULL AUTO_INCREMENT,\r\n"
+				+ "    `movie_id` int NOT NULL,\r\n"
+				+ "    `movie_time` datetime,\r\n"
+				+ "    `seat_number` varchar(5) NOT NULL,\r\n"
+				+ "    `reserved` boolean NOT NULL DEFAULT false,\r\n"
+				+ "    PRIMARY KEY (`id`)\r\n"
+				+ ");";
+		sql= new ArrayList<>();
+		tbl = new Table(tableName, sqlCreate, sql);
+		tables.add(tbl);
+		
+		return tables;
+	}
 
+}
+
+class Table {
+	public String tableName;
+	public String sqlCreate;
+	public ArrayList<String> sqls;
+	
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	public String getSqlCreate() {
+		return sqlCreate;
+	}
+
+	public void setSqlCreate(String sqlCreate) {
+		this.sqlCreate = sqlCreate;
+	}
+
+	public ArrayList<String> getSqls() {
+		return sqls;
+	}
+
+	public void setSqls(ArrayList<String> sqls) {
+		this.sqls = sqls;
+	}
+
+	Table(String tableName, String sqlCreate, ArrayList<String> sqls){
+		this.tableName = tableName;
+		this.sqlCreate = sqlCreate;
+		this.sqls = sqls;
+	}
 }
