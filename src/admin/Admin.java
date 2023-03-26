@@ -6,9 +6,7 @@ package admin;
 import java.util.Scanner;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import common.DataValidation;
 import common.DatabaseConnection;
 import common.Movie;
@@ -127,29 +125,6 @@ public class Admin {
 	}
 	
 	public static void main(String[] args){
-		String username;
-		String password;
-		
-		Scanner keyboard = new Scanner(System.in);
-		Login login = new Login();
-		do {
-			System.out.println("Login Details");
-			System.out.println("------------------");
-			System.out.print("Enter Username: ");
-	        username = keyboard.nextLine();
-	        System.out.print("Enter Password: ");
-	        password = keyboard.nextLine();
-	        
-	        if(login.isValidCredentials(username, password)) {
-	        	System.out.println("Login successful");
-	        	menu();
-	        	
-	        }
-	        else {
-	        	System.out.println("Invalid Username/Password. Please try again\n");
-	        }
-		} while(!login.isValidCredentials(username, password));
-		keyboard.close();
 		try {
 			connection = DatabaseConnection.getInstance().getConnection();
 			
@@ -180,6 +155,7 @@ public class Admin {
 		catch (Exception e) {
 			System.err.println(e.toString());
 		}
+		
 	}
 
 }
