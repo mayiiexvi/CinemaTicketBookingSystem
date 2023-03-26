@@ -329,7 +329,7 @@ public class Guest {
 				System.out.println("Your Seats are confirmed!!");
 			}
 			for(String seat: seats) {
-				MovieSeatReservation movieSeatReservation = new MovieSeatReservation(showtime.getId(), seat, true);
+				MovieSeatReservation movieSeatReservation = new MovieSeatReservation(showtime.getMovie().getId(), seat, true);
 				MovieSeatReservation.insert(connection, movieSeatReservation);
 				
 				/* START Adding Ticket stuff*/
@@ -337,7 +337,7 @@ public class Guest {
 				Ticket.insert(connection, ticket);
 				/* END Adding Ticket stuff*/
 			}
-			
+			reloadShowTime(); // load new data from db to ArrayList
 		}
 		
 	}
@@ -349,5 +349,7 @@ public class Guest {
 		}
 		return null;
 	}
-	
+	public static void reloadShowTime() throws SQLException {
+		showtimes = Showtime.getAvailableShowtimes(connection);
+	}
 }
