@@ -107,11 +107,9 @@ public class Movie {
     public static long generateId() throws IOException {
     	File file = new File("movies.txt");
 		Scanner infile = new Scanner(file);
-		String readFile = "";
-
 		
 		while (infile.hasNextLine()) {
-			readFile = infile.nextLine();
+			infile.nextLine();
 			++counter;
 		};
 		infile.close();
@@ -124,7 +122,7 @@ public class Movie {
 			FileWriter file = new FileWriter("movies.txt", true);
 			PrintWriter outfile = new PrintWriter(file);
 			
-			outfile.println("ID: " + generateId() + " | Movie Name: " + movieName + " | Synopsis: " + synopsis + " | Price: $" + price);
+			outfile.println(generateId() + "|" + movieName + "|" + synopsis + "|" + price);
 			System.out.println("Movie added to the list!");
 			outfile.close();
 		} catch (Exception e) {

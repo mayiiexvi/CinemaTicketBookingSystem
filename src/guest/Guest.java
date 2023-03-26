@@ -4,7 +4,9 @@
 package guest;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import cinemaTicketBookingSystem.Movie;
@@ -73,8 +75,8 @@ public class Guest {
 	
 	public static int chooseAMovie() throws IOException {
 		Scanner keyboard = new Scanner(System.in);
-    String[] seats = new String[100];
-    int number = 0;
+	    String[] seats = new String[100];
+	    int number = 0;
 		System.out.println("Now Showing");
 		System.out.println("--------------------------------------------");
 

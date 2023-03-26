@@ -8,13 +8,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Movie {
 	private int id;
 	private String movieName;
 	private String synopsis;
-	private Date releaseDate;
+	private String releaseDate;
+	private double price;
+	
+	public Movie() {
+		this.movieName = "";
+		this.synopsis = "";
+		this.releaseDate = "";
+		this.price = 0.0;
+	}
 	
 	/**
 	 * @param id
@@ -22,78 +29,105 @@ public class Movie {
 	 * @param synopsis
 	 * @param releaseDate
 	 */
-	public Movie(int id, String movieName, String synopsis, Date releaseDate) {
+	public Movie(int id, String movieName, String synopsis, String releaseDate, double price) {
 		this.id = id;
 		this.movieName = movieName;
 		this.synopsis = synopsis;
 		this.releaseDate = releaseDate;
+		this.price = price;
 	}
+	
+	public Movie(String movieName, String synopsis, String releaseDate, double price) {
+		this.movieName = movieName;
+		this.synopsis = synopsis;
+		this.releaseDate = releaseDate;
+		this.setPrice(price);
+	}
+  
 	/**
 	 * @return the id
 	 */
 	public int getId() {
 		return id;
 	}
+  
 	/**
 	 * @param id the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
+  
 	/**
 	 * @return the movieName
 	 */
 	public String getMovieName() {
 		return movieName;
 	}
+  
 	/**
 	 * @param movieName the movieName to set
 	 */
 	public void setMovieName(String movieName) {
 		this.movieName = movieName;
 	}
+  
 	/**
 	 * @return the synopsis
 	 */
 	public String getSynopsis() {
 		return synopsis;
 	}
+  
 	/**
 	 * @param synopsis the synopsis to set
 	 */
 	public void setSynopsis(String synopsis) {
 		this.synopsis = synopsis;
 	}
+  
 	/**
 	 * @return the releaseDate
 	 */
-	public Date getReleaseDate() {
+	public String getReleaseDate() {
 		return releaseDate;
 	}
+  
 	/**
 	 * @param releaseDate the releaseDate to set
 	 */
-	public void setReleaseDate(Date releaseDate) {
+  
+	public void setReleaseDate(String releaseDate) {
 		this.releaseDate = releaseDate;
 	}
 	
+	public String toString() {
+		return ("ID: " + id + "\n"
+				+ "Movie name: " + movieName + "\n"
+				+ "Synopsis: " + synopsis + "\n"
+				+ "Release date: " + releaseDate + "\n"
+				+ "Price: " + price);
+	}
+	
 	public static void insert(Connection connection, Movie movie) throws SQLException {
-		String query = "INSERT INTO movies (movie_name, synopsis, release_date) VALUES (?, ?, ?)";
+		String query = "INSERT INTO movies (movie_name, synopsis, release_date, price) VALUES (?, ?, ?, ?)";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setString(1, movie.getMovieName());
 		statement.setString(2, movie.getSynopsis());
-		statement.setDate(3, (java.sql.Date) movie.getReleaseDate());
+		statement.setString(3, movie.getReleaseDate());
+		statement.setDouble(4, movie.getPrice());
 		statement.executeUpdate();
 		System.out.println("Movie inserted successfully");
 	}
 
 	public static void update(Connection connection, Movie movie) throws SQLException {
-		String query = "UPDATE movies SET movie_name = ?, synopsis = ?, release_date = ? WHERE id = ?";
+		String query = "UPDATE movies SET movie_name = ?, synopsis = ?, release_date = ?, price = ? WHERE id = ?";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setString(1, movie.getMovieName());
 		statement.setString(2, movie.getSynopsis());
-		statement.setDate(3, (java.sql.Date) movie.getReleaseDate());
-		statement.setInt(4, movie.getId());
+		statement.setString(3, movie.getReleaseDate());
+		statement.setDouble(4, movie.getPrice());
+		statement.setInt(5, movie.getId());
 		statement.executeUpdate();
 		System.out.println("Movie updated successfully");
 	}
@@ -115,11 +149,20 @@ public class Movie {
 			int id = resultSet.getInt("id");
 			String name = resultSet.getString("movie_name");
 			String synopsis = resultSet.getString("synopsis");
-			Date release_date = resultSet.getDate("release_date");
-			Movie mv = new Movie(id, name, synopsis, release_date);
+			String release_date = resultSet.getString("release_date");
+			double price = resultSet.getDouble("price");
+			Movie mv = new Movie(id, name, synopsis, release_date, price);
 			movies.add(mv);
 		}
 		return movies;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
 }

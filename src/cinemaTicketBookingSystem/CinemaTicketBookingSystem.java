@@ -6,6 +6,7 @@ import admin.Admin;
 import java.util.Scanner;
 
 import admin.Login;
+import common.DataValidation;
 import guest.Guest;
 
 /**
@@ -25,25 +26,23 @@ public class CinemaTicketBookingSystem {
         while (number != 3) {
         	try {
         		menu();		
-        		System.out.print("Please enter 1/2: ");
-	        	num = keyboard.next();
-	        	number = Integer.parseInt(num);
+	        	number = DataValidation.readPositiveInt("Please enter 1/2: ");
 	        	if (number == 1) {
 	        		Admin.main(null);
 	        	} else if (number == 2) {
 	        		Guest.main(null);
 	        	} else if (number == 3) {
 	        		System.out.println("Thank you for using our program!");
+	                keyboard.close();
 	        		System.exit(0);
 	        	} else {
 	        		throw new Exception();
 	        	}
 	        } catch (Exception e) {
-	        	System.out.println("Please only enter 1 or 2. Try again.");
+	        	System.out.println(e.toString());
 	        }
         };
 
-        keyboard.close();
 	}
 	
 	public static void menu() {        
@@ -51,9 +50,7 @@ public class CinemaTicketBookingSystem {
 		System.out.println("--------------------------------------------");
 		System.out.println("1 - Login as Admin");
 		System.out.println("2 - Login as Guest");
-		System.out.println("3 - Exit");
-		
-		
+		System.out.println("3 - Exit");			
 	}
 
 }

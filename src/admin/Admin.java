@@ -3,13 +3,14 @@
  */
 package admin;
 
-import java.sql.Connection;
 import java.util.Scanner;
-
-import cinemaTicketBookingSystem.Movie;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import common.DataValidation;
 import common.DatabaseConnection;
+import common.Movie;
 import common.User;
-
 /**
  * @author 
  *
@@ -19,67 +20,105 @@ public class Admin {
 	/**
 	 * @param args
 	 */
+
 	static Connection connection;
-	public static void addToList() {
+
+	public static Movie takeMovieDetails() {
+		Movie movie = new Movie();
 		try {
 			Scanner keyboard = new Scanner(System.in);
 			
-			System.out.println("Enter movie name: ");
-			String movieName = keyboard.nextLine();
-			System.out.println("Enter movie synopsis: ");
-			String synopsis = keyboard.nextLine();
-			System.out.println("Enter movie price: ");
-			String stringPrice = keyboard.nextLine();
-			double price = Double.parseDouble(stringPrice);
-			
-			Movie.addToNowShowing(movieName, synopsis, price);
+    		System.out.print("\nEnter movie name: ");
+    		String movieName = keyboard.nextLine();
+    		
+    		System.out.print("Enter synopsis: ");
+    		String synopsis = keyboard.nextLine();
 
-			keyboard.close();
+    		System.out.print("Enter release date: ");
+    		String releaseDateString = keyboard.nextLine();
+
+    		Double price = DataValidation.readPositiveDouble("Enter price: ");
+
+    		movie = new Movie(movieName, synopsis, releaseDateString, price);    		
+			
 		} catch (Exception e) {
-			System.out.println("Error: " + e);
+			System.out.println(e.toString());
 		}
-		
-		
+		return movie;	
 	}
 	
-	public static void menu() {		
+	public static void menu() throws SQLException {		
 		Scanner keyboard = new Scanner(System.in);
-        String num = "";
         int number = 0;
-        
+        ArrayList<Movie> movies = Movie.listAll(connection);
        
     	while (number != 5) {
     		try {
-    			//System.out.println("Welcome Admin!");
-    			System.out.println("--------------------------------------------");
+    			System.out.println("\n            MAIN MENU            ");
+    			System.out.println("---------------------------------");
     			System.out.println("1 - View all movies from list");
     			System.out.println("2 - Add movie to list");
     			System.out.println("3 - Update movie from list");
     			System.out.println("4 - Delete movie from list");
     			System.out.println("5 - Exit");
-        		System.out.print("Please enter 1-5: ");
-        		
-            	num = keyboard.next();
-            	number = Integer.parseInt(num);
+            	number = DataValidation.readPositiveInt("Please enter 1-5: ");
+    			System.out.println("---------------------------------");
             	if (number == 1) {
-            		System.out.println("1");
-            		Movie.viewAllNowShowing();
-            	} else if (number == 2) {
-            		System.out.println("2");
-            		addToList();
+            		movies = Movie.listAll(connection);
+            		if (movies.isEmpty()) {
+            			System.out.println("\nNo movies in the list. Choose 2 to add.");
+            		} else {
+            			System.out.println("\n           NOW SHOWING            ");
+            			System.out.print(    "             *******            ");
+            			for (int i=0; i<movies.size(); i++) {
+            				System.out.println("\n" + movies.get(i));
+            			}
+            		}
+            	} else if (number == 2) {            		
+            		System.out.println("\n          ADD A MOVIE            ");
+        			System.out.println(  "            *******            ");
+            		Movie movie = takeMovieDetails();
+            		Movie.insert(connection, movie);            		
             	} else if (number == 3) {
-            		System.out.println("3");
+            		Movie updateMovie = movies.get(0);
+
+            		System.out.println("\n          UPDATE A MOVIE            ");
+        			System.out.println(  "             *******            ");
+        			System.out.print("\nEnter movie id: ");
+        			String movieIdString = keyboard.next();
+        			
+        			int movieId = Integer.parseInt(movieIdString);
+        			for (int i=0; i<movies.size(); i++){
+        				if (movies.get(i).getId() == movieId) {
+        					updateMovie = movies.get(i);
+        				}
+        			}
+        			Movie movieDetails = takeMovieDetails();
+        			
+        			updateMovie.setMovieName(movieDetails.getMovieName());
+        			updateMovie.setSynopsis(movieDetails.getSynopsis());
+        			updateMovie.setReleaseDate(movieDetails.getReleaseDate());
+        			updateMovie.setPrice(movieDetails.getPrice());
+
+        			Movie.update(connection, updateMovie);            		
             	} else if (number == 4) {
-            		System.out.println("4");
+            		System.out.println("\n          DELETE A MOVIE            ");
+        			System.out.println(  "              *******            ");
+            		System.out.print("\nEnter movie id: ");
+            		String movieIdString = keyboard.next();
+            		int movieId = Integer.parseInt(movieIdString);
+            		Movie.delete(connection, movieId);
+            		
             	} else if (number == 5) {
-            		System.out.println("Thank you for using our program!");
+            		System.out.println("\nThank you for using our program!");
+        			System.out.println(  "           *******            ");
             		keyboard.close();
             		System.exit(0);
             	} else {
             		throw new Exception();
             	}
             } catch (Exception e) {
-            	System.out.println("Please only enter 1-5. Try again. Error: " + e);
+            	System.out.println("Please only enter 1-5. Try again.");
             }
     	}
        
@@ -103,7 +142,7 @@ public class Admin {
 		        userLogin = User.isValidCredentials(connection, username, password);
 		        
 		        if(userLogin.getId() != 0) {
-		        	System.out.println("Welcome, " + userLogin.getFirstName());
+		        	System.out.println("\nWelcome, " + userLogin.getFirstName() +"!");
 		        	menu();
 		        }
 		        else {
