@@ -79,7 +79,7 @@ public class Guest {
 	public static void chooseAMovie(ArrayList<Movie> movies) throws SQLException{
 		ArrayList<Movie> movieDetails = new ArrayList<Movie>();
 		Scanner keyboard = new Scanner(System.in);
-	    String[] seats = new String[100];
+	    final int CINEMA_CAPACITY = 57;
 	    viewNowShowing(movies);
 		while(true){
 			System.out.print("\nPlease enter ID of the movie you want to watch: ");
@@ -89,12 +89,16 @@ public class Guest {
 			if(movieDetails.isEmpty()) {
 				System.out.println("Movie ID Provided do not exist. Please try again.");
 			}else {
-				System.out.println(movieDetails.get(0));
-				viewSeat(movieId);
-				String[] numOfSeats = chooseSeat(movieId);
-				review(movies, movieDetails.get(0), numOfSeats);
-				//payment(movieId, numOfSeats);
-				break;
+				if(reservedSeats(movieId).length == CINEMA_CAPACITY) {
+					System.out.println("Sorry for the inconvinience. Movie is already fully booked.");
+				}else {
+					System.out.println(movieDetails.get(0));
+					viewSeat(movieId);
+					String[] numOfSeats = chooseSeat(movieId);
+					review(movies, movieDetails.get(0), numOfSeats);
+					break;
+				}
+				
 			}
 			
 			for (int i=0; i<movies.size(); i++) {
@@ -105,8 +109,8 @@ public class Guest {
 	}
 	public static String[] reservedSeats(int movieId) throws SQLException {
 		ArrayList<MovieSeatReservation> movieSeatReservation = new ArrayList<MovieSeatReservation>();
-		String[] reservedSeats = new String[100];
 		movieSeatReservation = MovieSeatReservation.selectedSeats(connection, movieId);
+		String[] reservedSeats = new String[movieSeatReservation.size()];
 		if(!movieSeatReservation.isEmpty()) {
 			for(int i = 0; i< movieSeatReservation.size(); i++) {
 				reservedSeats[i] = movieSeatReservation.get(i).getSeat_number();
@@ -254,8 +258,10 @@ public class Guest {
 	        	number = DataValidation.readPositiveInt("Please enter 1-3: ");
 	        	if (number == 1) {
 	        		payment(movie, seats);
+	        		break;
 	        	} else if (number == 2) {
 	        		chooseAMovie(movies);
+	        		break;
 	        	} else if (number == 3) {
 	        		System.out.println("Thank you for using our program!");
 	        	} else {
