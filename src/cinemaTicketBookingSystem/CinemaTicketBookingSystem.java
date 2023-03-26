@@ -2,10 +2,13 @@
  * 
  */
 package cinemaTicketBookingSystem;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import admin.Admin;
 import common.DataValidation;
+import common.DatabaseConnection;
 import guest.Guest;
 
 /**
@@ -16,8 +19,12 @@ public class CinemaTicketBookingSystem {
 
 	/**
 	 * @param args
+	 * @throws SQLException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
+		Connection connection = DatabaseConnection.getInstance().getConnection();
+		DatabaseConnection.checkAndInitializeDatabase(connection);
+		
 		Scanner keyboard = new Scanner(System.in);
         String num = "";
         int number = 0;

@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 
@@ -125,6 +126,26 @@ public class User {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+	
+	public User() {}
+	
+	/**
+	 * @param firstName
+	 * @param lastName
+	 * @param role
+	 * @param email
+	 * @param phone
+	 */
+	public User(String firstName, String lastName, String role, String email,
+			String phone) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.role = role;
+		this.email = email;
+		this.phone = phone;
+	}
+
+
 	public static User isValidCredentials(Connection connection, String username, String password) throws SQLException {
 		String query = "SELECT * FROM users WHERE user_name = ? AND password = ?";
 		PreparedStatement statement = connection.prepareStatement(query);
@@ -148,5 +169,29 @@ public class User {
 			return listUsers.get(0);
 		} else { return new User();}
 		
+	}
+	public static User insert(Connection connection, User user) throws SQLException {
+		String query = "INSERT INTO users (first_name, last_name, role, email, phone) VALUES (?, ?, ?, ?, ?)";
+		PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		statement.setString(1, user.getFirstName());
+		statement.setString(2, user.getLastName());
+		statement.setString(3, user.getRole());
+		statement.setString(4, user.getEmail());
+		statement.setString(5, user.getPhone());
+//		statement.executeUpdate();
+		int affectedRows = statement.executeUpdate();
+        if (affectedRows == 0) {
+            throw new SQLException("Creating user failed, no rows affected.");
+        }
+        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                user.setId(generatedKeys.getInt(1));
+                System.out.println("User inserted successfully. User ID: " + user.getId());
+            }
+            else {
+                throw new SQLException("Creating user failed, no ID obtained.");
+            }
+        }
+		return user;
 	}
 }
