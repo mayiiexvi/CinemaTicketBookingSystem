@@ -93,6 +93,7 @@ public class Guest {
 				System.out.println("Movie Name:\t" + showtime.getMovie().getMovieName());
 				//System.out.println("Release Date:\t" + showtime.getMovie().getReleaseDate());
 				System.out.println("Hall:\t\t" + showtime.getHall().getName());
+				System.out.println("Price:\t\t" + ANSI_BLUE+ "$" + String.format("%.2f", showtime.getPrice()) + ANSI_RESET );
 				System.out.println("Avalable Seats: " + ANSI_GREEN + showtime.getAvailableSeats() +ANSI_RESET);
 				// Show more here
 				System.out.println();
@@ -328,16 +329,20 @@ public class Guest {
 			{
 				System.out.println("Your Seats are confirmed!!");
 			}
+			
+			ArrayList<Ticket> tickets = new ArrayList<>();
 			for(String seat: seats) {
 				MovieSeatReservation movieSeatReservation = new MovieSeatReservation(showtime.getMovie().getId(), seat, true);
 				MovieSeatReservation.insert(connection, movieSeatReservation);
-				
 				/* START Adding Ticket stuff*/
 				Ticket ticket = new Ticket(customer, showtime, seat);
 				Ticket.insert(connection, ticket);
+				tickets.add(ticket);
 				/* END Adding Ticket stuff*/
 			}
+			printTicketSummary(tickets, total, paid, difference);
 			reloadShowTime(); // load new data from db to ArrayList
+	
 		}
 		
 	}
@@ -352,4 +357,26 @@ public class Guest {
 	public static void reloadShowTime() throws SQLException {
 		showtimes = Showtime.getAvailableShowtimes(connection);
 	}
+	
+	public static void printTicketSummary(ArrayList<Ticket> tickets, double total, double received, double changes) {
+	    System.out.println("========================================");
+	    System.out.println("             Ticket Summary             ");
+	    System.out.println("========================================");
+	    System.out.printf("%-20s%20s\n", "Movie:", tickets.get(0).getShowtime().getMovie().getMovieName());
+	    System.out.printf("%-20s%20s\n", "Hall:", tickets.get(0).getShowtime().getHall().getName());
+	    System.out.printf("%-20s%20s\n", "Showtime:", tickets.get(0).getShowtime().getShowTimeFormatted());
+	    String seats = "";
+	    for (Ticket ticket : tickets) {
+	    	seats += ticket.getSeatCode() +", ";
+		}
+	    seats = seats.substring(0, seats.length()-2);
+	    System.out.printf("%-20s%20s\n", "Seat Number:", seats);
+	    System.out.printf("%-20s%20s\n", "Ticket Price:", "$"+String.format("%.2f",tickets.get(0).getShowtime().getPrice()));
+	    System.out.printf("%-20s%20s\n", "Total Price:", "$"+String.format("%.2f",total));
+	    System.out.printf("%-20s%20s\n", "Money Received:", "$"+String.format("%.2f",received));
+	    System.out.printf("%-20s%20s\n", "Change:", "$"+String.format("%.2f",Math.abs(changes)));
+	    System.out.println("========================================");
+	    System.out.println("Thank you! Enjoy your movie! ");
+	}
+
 }
