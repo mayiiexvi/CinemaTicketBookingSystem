@@ -82,18 +82,41 @@ public class Admin {
             	} else if (number == 3) {
             		movies = Movie.listAll(connection);
             		Movie updateMovie = movies.get(0);
+            		
+            		System.out.println("\n          CURRENT MOVIES            ");
+        			System.out.println(  "            *******            ");
+        			for (int i=0; i<movies.size(); i++) {
+        				System.out.println("Movie:  " + movies.get(i).getId() + "\t" + movies.get(i).getMovieName());
+        			}
 
             		System.out.println("\n          UPDATE A MOVIE            ");
         			System.out.println(  "             *******            ");
         			System.out.print("\nEnter movie id: ");
         			String movieIdString = keyboard.next();
         			
+        			boolean isValidId = false;
         			int movieId = Integer.parseInt(movieIdString);
-        			for (int i=0; i<movies.size(); i++){
-        				if (movies.get(i).getId() == movieId) {
-        					updateMovie = movies.get(i);
+        			
+        			while(!isValidId)
+        			{
+        				for (int i=0; i<movies.size(); i++) {
+            				if(movieId == movies.get(i).getId())
+            				{
+            					isValidId = true;
+            					updateMovie = movies.get(i);
+            					break;
+            				}
+            					
+            			}
+        				if(!isValidId)
+        				{
+        					System.out.println("\nMovie doesn't exist!! \nPlease enter valid movie ID!!");
+        					System.out.print("\nEnter movie id: ");
+        					movieIdString = keyboard.next();
+        					movieId = Integer.parseInt(movieIdString);
         				}
         			}
+        			
         			Movie movieDetails = takeMovieDetails();
         			
         			updateMovie.setMovieName(movieDetails.getMovieName());
@@ -103,12 +126,39 @@ public class Admin {
 
         			Movie.update(connection, updateMovie);            		
             	} else if (number == 4) {
+            		movies = Movie.listAll(connection);
+            		System.out.println("\n          CURRENT MOVIES            ");
+        			System.out.println(  "            *******            ");
+        			for (int i=0; i<movies.size(); i++) {
+        				System.out.println("Movie:  " + movies.get(i).getId() + "\t" + movies.get(i).getMovieName());
+        			}
+        			
             		System.out.println("\n          DELETE A MOVIE            ");
         			System.out.println(  "              *******            ");
             		System.out.print("\nEnter movie id: ");
             		String movieIdString = keyboard.next();
-            		int movieId = Integer.parseInt(movieIdString);
-            		Movie.delete(connection, movieId);
+            		boolean isValidId = false;
+        			int movieId = Integer.parseInt(movieIdString);
+        			
+        			while(!isValidId)
+        			{
+        				for (int i=0; i<movies.size(); i++) {
+            				if(movieId == movies.get(i).getId())
+            				{
+            					isValidId = true;
+            					Movie.delete(connection, movieId);
+            					break;
+            				}
+            					
+            			}
+        				if(!isValidId)
+        				{
+        					System.out.println("\nMovie doesn't exist!! \nPlease enter valid movie ID!!");
+        					System.out.print("\nEnter movie id: ");
+        					movieIdString = keyboard.next();
+        					movieId = Integer.parseInt(movieIdString);
+        				}
+        			}
             		
             	} else if (number == 5) {
             		System.out.println("\nThank you for using our program!");
