@@ -106,20 +106,23 @@ public class Guest {
 		Scanner keyboard = new Scanner(System.in);
 	    viewNowShowing(showtimes);
 	    boolean flag = true;
-	    while(flag) {
-		    int showtimeID = DataValidation.readPositiveInt("\nPlease enter ID of the showtime you want to watch: ");
-		    Showtime showtime = showtimeCheckExists(showtimes, showtimeID);
-		    if(showtime != null) {
-		    	System.out.println(showtime.getMovie());
-				viewSeat(showtime.getMovie().getId());
-				String[] numOfSeats = chooseSeat(showtime.getMovie().getId());
-				review(showtime, numOfSeats);
-		    	flag = false;
-		    } else {
-		    	System.out.println("Showtime ID Provided do not exist. Please try again.");
+	    if (!showtimes.isEmpty()) {
+	    	while(flag) {
+			    int showtimeID = DataValidation.readPositiveInt("\nPlease enter ID of the showtime you want to watch: ");
+			    Showtime showtime = showtimeCheckExists(showtimes, showtimeID);
+			    if(showtime != null) {
+			    	System.out.println(showtime.getMovie());
+					viewSeat(showtime.getMovie().getId());
+					String[] numOfSeats = chooseSeat(showtime.getMovie().getId());
+					review(showtime, numOfSeats);
+			    	flag = false;
+			    } else {
+			    	System.out.println("Showtime ID Provided do not exist. Please try again.");
+			    }
 		    }
-	    }
-	    int a =1;
+		    int a =1;
+		}
+	    
 	}
 	public static String[] reservedSeats(int movieId) throws SQLException {
 		ArrayList<MovieSeatReservation> movieSeatReservation = new ArrayList<MovieSeatReservation>();
