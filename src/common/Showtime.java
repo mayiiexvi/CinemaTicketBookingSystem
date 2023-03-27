@@ -154,4 +154,12 @@ public class Showtime {
 	public boolean checkAvailableSeat() {
 		return true;
 	}
+	public static Showtime showtimeCheckExists(ArrayList<Showtime> showtimes, int id) {
+		for (Showtime showtime : showtimes) {
+			if(showtime.getId() == id) {
+				return showtime;
+			}
+		}
+		return null;
+	}
 }
