@@ -20,6 +20,7 @@ public class Hall {
 	private String name;
 	private int seatingRows;
 	private int seatingCols;
+	private String hidenSeats;
 	
 	/*----------- Getter Setter ----------- */
 	/**
@@ -70,12 +71,26 @@ public class Hall {
 	public void setSeatingCols(int seatingCols) {
 		this.seatingCols = seatingCols;
 	}
-	
+	/**
+	 * @return the hidenSeats
+	 */
+	public String getHidenSeats() {
+		return hidenSeats;
+	}
+	/**
+	 * @param hidenSeats the hidenSeats to set
+	 */
 	/*----------- Constructors ----------- */
 	
-
-	public Hall(String name) {
+	
+	public void setHidenSeats(String hidenSeats) {
+		this.hidenSeats = hidenSeats;
+	}
+	public Hall(String name, int seatingRows, int seatingCols, String hidenSeats) {
 		this.name = name;
+		this.seatingRows = seatingRows;
+		this.seatingCols = seatingCols;
+		this.hidenSeats = hidenSeats;
 	}
 	
 	/**

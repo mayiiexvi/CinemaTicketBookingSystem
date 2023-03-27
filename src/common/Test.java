@@ -13,9 +13,13 @@ public class Test {
 		//ArrayList<Showtime> showtimes = Showtime.getAvailableShowtimes(connection);
 		
 		
-		DatabaseConnection.checkAndInitializeDatabase(connection);
+		//DatabaseConnection.checkAndInitializeDatabase(connection);
+		
+		System.out.println(fixedLengthString("B10", 5));
 		
 		int a =1;
 	}
-
+	public static String fixedLengthString(String string, int length) {
+	    return String.format("%-" + length + "s", string);
+	}
 }
