@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
  * @author Tich
@@ -127,10 +129,11 @@ public class Ticket {
 	/*----------- Methods ----------- */
 	
 	public static Ticket insert(Connection connection, Ticket ticket) throws SQLException {
-		String query = "INSERT INTO tickets (user_id, showtime_id) VALUES (?, ?)";
+		String query = "INSERT INTO tickets (user_id, showtime_id, seatCode) VALUES (?, ?, ?)";
 		PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setInt(1, ticket.getUser().getId());
 		statement.setInt(2, ticket.getShowtime().getId());
+		statement.setString(3, ticket.getSeatCode());
 //		statement.executeUpdate();
 		int affectedRows = statement.executeUpdate();
         if (affectedRows == 0) {
@@ -146,5 +149,22 @@ public class Ticket {
             }
         }
 		return ticket;
+	}
+	
+	public static ArrayList<Ticket> getTicketsByShowTimeID(Connection connection, int showtimeID) throws SQLException{
+		ArrayList<Ticket> tickets = new ArrayList<>();
+		String query = "SELECT * FROM tickets WHERE showtime_id = ?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, showtimeID);
+		ResultSet resultSet = statement.executeQuery();
+		while (resultSet.next()) {
+			Ticket ticket = new Ticket();
+			ticket.setId(resultSet.getInt("id"));
+			ticket.setSeat_row(resultSet.getInt("seat_row"));
+			ticket.setSeat_col(resultSet.getInt("seat_col"));
+			ticket.setSeatCode(resultSet.getString("seatCode"));
+			tickets.add(ticket);
+		}
+		return tickets;
 	}
 }

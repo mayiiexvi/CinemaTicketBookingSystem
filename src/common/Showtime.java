@@ -126,14 +126,15 @@ public class Showtime {
 		ArrayList<Showtime> showtimes = new ArrayList<>();
 		String query = "SELECT A.ID, A.SHOWTIME, A.PRICE, B.ID AS HALL_ID, B.NAME AS HALL_NAME,\r\n"
 				+ "C.ID AS MOVIE_ID, C.MOVIE_NAME, C.synopsis, C.release_date,\r\n"
-				+ "((SELECT SEATING_ROWS * SEATING_COLS FROM HALLS WHERE ID = B.ID) - (SELECT COUNT(*) AS SEATBOOKED FROM TICKETS WHERE SHOWTIME_ID = A.ID)) AS AVAILABLE_SEATS\r\n"
+				+ "((SELECT SEATING_ROWS * SEATING_COLS FROM HALLS WHERE ID = B.ID) - (SELECT COUNT(*) AS SEATBOOKED FROM TICKETS WHERE SHOWTIME_ID = A.ID)) AS AVAILABLE_SEATS,\r\n"
+				+ "B.SEATING_ROWS, B.SEATING_COLS, B.HIDENSEATS\r\n"
 				+ "FROM SHOWTIME A INNER JOIN HALLS B ON A.HALL_ID = B.ID\r\n"
 				+ "INNER JOIN MOVIES C ON A.MOVIE_ID = C.ID;";
 		PreparedStatement statement = connection.prepareStatement(query);
 		ResultSet resultSet = statement.executeQuery();
 		while (resultSet.next()) {
 			Movie mv = new Movie(resultSet.getInt("MOVIE_ID"), resultSet.getString("MOVIE_NAME"), resultSet.getString("synopsis"), resultSet.getString("release_date"), 0.0);
-			Hall hall = new Hall(resultSet.getString("HALL_NAME"));
+			Hall hall = new Hall(resultSet.getString("HALL_NAME"), resultSet.getInt("SEATING_ROWS"), resultSet.getInt("SEATING_COLS"), resultSet.getString("HIDENSEATS") );
 			Showtime showtime = new Showtime();
 			showtime.setId(resultSet.getInt("ID"));
 			showtime.setPrice(resultSet.getDouble("PRICE"));

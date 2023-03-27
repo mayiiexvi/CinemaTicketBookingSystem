@@ -44,8 +44,8 @@ CREATE TABLE `halls` (
   `name` varchar(100) DEFAULT NULL,
   `seating_rows` int DEFAULT NULL,
   `seating_cols` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-  );
+  `hidenseats` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`));
   
 DROP TABLE IF EXISTS `showtime`;
 CREATE TABLE `showtime` (
@@ -76,10 +76,15 @@ INSERT INTO `users` (`id`,`first_name`,`last_name`,`user_name`,`password`,`role`
 INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`price`) VALUES (1,'John Wick 4','With the price on his head ever increasing, legendary hit man John Wick takes his fight against...','1/1/2024',90000.00);
 INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`price`) VALUES (2,'Strange Things','In 1980s Indiana, a group of young friends witness supernatural forces and secret government exploit','2/2/2024',190.00);
 
-INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`) VALUES (1,'Galaxy 1',5,10);
-INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`) VALUES (2,'Galaxy 2',6,12);
-INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`) VALUES (3,'Galaxy 3',7,15);
+INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`,`hidenseats`) VALUES (1,'Galaxy 1',5,16,'A5,A6,A7,A8,A9,A10,A11,B5,C5,D5,E5,B11,C11,D11,E11,D1,E1,D16,E16');
+INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`,`hidenseats`) VALUES (2,'Galaxy 2',8,11,'E1,F1,H1,G1,E11,F11,G11,H11,E2,E3,E4,E5,E6,E7,E8,E9,E10');
+INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`,`hidenseats`) VALUES (3,'Galaxy 3',12,14,'A4,B4,C4,D4,E4,F4,G4,H4,I4,J4,K4,L4,A11,B11,C11,D11,E11,F11,G11,H11,I11,J11,K11,L11');
+
+
+
 
 INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (1,1,1,DATE_ADD(NOW(), INTERVAL 3 HOUR),60.00);
 INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (2,1,2,DATE_ADD(NOW(), INTERVAL 4 HOUR),30.00);
 INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (3,2,1,DATE_ADD(NOW(), INTERVAL 4 HOUR),25.00);
+INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (4,2,3,'2023-05-10 21:10:00',98.00);
+
