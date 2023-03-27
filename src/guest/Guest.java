@@ -104,23 +104,25 @@ public class Guest {
 	}
 	public static void chooseAMovie() throws SQLException{
 		Scanner keyboard = new Scanner(System.in);
-	    final int CINEMA_CAPACITY = 57;
 	    viewNowShowing(showtimes);
 	    boolean flag = true;
-	    while(flag) {
-		    int showtimeID = DataValidation.readPositiveInt("\nPlease enter ID of the showtime you want to watch: ");
-		    Showtime showtime = showtimeCheckExists(showtimes, showtimeID);
-		    if(showtime != null) {
-		    	System.out.println(showtime.getMovie());
-				viewSeat(showtime.getMovie().getId());
-				String[] numOfSeats = chooseSeat(showtime.getMovie().getId());
-				review(showtime, numOfSeats);
-		    	flag = false;
-		    } else {
-		    	System.out.println("Showtime ID Provided do not exist. Please try again.");
+	    if (!showtimes.isEmpty()) {
+	    	while(flag) {
+			    int showtimeID = DataValidation.readPositiveInt("\nPlease enter ID of the showtime you want to watch: ");
+			    Showtime showtime = showtimeCheckExists(showtimes, showtimeID);
+			    if(showtime != null) {
+			    	System.out.println(showtime.getMovie());
+					viewSeat(showtime.getMovie().getId());
+					String[] numOfSeats = chooseSeat(showtime.getMovie().getId());
+					review(showtime, numOfSeats);
+			    	flag = false;
+			    } else {
+			    	System.out.println("Showtime ID Provided do not exist. Please try again.");
+			    }
 		    }
-	    }
-	    int a =1;
+		    int a =1;
+		}
+	    
 	}
 	public static String[] reservedSeats(int movieId) throws SQLException {
 		ArrayList<MovieSeatReservation> movieSeatReservation = new ArrayList<MovieSeatReservation>();
@@ -138,7 +140,7 @@ public class Guest {
 		String[][] seats = new String [5][14];
 		String seatLetter = null;
 		int seatsRowLength = 0;
-		System.out.println("--------------");
+		System.out.println("--------------------------------------------------");
 		for(int row = 0; row < seats.length; row++) {
 			if(row == 0) {
 				System.out.println("");
@@ -166,7 +168,7 @@ public class Guest {
 				if (reservedSeats(movieId).length > 0) {
 					for (String selectedSeat: reservedSeats(movieId)) {
 						if(seats[row][column].equals(selectedSeat)) {
-							seats[row][column] = "X";
+							seats[row][column] = "X ";
 						}
 					}
 				}
@@ -222,21 +224,27 @@ public class Guest {
 	}
 	
 	public static String[] chooseSeat(int movieId) throws SQLException {
+		final int MAXIMUM_CINEMA_CAPACITY = 57;
+		
 		if(movieId == 0)
 		{
 			System.out.println("Select a Movie first!!");
 			return null;
 		}
 		Scanner keyboard = new Scanner(System.in);
-		System.out.println("\nHow many seats do you want to select?: ");
-		int num = keyboard.nextInt();
+		
+		int availableSeats = MAXIMUM_CINEMA_CAPACITY - reservedSeats(movieId).length;
+		int num = DataValidation.readPositiveInt("\nHow many seats do you want to select?: ");
+		while(num > availableSeats) {
+			System.out.println("You provided a number of seats that is greater than our available seats. Please try again!");
+		}
 		String seats[] = new String[num];
 		String[] validSeats = {"a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","b1","b2","b3","b4","b5","b6","b7","b8","b9","b10","b11","c1","c2","c3","c4","c5","c6","c7","c8","c9","c10","c11","c12","c13","d1","d2","d3","d4","d5","d6","d7","d8","d9","d10","d11","d12","d13","e1","e2","e3","e4","e5","e6","e7","e8","e9"};
 		
 		
 		for(int i = 0; i < seats.length; i++)
 		{
-			System.out.println("Enter Your Seat Number for seat-" + (i+1) + ": ");
+			System.out.println("Enter Your Seat Number for Seat-" + (i+1) + ": ");
 			seats[i] = keyboard.next();
 			while(Arrays.asList(reservedSeats(movieId)).contains(seats[i]) || !Arrays.asList(validSeats).contains(seats[i]))
 			{
@@ -263,7 +271,7 @@ public class Guest {
 		for (String seat : seats) {
 			System.out.println(seat);
 		}
-		System.out.println("Total Price: $" +total);
+		System.out.printf("Total Price: $%,.2f\n" ,total);
 		
 		while (number != 3) {
         	try {
@@ -289,6 +297,7 @@ public class Guest {
 		
 	}
 	public static void payment(Showtime showtime, String[] seats)throws SQLException {
+		boolean isPaid = false;
 		if(showtime.getId() == 0 || seats.length == 0)
 		{
 			System.out.println("Select a Movie and choose seats first!!");
@@ -311,38 +320,39 @@ public class Guest {
 		double subtotal = showtime.getPrice() * seats.length;
 		double tax = subtotal * 0.05;
 		double total = subtotal + tax;
-		System.out.println("You have to Pay $"+ total);
-		System.out.println("Enter how much you paid : ");
-		double paid = keyboard.nextDouble();
-		double difference = total - paid;
-		if(difference > 0 )
-		{
-			System.out.println("Please pay the full amount to confirm seats!!");
-		}
-		else {
-			
-			if(difference < 0)
+		System.out.printf("\nYou have to Pay $%,.2f", total);
+		while(!isPaid) {
+			double paid = DataValidation.readPositiveDouble("\nEnter how much you paid : ");
+			double difference = total - paid;
+			if(difference > 0 )
 			{
-				System.out.println("You paid "+ Math.abs(difference) + "extra.\nDon't forget to take your changes");
+				System.out.println("Please pay the full amount to confirm seats!!");
 			}
-			else
-			{
-				System.out.println("Your Seats are confirmed!!");
+			else {
+				
+				if(difference < 0)
+				{
+					System.out.printf("You paid $%.2f extra.\nDon't forget to take your changes",  Math.abs(difference) );
+				}
+				else
+				{
+					System.out.println("Your Seats are confirmed!!");
+				}
+				
+				ArrayList<Ticket> tickets = new ArrayList<>();
+				for(String seat: seats) {
+					MovieSeatReservation movieSeatReservation = new MovieSeatReservation(showtime.getMovie().getId(), seat, true);
+					MovieSeatReservation.insert(connection, movieSeatReservation);
+					/* START Adding Ticket stuff*/
+					Ticket ticket = new Ticket(customer, showtime, seat);
+					Ticket.insert(connection, ticket);
+					tickets.add(ticket);
+					/* END Adding Ticket stuff*/
+				}
+				printTicketSummary(tickets, total, paid, difference);
+				reloadShowTime(); // load new data from db to ArrayList
+				isPaid = true;
 			}
-			
-			ArrayList<Ticket> tickets = new ArrayList<>();
-			for(String seat: seats) {
-				MovieSeatReservation movieSeatReservation = new MovieSeatReservation(showtime.getMovie().getId(), seat, true);
-				MovieSeatReservation.insert(connection, movieSeatReservation);
-				/* START Adding Ticket stuff*/
-				Ticket ticket = new Ticket(customer, showtime, seat);
-				Ticket.insert(connection, ticket);
-				tickets.add(ticket);
-				/* END Adding Ticket stuff*/
-			}
-			printTicketSummary(tickets, total, paid, difference);
-			reloadShowTime(); // load new data from db to ArrayList
-	
 		}
 		
 	}
