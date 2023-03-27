@@ -26,8 +26,6 @@ CREATE TABLE `movies` (
   PRIMARY KEY (`id`)
 );
 
-SELECT * FROM `movies`;
-
 CREATE TABLE `seatreservation`(
 	`id` int NOT NULL AUTO_INCREMENT,
     `movie_id` int NOT NULL,
@@ -72,7 +70,7 @@ CREATE TABLE `tickets` (
   
   
 
-INSERT INTO `users` (`id`,`first_name`,`last_name`,`user_name`,`password`,`role`,`email`,`phone`) VALUES (1,'Administrator',NULL,'admin','password','ADMIN','admin@gmail.com',NULL);
+INSERT INTO `users` (`id`,`first_name`,`last_name`,`user_name`,`password`,`role`,`email`,`phone`) VALUES (1,'Administrator',NULL,'admin','java2','java2','admin@gmail.com',NULL);
 INSERT INTO `users` (`id`,`first_name`,`last_name`,`user_name`,`password`,`role`,`email`,`phone`) VALUES (2,'User Test',NULL,'user','password','USER','user@gmail.com','22695245192');
 
 INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`price`) VALUES (1,'John Wick 4','With the price on his head ever increasing, legendary hit man John Wick takes his fight against...','1/1/2024',90000.00);
