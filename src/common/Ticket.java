@@ -167,4 +167,13 @@ public class Ticket {
 		}
 		return tickets;
 	}
+	
+	public static boolean isBookedSeat(ArrayList<Ticket> seatsBooked, String seatCode) {
+		for (Ticket ticket : seatsBooked) {
+			if(ticket.getSeatCode().equals(seatCode)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

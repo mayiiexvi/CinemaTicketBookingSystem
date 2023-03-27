@@ -43,11 +43,8 @@ public class Guest {
 	public static void main(String[] args) throws Exception{
 		connection = DatabaseConnection.getInstance().getConnection();
 		showtimes = Showtime.getAvailableShowtimes(connection);
-		ArrayList<Movie> movies = new ArrayList<>();
 		Scanner keyboard = new Scanner(System.in);
         int number = 0;
-        int movieId = 0;
-        int numOfSeats = 0;
        
         while (number != 3) {
         	try {
@@ -103,13 +100,12 @@ public class Guest {
 		/*To add print where user is asked if they want to proceed with choosing movie or exit*/
 	}
 	public static void chooseAMovie() throws SQLException{
-		Scanner keyboard = new Scanner(System.in);
 	    viewNowShowing(showtimes);
 	    boolean flag = true;
 		if (!showtimes.isEmpty()) {
 		    while(flag) {
 			    int showtimeID = DataValidation.readPositiveInt("\nPlease enter ID of the showtime you want to watch: ");
-			    Showtime showtime = showtimeCheckExists(showtimes, showtimeID);
+			    Showtime showtime = Showtime.showtimeCheckExists(showtimes, showtimeID);
 			    if(showtime != null) {
 			    	System.out.println(showtime.getMovie());
 					//viewSeat(showtime.getMovie().getId());
@@ -136,14 +132,7 @@ public class Guest {
 		return reservedSeats;
 	}
 	
-	public static boolean isBookedSeat(ArrayList<Ticket> seatsBooked, String seatCode) {
-		for (Ticket ticket : seatsBooked) {
-			if(ticket.getSeatCode().equals(seatCode)) {
-				return true;
-			}
-		}
-		return false;
-	}
+	
 	public static boolean isHidenSeat(String[] hidenSeats, String seatCode) {
 		for (String seat : hidenSeats) {
 			if(seat.equals(seatCode)) {
@@ -170,7 +159,7 @@ public class Guest {
         	System.out.print("   ");
             for (int j = 0; j < numCols; j++) {
             	String seatCode = (char) ('A' + i)+String.valueOf(j+1);
-                if (isBookedSeat(seatsBooked,seatCode )) {
+                if (Ticket.isBookedSeat(seatsBooked,seatCode )) {
                     System.out.print(ANSI_RED + fixedLengthString(seatCode, 5) + ANSI_RESET);
                 } else {
                 	if(isHidenSeat(hidenSeats, seatCode)) {
@@ -208,11 +197,9 @@ public class Guest {
 			return null;
 		}
 		Scanner keyboard = new Scanner(System.in);
-		int num = DataValidation.readPositiveInt("How many seats do you want to select?: ");
+		// Check if number of seats input > available seats. 
+		int num = DataValidation.readPositiveInt("How many seats do you want to select?: ", validSeats.size(), "You provided a number of seats that is greater than our available seats. Please try again!");
 		String seats[] = new String[num];
-		//String[] validSeats = {"a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","b1","b2","b3","b4","b5","b6","b7","b8","b9","b10","b11","c1","c2","c3","c4","c5","c6","c7","c8","c9","c10","c11","c12","c13","d1","d2","d3","d4","d5","d6","d7","d8","d9","d10","d11","d12","d13","e1","e2","e3","e4","e5","e6","e7","e8","e9"};
-		
-		
 		for(int i = 0; i < seats.length; i++)
 		{
 			System.out.println("Enter Your Seat Number for seat-" + (i+1) + ": ");
@@ -231,6 +218,8 @@ public class Guest {
 		tmp = tmp.substring(0, tmp.length()-2);
 		System.out.println("Selected seats are as follows: " + tmp);
 		return seats;
+		
+		
 	}
 	
 	public static void review(Showtime showtime, String[] seats) {
@@ -325,14 +314,7 @@ public class Guest {
 		}
 		
 	}
-	public static Showtime showtimeCheckExists(ArrayList<Showtime> showtimes, int id) {
-		for (Showtime showtime : showtimes) {
-			if(showtime.getId() == id) {
-				return showtime;
-			}
-		}
-		return null;
-	}
+	
 	public static void reloadShowTime() throws SQLException {
 		showtimes = Showtime.getAvailableShowtimes(connection);
 	}
