@@ -1,5 +1,5 @@
 
-DROP DATABASE `cinematicketbookingsystem`;
+DROP DATABASE IF EXISTS `cinematicketbookingsystem`;
 CREATE DATABASE `cinematicketbookingsystem` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `cinematicketbookingsystem`;
@@ -16,7 +16,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`)
 );
 
-DROP TABLE `movies`;
+DROP TABLE IF EXISTS `movies`;
 CREATE TABLE `movies` (
   `id` int NOT NULL AUTO_INCREMENT,
   `movie_name` varchar(100) DEFAULT NULL,
@@ -36,11 +36,11 @@ CREATE TABLE `seatreservation`(
     `reserved` boolean NOT NULL DEFAULT false,
     PRIMARY KEY (`id`)
 );
-INSERT INTO `seatreservation` VALUES (1, 1 , 'a1', true);
+INSERT INTO `seatreservation` VALUES (1, 1, DATE_ADD(NOW(), INTERVAL 3 HOUR) , 'a1', true);
 SELECT * FROM `seatreservation`;
 
 
-DROP TABLE `halls`;
+DROP TABLE IF EXISTS `halls`;
 CREATE TABLE `halls` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE `halls` (
   PRIMARY KEY (`id`)
   );
   
-DROP TABLE `showtime`;
+DROP TABLE IF EXISTS `showtime`;
 CREATE TABLE `showtime` (
   `id` int NOT NULL AUTO_INCREMENT,
   `movie_id` int DEFAULT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE `showtime` (
   PRIMARY KEY (`id`)
 );
 
-DROP TABLE `tickets`;
+DROP TABLE IF EXISTS `tickets`;
 CREATE TABLE `tickets` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL,
@@ -82,6 +82,6 @@ INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`) VALUES (1,'Galax
 INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`) VALUES (2,'Galaxy 2',6,12);
 INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`) VALUES (3,'Galaxy 3',7,15);
 
-INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (1,1,1,'2023-05-01 10:10:00',60.00);
-INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (2,1,2,'2023-05-01 23:10:00',30.00);
-INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (3,2,1,'2023-05-02 18:10:00',25.00);
+INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (1,1,1,DATE_ADD(NOW(), INTERVAL 3 HOUR),60.00);
+INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (2,1,2,DATE_ADD(NOW(), INTERVAL 4 HOUR),30.00);
+INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (3,2,1,DATE_ADD(NOW(), INTERVAL 4 HOUR),25.00);
