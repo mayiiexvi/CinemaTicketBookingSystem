@@ -16,7 +16,6 @@ public class Movie {
 	private String movieName;
 	private String synopsis;
 	private String releaseDate;
-	private double price;
 	
 	/*----------- Getter Setter ----------- */
 	/**
@@ -75,20 +74,6 @@ public class Movie {
 	public void setReleaseDate(String releaseDate) {
 		this.releaseDate = releaseDate;
 	}
-	/**
-	 * 
-	 * @return
-	 */
-	public double getPrice() {
-		return price;
-	}
-	/**
-	 * 
-	 * @param price
-	 */
-	public void setPrice(double price) {
-		this.price = price;
-	}
 	
 	/*----------- Constructors ----------- */
 	/**
@@ -98,7 +83,6 @@ public class Movie {
 		this.movieName = "";
 		this.synopsis = "";
 		this.releaseDate = "";
-		this.price = 0.0;
 	}
 	
 	/**
@@ -108,19 +92,17 @@ public class Movie {
 	 * @param synopsis
 	 * @param releaseDate
 	 */
-	public Movie(int id, String movieName, String synopsis, String releaseDate, double price) {
+	public Movie(int id, String movieName, String synopsis, String releaseDate) {
 		this.id = id;
 		this.movieName = movieName;
 		this.synopsis = synopsis;
 		this.releaseDate = releaseDate;
-		this.price = price;
 	}
 	
-	public Movie(String movieName, String synopsis, String releaseDate, double price) {
+	public Movie(String movieName, String synopsis, String releaseDate) {
 		this.movieName = movieName;
 		this.synopsis = synopsis;
 		this.releaseDate = releaseDate;
-		this.setPrice(price);
 	}
 	
 	public Movie(int id) {
@@ -137,24 +119,22 @@ public class Movie {
 	}
 	
 	public static void insert(Connection connection, Movie movie) throws SQLException {
-		String query = "INSERT INTO movies (movie_name, synopsis, release_date, price) VALUES (?, ?, ?, ?)";
+		String query = "INSERT INTO movies (movie_name, synopsis, release_date) VALUES (?, ?, ?)";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setString(1, movie.getMovieName());
 		statement.setString(2, movie.getSynopsis());
 		statement.setString(3, movie.getReleaseDate());
-		statement.setDouble(4, movie.getPrice());
 		statement.executeUpdate();
 		System.out.println("Movie inserted successfully");
 	}
 
 	public static void update(Connection connection, Movie movie) throws SQLException {
-		String query = "UPDATE movies SET movie_name = ?, synopsis = ?, release_date = ?, price = ? WHERE id = ?";
+		String query = "UPDATE movies SET movie_name = ?, synopsis = ?, release_date = ? WHERE id = ?";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setString(1, movie.getMovieName());
 		statement.setString(2, movie.getSynopsis());
 		statement.setString(3, movie.getReleaseDate());
-		statement.setDouble(4, movie.getPrice());
-		statement.setInt(5, movie.getId());
+		statement.setInt(4, movie.getId());
 		statement.executeUpdate();
 		System.out.println("Movie updated successfully");
 	}
@@ -177,8 +157,7 @@ public class Movie {
 			String name = resultSet.getString("movie_name");
 			String synopsis = resultSet.getString("synopsis");
 			String release_date = resultSet.getString("release_date");
-			double price = resultSet.getDouble("price");
-			Movie mv = new Movie(id, name, synopsis, release_date, price);
+			Movie mv = new Movie(id, name, synopsis, release_date);
 			movies.add(mv);
 		}
 		return movies;
@@ -194,8 +173,7 @@ public class Movie {
 			String name = resultSet.getString("movie_name");
 			String synopsis = resultSet.getString("synopsis");
 			String release_date = resultSet.getString("release_date");
-			double price = resultSet.getDouble("price");
-			Movie mv = new Movie(movie_id, name, synopsis, release_date, price);
+			Movie mv = new Movie(movie_id, name, synopsis, release_date);
 			movies.add(mv);
 		}
 		
@@ -212,8 +190,7 @@ public class Movie {
 			String name = resultSet.getString("movie_name");
 			String synopsis = resultSet.getString("synopsis");
 			String release_date = resultSet.getString("release_date");
-			double price = resultSet.getDouble("price");
-			Movie mv = new Movie(movie_id, name, synopsis, release_date, price);
+			Movie mv = new Movie(movie_id, name, synopsis, release_date);
 			movies.add(mv);
 		}
 		
@@ -230,8 +207,7 @@ public class Movie {
 			String name = resultSet.getString("movie_name");
 			String synopsis = resultSet.getString("synopsis");
 			String release_date = resultSet.getString("release_date");
-			double price = resultSet.getDouble("price");
-			mv = new Movie(id, name, synopsis, release_date, price);
+			mv = new Movie(id, name, synopsis, release_date);
 		}
 		return mv;
 	}

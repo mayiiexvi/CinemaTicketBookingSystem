@@ -61,7 +61,7 @@ public class DataValidation {
 			System.out.print(prompt);
 			result = keyboard.nextLine();
     		if (result.isEmpty()) {
-    			System.out.println("This field is manatory!");
+    			System.out.println("This field is mandatory!");
     		} else {
     			isValid = true;
     		}

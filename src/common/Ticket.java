@@ -142,7 +142,6 @@ public class Ticket {
         try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
             if (generatedKeys.next()) {
             	ticket.setId(generatedKeys.getInt(1));
-                System.out.println("Ticket inserted successfully. Ticket ID: " + ticket.getId());
             }
             else {
                 throw new SQLException("Creating ticket failed, no ID obtained.");
