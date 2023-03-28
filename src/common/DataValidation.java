@@ -1,5 +1,7 @@
 package common;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class DataValidation {
@@ -90,4 +92,45 @@ public class DataValidation {
 		}
 		return num;
 	}
+	
+	/**
+	 * 
+	 * @param prompt
+	 * @return
+	 */
+	public static Date readPositiveDate(String prompt) {
+        Scanner scanner = new Scanner(System.in);
+        
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
+        Date date = null;
+        boolean flag = true;
+        while(flag)
+	        try {
+	        	System.out.print(prompt);
+	        	String dateInput = scanner.nextLine();
+	            date = dateFormatter.parse(dateInput);
+	            flag = false;
+	        } catch (Exception e) {
+	            System.out.println("Invalid date format!");
+	        }
+        return date;
+    }
+	
+	public static Date readPositiveTime(String prompt) {
+        Scanner scanner = new Scanner(System.in);
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+        Date time = null;
+        boolean flag = true;
+        while(flag)
+	        try {
+	        	System.out.print(prompt);
+	        	String timeInput = scanner.nextLine();
+	        	time = timeFormatter.parse(timeInput);
+	        	
+	            flag = false;
+	        } catch (Exception e) {
+	            System.out.println("Invalid time format!");
+	        }
+        return time;
+    }
 }

@@ -86,7 +86,11 @@ public class Hall {
 	public void setHidenSeats(String hidenSeats) {
 		this.hidenSeats = hidenSeats;
 	}
-	public Hall(String name, int seatingRows, int seatingCols, String hidenSeats) {
+	public Hall(int id) {
+		this.id = id;
+	}
+	public Hall(int id, String name, int seatingRows, int seatingCols, String hidenSeats) {
+		this.id = id;
 		this.name = name;
 		this.seatingRows = seatingRows;
 		this.seatingCols = seatingCols;
@@ -133,6 +137,14 @@ public class Hall {
 			halls.add(hall);
 		}
 		return halls;
+	}
+	public static boolean checkHallExist(ArrayList<Hall> halls, int selectedHall) {
+		for (Hall hall : halls) {
+			if(hall.getId() == selectedHall) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
