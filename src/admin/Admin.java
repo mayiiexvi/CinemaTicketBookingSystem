@@ -4,9 +4,14 @@
 package admin;
 
 import java.util.Scanner;
+
+import cinemaTicketBookingSystem.CinemaTicketBookingSystem;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -85,9 +90,7 @@ public class Admin {
 	        		} else if(choice.equals("2")) { // showtimes main process
 	        			showtimesProcess();
 	        		} else if(choice.equals("3")) { // main program exit
-	        			System.out.println("\nThank you for using our program!");
-	        			System.out.println("           *******            ");
-	        			System.exit(0);
+	        			CinemaTicketBookingSystem.main(null);
 	        		} else {
 	        			System.out.println("Bad input! Please try again!");
 	        		}
@@ -127,7 +130,7 @@ public class Admin {
     		} else if(choice.equals("4")) {
     			deleteShowtime();
     		} else if(choice.equals("5")) {
-    			// go back
+    			CinemaTicketBookingSystem.main(null);
     		} else {
     			System.out.println("Bad input! Please try again!");
     		}
@@ -300,20 +303,14 @@ public class Admin {
 	}
 	public static Movie takeMovieDetails() {
 		Movie movie = new Movie();
+		Format formatter = new SimpleDateFormat("MM/dd/yyyy");
 		try {
 			
-    		System.out.print("\nEnter movie name: ");
-    		String movieName = keyboard.nextLine();
-    		
-    		System.out.print("Enter synopsis: ");
-    		String synopsis = keyboard.nextLine();
+			String movieName = DataValidation.inputStringNotEmpty("\nEnter movie name: ");    		
+			String synopsis = DataValidation.inputStringNotEmpty("Enter synopsis: ");
+    		String releaseDateString = formatter.format(DataValidation.readPositiveDate("Enter release date ("+DATE_FORMAT+"): "));
 
-    		System.out.print("Enter release date: ");
-    		String releaseDateString = keyboard.nextLine();
-
-    		Double price = DataValidation.readPositiveDouble("Enter price: ");
-
-    		movie = new Movie(movieName, synopsis, releaseDateString, price);    		
+    		movie = new Movie(movieName, synopsis, releaseDateString);    		
 			
 		} catch (Exception e) {
 			System.out.println(e.toString());
@@ -355,6 +352,7 @@ public class Admin {
 	
 	private static void deleteMovie() throws SQLException {
 		ArrayList<Movie> movies = Movie.listAll(connection);
+		
 		System.out.println("\n          CURRENT MOVIES            ");
 		System.out.println(  "            *******            ");
 		for (int i=0; i<movies.size(); i++) {
@@ -363,33 +361,38 @@ public class Admin {
 		
 		System.out.println("\n          DELETE A MOVIE            ");
 		System.out.println(  "              *******            ");
-		System.out.print("\nEnter movie id: ");
-		String movieIdString = keyboard.next();
-		boolean isValidId = false;
-		int movieId = Integer.parseInt(movieIdString);
+		boolean isValidId = false, goodToDelete = true;
 		
-		while(!isValidId)
-		{
-			for (int i=0; i<movies.size(); i++) {
-				if(movieId == movies.get(i).getId())
-				{
-					isValidId = true;
-					Movie.delete(connection, movieId);
-					break;
+		while(!isValidId) {
+			int movieId = DataValidation.readPositiveInt("\nEnter movie id: ");
+			for(int i=0; i<movies.size(); i++) {
+				isValidId = true;
+				break;
+			}
+			
+			if(isValidId) {
+				ArrayList<Showtime> showtimes = Showtime.getAvailableShowtimes(connection);
+				for(Showtime showtime: showtimes) {
+					if(showtime.getMovie().getId() == movieId) {
+						goodToDelete = false;
+						break;
+					}
 				}
-					
-			}
-			if(!isValidId)
-			{
+				
+				if(goodToDelete) {
+					Movie.delete(connection, movieId);
+				}else {
+					System.out.println("Movie has associated showtime, so you need to delete it first");
+				}
+			}else {
 				System.out.println("\nMovie doesn't exist!! \nPlease enter valid movie ID!!");
-				System.out.print("\nEnter movie id: ");
-				movieIdString = keyboard.next();
-				movieId = Integer.parseInt(movieIdString);
 			}
-		}
-		
+		}		
 	}
-	private static void updateMovie() throws SQLException {
+	private static void updateMovie() throws SQLException{
+		Date releaseDateFormat;
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
+		Format formatter = new SimpleDateFormat("MM/dd/yyyy");
 		ArrayList<Movie> movies = Movie.listAll(connection);
 		Movie updateMovie = movies.get(0);
 		
@@ -402,7 +405,7 @@ public class Admin {
 		System.out.println("\n          UPDATE A MOVIE            ");
 		System.out.println(  "             *******            ");
 		System.out.print("\nEnter movie id: ");
-		String movieIdString = keyboard.next();
+		String movieIdString = keyboard.nextLine();
 		
 		boolean isValidId = false;
 		int movieId = Integer.parseInt(movieIdString);
@@ -422,21 +425,51 @@ public class Admin {
 			{
 				System.out.println("\nMovie doesn't exist!! \nPlease enter valid movie ID!!");
 				System.out.print("\nEnter movie id: ");
-				movieIdString = keyboard.next();
+				movieIdString = keyboard.nextLine();
 				movieId = Integer.parseInt(movieIdString);
 			}
 		}
+		ArrayList<Movie> movieDetails = Movie.listMovieDetails(connection, movieId);
+		for(Movie movie: movieDetails) {
+			System.out.println(movie);
+		}
 		
-		Movie movieDetails = takeMovieDetails();
+		System.out.print("\nEnter new movie name or leave it empty to skip: ");
+		String movieName = keyboard.nextLine();
+		if(movieName.isEmpty()) {
+			movieName = movieDetails.get(0).getMovieName();
+		}
+		System.out.println("Skipping update movie name");
 		
-		updateMovie.setMovieName(movieDetails.getMovieName());
-		updateMovie.setSynopsis(movieDetails.getSynopsis());
-		updateMovie.setReleaseDate(movieDetails.getReleaseDate());
-		updateMovie.setPrice(movieDetails.getPrice());
-
+		System.out.print("Enter new synopsis or leave it empty to skip: ");
+		String synopsis = keyboard.nextLine();
+		if(synopsis.isEmpty()) {
+			movieName = movieDetails.get(0).getSynopsis();
+		}
+		System.out.println("Skipping update synopsis");
+		
+		System.out.println("Enter new release date or leave it empty to skip: ");
+		String releaseDate = keyboard.nextLine();
+		if(releaseDate.isEmpty()) {
+			releaseDate = movieDetails.get(0).getReleaseDate();
+			System.out.println("Skipping update releases date");
+		}else {
+			try {
+				releaseDateFormat = dateFormatter.parse(releaseDate);
+				releaseDate = formatter.format(releaseDateFormat);
+			} catch (Exception e) {
+				System.out.println(e.toString());
+			}
+		}
+		updateMovie.setMovieName(movieName);
+		updateMovie.setSynopsis(synopsis);
+		updateMovie.setReleaseDate(releaseDate);
+		
 		Movie.update(connection, updateMovie);
 		
+		
 	}
+	
 	private static void addMovie() throws SQLException {
 		System.out.println("\n          ADD A MOVIE            ");
 		System.out.println(  "            *******            ");
@@ -444,6 +477,7 @@ public class Admin {
 		Movie.insert(connection, movie);   
 		
 	}
+	
 	private static void viewAllMovies() throws SQLException {
 		ArrayList<Movie> movies = Movie.listAll(connection);
 		if (movies.isEmpty()) {
