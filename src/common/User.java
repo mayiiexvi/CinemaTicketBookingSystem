@@ -186,7 +186,6 @@ public class User {
         try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
             if (generatedKeys.next()) {
                 user.setId(generatedKeys.getInt(1));
-                System.out.println("User inserted successfully. User ID: " + user.getId());
             }
             else {
                 throw new SQLException("Creating user failed, no ID obtained.");

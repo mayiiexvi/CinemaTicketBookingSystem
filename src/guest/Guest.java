@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import cinemaTicketBookingSystem.CinemaTicketBookingSystem;
 import common.DataValidation;
 import common.DatabaseConnection;
 import common.Movie;
@@ -55,13 +56,14 @@ public class Guest {
 	        	} else if (number == 2) {
 	        		chooseAMovie();
 	        	} else if (number == 3) {
-	        		System.out.println("Thank you for using our program!");
-	                keyboard.close();
-	        		System.exit(0);
+	        		CinemaTicketBookingSystem.main(null);
+	        		keyboard.close();
 	        	} else {
 	        		throw new Exception();
 	        	}
-	        } catch (Exception e) {
+	        }
+        	
+        	catch (Exception e) {
 	        	System.out.println(e.toString());
 	        }
         };
@@ -244,7 +246,7 @@ public class Guest {
 	        		chooseAMovie();
 	        		break;
 	        	} else if (number == 3) {
-	        		System.out.println("Thank you for using our program!");
+	        		CinemaTicketBookingSystem.main(null);
 	        	} else {
 	        		throw new Exception();
 	        	}
@@ -290,7 +292,7 @@ public class Guest {
 				
 				if(difference < 0)
 				{
-					System.out.printf("You paid $%.2f extra.\nDon't forget to take your changes",  Math.abs(difference) );
+					System.out.printf("You paid $%.2f extra.\nDon't forget to take your changes\n",  Math.abs(difference) );
 				}
 				else
 				{
