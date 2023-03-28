@@ -12,9 +12,19 @@ import common.DatabaseConnection;
 import guest.Guest;
 
 /**
- * @author mufida
- *
+ * @author Sylvia Espina C0866311
+ * @author Mufida Andi C0864756
+ * @author Jenil Shivamkumar Varma - c0870543
+ * @author Tich Vu Lu C0861736
+ * @author Jay Shah C0868053
  */
+
+/**
+	Cinema Ticket Booking System : For booking movie ticket
+	To run this app user needs to run the main method in the CinemaTicketBooking System class. 
+	Before run the this app please ensure that you are connected with database.
+	User name: java2 and password: java2  
+  */
 public class CinemaTicketBookingSystem {
 
 	/**
@@ -22,9 +32,12 @@ public class CinemaTicketBookingSystem {
 	 * @throws SQLException 
 	 */
 	public static void main(String[] args) throws SQLException {
+
+		// for connecting the database
 		Connection connection = DatabaseConnection.getInstance().getConnection();
 		DatabaseConnection.checkAndInitializeDatabase(connection);
 		
+		// Validation for keep asking till getting the valid input from the user
 		Scanner keyboard = new Scanner(System.in);
         String num = "";
         int number = 0;
@@ -32,9 +45,9 @@ public class CinemaTicketBookingSystem {
         while (number != 3) {
         	try {
         		menu();		
-	        	number = DataValidation.readPositiveInt("Please enter 1/2: ");
+	        	number = DataValidation.readPositiveInt("Please Select The Option:");
 	        	if (number == 1) {
-	        		Admin.main(null);
+	        		Admin.main(null);      // Calling main method of the Admin class 
 	        	} else if (number == 2) {
 	        		Guest.main(null);
 	        	} else if (number == 3) {
@@ -42,6 +55,9 @@ public class CinemaTicketBookingSystem {
 	                keyboard.close();
 	        		System.exit(0);
 	        	} else {
+	        		// showing the message while selecting the wrong input
+	        		System.out.println("Oops! Wrong Option Selected.");
+	        		System.out.println("Please select the correct option.");
 	        		throw new Exception();
 	        	}
 	        } catch (Exception e) {

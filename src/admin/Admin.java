@@ -18,8 +18,11 @@ import common.Movie;
 import common.Showtime;
 import common.User;
 /**
- * @author 
- *
+ * @author Sylvia Espina C0866311
+ * @author Mufida Andi C0864756
+ * @author Jenil Shivamkumar Varma - c0870543
+ * @author Tich Vu Lu C0861736
+ * @author Jay Shah C0868053
  */
 public class Admin {
 
