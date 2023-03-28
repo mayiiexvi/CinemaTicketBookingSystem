@@ -122,8 +122,10 @@ public class Movie {
 		this.releaseDate = releaseDate;
 		this.setPrice(price);
 	}
-  
 	
+	public Movie(int id) {
+		this.id = id;
+	}
 	
 	public String toString() {
 		return ("ID:\t\t" + id + "\n"
@@ -232,6 +234,14 @@ public class Movie {
 			mv = new Movie(id, name, synopsis, release_date, price);
 		}
 		return mv;
+	}
+	public static boolean checkMovieExist(ArrayList<Movie> movies, int selectedMovie) {
+		for (Movie movie : movies) {
+			if(movie.getId() == selectedMovie) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

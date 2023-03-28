@@ -54,7 +54,9 @@ CREATE TABLE `showtime` (
   `hall_id` int DEFAULT NULL,
   `showtime` datetime DEFAULT NULL,
   `price` decimal(8,2) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `movie_id` (`movie_id`),
+  CONSTRAINT `showtime_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`id`)
 );
 
 DROP TABLE IF EXISTS `tickets`;

@@ -156,12 +156,14 @@ public class DatabaseConnection {
 				+ "  `hall_id` int DEFAULT NULL,\r\n"
 				+ "  `showtime` datetime DEFAULT NULL,\r\n"
 				+ "  `price` decimal(8,2) DEFAULT NULL,\r\n"
-				+ "  PRIMARY KEY (`id`)\r\n"
+				+ "  PRIMARY KEY (`id`),\r\n"
+				+ "  KEY `movie_id` (`movie_id`),\r\n"
+				+ "  CONSTRAINT `showtime_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`id`)\r\n"
 				+ ");";
 		sql= new ArrayList<>();
-		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (1,1,1,'2023-05-01 10:10:00',60.00);");
-		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (2,1,2,'2023-05-01 23:10:00',30.00);");
-		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (3,2,1,'2023-05-02 18:10:00',25.00);");
+		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (1,1,1,DATE_ADD(NOW(), INTERVAL 3 HOUR),60.00);");
+		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (2,1,2,DATE_ADD(NOW(), INTERVAL 4 HOUR),30.00);");
+		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (3,2,1,DATE_ADD(NOW(), INTERVAL 4 HOUR),25.00);");
 		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (4,2,3,'2023-05-10 21:10:00',98.00);");
 		tbl = new Table(tableName, sqlCreate, sql);
 		tables.add(tbl);
