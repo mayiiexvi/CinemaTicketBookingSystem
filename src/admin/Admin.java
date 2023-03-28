@@ -447,7 +447,7 @@ public class Admin {
 		System.out.print("Enter new synopsis or leave it empty to skip: ");
 		String synopsis = keyboard.nextLine();
 		if(synopsis.isEmpty()) {
-			movieName = movieDetails.get(0).getSynopsis();
+			synopsis = movieDetails.get(0).getSynopsis();
 		}
 		System.out.println("Skipping update synopsis");
 		
