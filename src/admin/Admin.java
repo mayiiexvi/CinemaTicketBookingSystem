@@ -138,6 +138,33 @@ public class Admin {
 	}
 	private static void deleteShowtime() throws SQLException{
 		// TODO Auto-generated method stub
+		ArrayList<Showtime> showtimes = viewAllShowtimes();
+		System.out.println("\n          Delete A SHOWTIME            ");
+		System.out.println(  "            *******            ");
+		int showtimeID = DataValidation.readPositiveInt("Please choose a showtime: ");
+		Showtime showtime = Showtime.showtimeCheckExists(showtimes, showtimeID);		
+		if(showtime != null) {			
+			while(true) {
+				try {
+					System.out.println("Are you sure you want to delete the showtime " + showtimeID +" ? y/n");
+					String userInput = keyboard.nextLine();
+					if(userInput.toUpperCase().equals("Y")) {
+						Showtime.delete(connection, showtimeID);
+						break;
+					}else if (userInput.toUpperCase().equals("N")) {
+						System.out.println("Show time is not deleted.");
+						break;
+					}else {
+						System.out.println("Please enter y for Yes or n for No");
+					}
+				}catch(Exception e){
+					System.out.println("Invalid input format!");
+				}
+			}
+						
+		}else {
+			System.out.println("Show time is not exist");
+		}
 		
 	}
 	private static void updateShowtime() throws SQLException{
