@@ -391,26 +391,46 @@ public class Admin {
 		
 		System.out.println("\n          DELETE A MOVIE            ");
 		System.out.println(  "              *******            ");
-		boolean isValidId = false, goodToDelete = true;
+		boolean isValidId = false, dontDelete = false;
 		
 		while(!isValidId) {
 			int movieId = DataValidation.readPositiveInt("\nEnter movie id: ");
 			for(int i=0; i<movies.size(); i++) {
-				isValidId = true;
-				break;
+				if(movies.get(i).getId() == movieId) {
+					isValidId = true;
+					break;
+				}
+				
 			}
 			
 			if(isValidId) {
 				ArrayList<Showtime> showtimes = Showtime.getAvailableShowtimes(connection);
 				for(Showtime showtime: showtimes) {
 					if(showtime.getMovie().getId() == movieId) {
-						goodToDelete = false;
+						System.out.println(showtime.getMovie().getId());
+						dontDelete = true;
 						break;
 					}
 				}
 				
-				if(goodToDelete) {
-					Movie.delete(connection, movieId);
+				if(!dontDelete) {
+					while(true) {
+						try {
+							System.out.println("Are you sure you want to delete the movie " + movieId +" ? y/n");
+							String userInput = keyboard.nextLine();
+							if(userInput.toUpperCase().equals("Y")) {
+								Movie.delete(connection, movieId);
+								break;
+							}else if (userInput.toUpperCase().equals("N")) {
+								System.out.println("Movie is not deleted.");
+								break;
+							}else {
+								System.out.println("Please enter y for Yes or n for No");
+							}
+						}catch(Exception e){
+							System.out.println("Invalid input format!");
+						}
+					}
 				}else {
 					System.out.println("Movie has associated showtime, so you need to delete it first");
 				}
@@ -434,14 +454,13 @@ public class Admin {
 
 		System.out.println("\n          UPDATE A MOVIE            ");
 		System.out.println(  "             *******            ");
-		System.out.print("\nEnter movie id: ");
-		String movieIdString = keyboard.nextLine();
 		
 		boolean isValidId = false;
-		int movieId = Integer.parseInt(movieIdString);
+		int movieId = 0;
 		
 		while(!isValidId)
 		{
+			movieId = DataValidation.readPositiveInt("Enter movie id: ");
 			for (int i=0; i<movies.size(); i++) {
 				if(movieId == movies.get(i).getId())
 				{
@@ -454,9 +473,6 @@ public class Admin {
 			if(!isValidId)
 			{
 				System.out.println("\nMovie doesn't exist!! \nPlease enter valid movie ID!!");
-				System.out.print("\nEnter movie id: ");
-				movieIdString = keyboard.nextLine();
-				movieId = Integer.parseInt(movieIdString);
 			}
 		}
 		ArrayList<Movie> movieDetails = Movie.listMovieDetails(connection, movieId);
