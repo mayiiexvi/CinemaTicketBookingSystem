@@ -137,10 +137,12 @@ public class Showtime {
 		ArrayList<Showtime> showtimes = new ArrayList<>();
 		String query = "SELECT A.ID, A.SHOWTIME, A.PRICE, B.ID AS HALL_ID, B.NAME AS HALL_NAME,\r\n"
 				+ "C.ID AS MOVIE_ID, C.MOVIE_NAME, C.synopsis, C.release_date,\r\n"
-				+ "((SELECT SEATING_ROWS * SEATING_COLS FROM HALLS WHERE ID = B.ID) - (SELECT COUNT(*) AS SEATBOOKED FROM TICKETS WHERE SHOWTIME_ID = A.ID)) AS AVAILABLE_SEATS,\r\n"
-				+ "B.SEATING_ROWS, B.SEATING_COLS, B.HIDENSEATS\r\n"
+				+ "((SELECT SEATING_ROWS * SEATING_COLS FROM HALLS WHERE ID = B.ID) - (SELECT COUNT(*) AS SEATBOOKED FROM TICKETS WHERE SHOWTIME_ID = A.ID)) \r\n"
+				+ "- (SELECT (LENGTH(B.HIDENSEATS) - LENGTH(REPLACE(HIDENSEATS, ',', ''))) - 1) AS AVAILABLE_SEATS,\r\n"
+				+ "B.SEATING_ROWS, B.SEATING_COLS, HIDENSEATS\r\n"
 				+ "FROM SHOWTIME A INNER JOIN HALLS B ON A.HALL_ID = B.ID\r\n"
-				+ "INNER JOIN MOVIES C ON A.MOVIE_ID = C.ID ORDER BY A.ID DESC;";
+				+ "INNER JOIN MOVIES C ON A.MOVIE_ID = C.ID\r\n"
+				+ "ORDER BY A.ID DESC;";
 		PreparedStatement statement = connection.prepareStatement(query);
 		ResultSet resultSet = statement.executeQuery();
 		while (resultSet.next()) {
