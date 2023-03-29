@@ -297,7 +297,7 @@ public class Admin {
 	private static void addShowtime() throws SQLException{
 		viewAllShowtimes();
 		System.out.println("\n          ADD A SHOWTIME            ");
-		System.out.println(  "            *******            ");
+		System.out.println(  "            ***            ");
 		ArrayList<Movie> movies = Movie.listAll(connection);
 		ArrayList<Hall> halls = Hall.listAll(connection);
 		System.out.println("Please choose a movie: ");
@@ -312,7 +312,22 @@ public class Admin {
 			}
 			int selectedHall = DataValidation.readPositiveInt("Your choice: ");
 			if(Hall.checkHallExist(halls, selectedHall)) {
-				Date showDateTime = inputShowTimeDateTime();
+				Date showDateTime;
+				while(true) {
+					try {
+						showDateTime = inputShowTimeDateTime();
+						Date now = new Date();
+						long oneHourLaterMillis = now.getTime() + (60 * 60 * 1000);
+				        Date oneHourLater = new Date(oneHourLaterMillis);
+				        if(showDateTime.after(oneHourLater)) { // is equal to or is later than
+				        	break;
+				        } else {
+				        	System.out.println("Showtime must be greater than or equal to the current date time plus 1 hour.");
+				        }
+					} catch (Exception e) {
+		            	System.out.println("Invalid input format!");
+		            }
+				}
 				double price = DataValidation.readPositiveDouble("Price for a ticket: ");
 				Movie movie = new Movie(selectedMovie);
 				Hall hall = new Hall(selectedHall);
