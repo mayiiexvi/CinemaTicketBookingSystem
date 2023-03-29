@@ -13,7 +13,6 @@ import cinemaTicketBookingSystem.CinemaTicketBookingSystem;
 import common.DataValidation;
 import common.DatabaseConnection;
 import common.Movie;
-import common.MovieSeatReservation;
 import common.Showtime;
 import common.Ticket;
 import common.User;
@@ -120,18 +119,6 @@ public class Guest {
 			    }
 		    }
 		}
-	}
-	public static String[] reservedSeats(int movieId) throws SQLException {
-		ArrayList<MovieSeatReservation> movieSeatReservation = new ArrayList<MovieSeatReservation>();
-		movieSeatReservation = MovieSeatReservation.selectedSeats(connection, movieId);
-		String[] reservedSeats = new String[movieSeatReservation.size()];
-		if(!movieSeatReservation.isEmpty()) {
-			for(int i = 0; i< movieSeatReservation.size(); i++) {
-				reservedSeats[i] = movieSeatReservation.get(i).getSeat_number();
-			}
-		}
-		
-		return reservedSeats;
 	}
 	
 	
@@ -301,8 +288,6 @@ public class Guest {
 				
 				ArrayList<Ticket> tickets = new ArrayList<>();
 				for(String seat: seats) {
-					MovieSeatReservation movieSeatReservation = new MovieSeatReservation(showtime.getMovie().getId(), seat, true);
-					MovieSeatReservation.insert(connection, movieSeatReservation);
 					/* START Adding Ticket stuff*/
 					Ticket ticket = new Ticket(customer, showtime, seat);
 					Ticket.insert(connection, ticket);

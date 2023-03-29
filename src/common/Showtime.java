@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * @author Tich
@@ -174,12 +175,24 @@ public class Showtime {
 	 * @return
 	 */
 	public static Showtime showtimeCheckExists(ArrayList<Showtime> showtimes, int id) {
+		// 1. Foreach way
+		/*
 		for (Showtime showtime : showtimes) {
 			if(showtime.getId() == id) {
 				return showtime;
 			}
 		}
-		return null;
+		*/
+		
+		// 2. Lambda Expression way
+		Optional<Showtime> showtime = showtimes.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst();
+		if(showtime.isPresent()) {
+			return showtime.get();
+		} else {
+			return null;
+		}
 	}
 	
 	/**
