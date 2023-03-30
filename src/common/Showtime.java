@@ -7,12 +7,14 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 
 /**
  * @author Tich
  *
  */
+
 public class Showtime {
 	/*----------- Fields ----------- */
 	private int id;
@@ -143,6 +145,43 @@ public class Showtime {
 				+ "B.SEATING_ROWS, B.SEATING_COLS, HIDENSEATS\r\n"
 				+ "FROM SHOWTIME A INNER JOIN HALLS B ON A.HALL_ID = B.ID\r\n"
 				+ "INNER JOIN MOVIES C ON A.MOVIE_ID = C.ID\r\n"
+				+ "WHERE A.SHOWTIME >= DATE_SUB(NOW(), INTERVAL 1 HOUR)\r\n"
+				+ "ORDER BY A.ID DESC;";
+		PreparedStatement statement = connection.prepareStatement(query);
+		ResultSet resultSet = statement.executeQuery();
+		while (resultSet.next()) {
+			Movie mv = new Movie(resultSet.getInt("MOVIE_ID"), resultSet.getString("MOVIE_NAME"), resultSet.getString("synopsis"), resultSet.getString("release_date"));
+			Hall hall = new Hall(resultSet.getInt("HALL_ID"), resultSet.getString("HALL_NAME"), resultSet.getInt("SEATING_ROWS"), resultSet.getInt("SEATING_COLS"), resultSet.getString("HIDENSEATS") );
+			Showtime showtime = new Showtime();
+			showtime.setId(resultSet.getInt("ID"));
+			showtime.setPrice(resultSet.getDouble("PRICE"));
+			//showtime.setShowtime(resultSet.getDate("SHOWTIME"));
+			Timestamp timestamp = resultSet.getTimestamp("SHOWTIME");
+			if (timestamp != null) {
+				showtime.setShowtime(timestamp);
+			}
+			showtime.setAvailableSeats(resultSet.getInt("AVAILABLE_SEATS"));
+			showtime.setHall(hall);
+			showtime.setMovie(mv);
+			showtimes.add(showtime);
+		}
+		return showtimes;
+	}
+	/**
+	 * Get a list of available showtimes
+	 * @param connection
+	 * @return
+	 * @throws SQLException
+	 */
+	public static ArrayList<Showtime> getAllShowtimes(Connection connection) throws SQLException{
+		ArrayList<Showtime> showtimes = new ArrayList<>();
+		String query = "SELECT A.ID, A.SHOWTIME, A.PRICE, B.ID AS HALL_ID, B.NAME AS HALL_NAME,\r\n"
+				+ "C.ID AS MOVIE_ID, C.MOVIE_NAME, C.synopsis, C.release_date,\r\n"
+				+ "((SELECT SEATING_ROWS * SEATING_COLS FROM HALLS WHERE ID = B.ID) - (SELECT COUNT(*) AS SEATBOOKED FROM TICKETS WHERE SHOWTIME_ID = A.ID)) \r\n"
+				+ "- (SELECT (LENGTH(B.HIDENSEATS) - LENGTH(REPLACE(HIDENSEATS, ',', ''))) - 1) AS AVAILABLE_SEATS,\r\n"
+				+ "B.SEATING_ROWS, B.SEATING_COLS, HIDENSEATS\r\n"
+				+ "FROM SHOWTIME A INNER JOIN HALLS B ON A.HALL_ID = B.ID\r\n"
+				+ "INNER JOIN MOVIES C ON A.MOVIE_ID = C.ID\r\n"
 				+ "ORDER BY A.ID DESC;";
 		PreparedStatement statement = connection.prepareStatement(query);
 		ResultSet resultSet = statement.executeQuery();
@@ -245,17 +284,30 @@ public class Showtime {
 	}
 
 	public static void displayShowtimes(ArrayList<Showtime> showtimes) {
-	    System.out.println("+-----+----------+----------------+-------+----------------+---------------------+-------+--------------+");
-	    System.out.println("| ID  | Movie ID | Movie Name     | Hall  | Hall Name      | Showtime            | Price | Available    |");
-	    System.out.println("|     |          |                | ID    |                |                     |       | Seats        |");
-	    System.out.println("+-----+----------+----------------+-------+----------------+---------------------+-------+--------------+");
+	    System.out.println("+-----+--------+------------------+-------+--------------+---------------------+----------+-------------+--------+");
+	    System.out.println("| ID  | Movie  | Movie Name       | Hall  | Hall Name    | Showtime            | Price    | Available   | Status |");
+	    System.out.println("|     | ID     |                  | ID    |              |                     |          | Seats       |        |");
+	    System.out.println("+-----+--------+------------------+-------+--------------+---------------------+----------+-------------+--------+");
 	    for (Showtime showtime : showtimes) {
-	        System.out.printf("| %1$-3d | %2$-8d | %3$-14s | %4$-5d | %5$-14s | %6$-19s | $%7$-5.2f | %8$-12d |\n",
-	                showtime.getId(), showtime.getMovie().getId(), showtime.getMovie().getMovieName(),
-	                showtime.getHall().getId(), showtime.getHall().getName(), showtime.getShowTimeFormatted(),
-	                showtime.getPrice(), showtime.getAvailableSeats());
+	    	Date now = new Date();
+			long oneHourLaterMillis = now.getTime() + (60 * 60 * 1000);
+	        Date oneHourLater = new Date(oneHourLaterMillis);
+	        if(showtime.getShowtime().after(oneHourLater)) { // is equal to or is later than
+	        	// Now showing
+	        	System.out.println(Constant.ANSI_GREEN + String.format("| %-3d | %-6d | %-16s | %-5d | %-12s | %-19s | $%-7.2f | %-11d | %-6s |",
+		                showtime.getId(), showtime.getMovie().getId(), showtime.getMovie().getMovieName(),
+		                showtime.getHall().getId(), showtime.getHall().getName(), showtime.getShowTimeFormatted(),
+		                showtime.getPrice(), showtime.getAvailableSeats(), "Open  ") + Constant.ANSI_RESET);
+	        } else {
+	        	// Done
+	        	System.out.println(String.format("| %-3d | %-6d | %-16s | %-5d | %-12s | %-19s | $%-7.2f | %-11d | %-6s |",
+		                showtime.getId(), showtime.getMovie().getId(), showtime.getMovie().getMovieName(),
+		                showtime.getHall().getId(), showtime.getHall().getName(), showtime.getShowTimeFormatted(),
+		                showtime.getPrice(), showtime.getAvailableSeats(), "Closed"));
+	        }
+	        
 	    }
-	    System.out.println("+-----+----------+----------------+-------+----------------+---------------------+-------+--------------+");
+	    System.out.println("+-----+----------+----------------+-------+----------------+---------------------+-------+--------------+--------+");
 	}
 
 }

@@ -13,7 +13,7 @@ public class DataValidation {
 		while(!isValid) {
 			try {
 				System.out.print(prompt);
-				String priceString = keyboard.next();
+				String priceString = keyboard.nextLine();
 				num = Double.parseDouble(priceString);
 	    		if (num <= 0) {
 	    			System.out.println("Please enter a number greater than 0.");
@@ -37,7 +37,7 @@ public class DataValidation {
 		while(!isValid) {
 			try {
 				System.out.print(prompt);
-				String numString = keyboard.next();
+				String numString = keyboard.nextLine();
 	    		num = Integer.parseInt(numString);
 	    		if (num <= 0) {
 	    			System.out.println("Please enter a number greater than 0.");
@@ -77,7 +77,7 @@ public class DataValidation {
 		while(!isValid) {
 			try {
 				System.out.print(prompt);
-				String numString = keyboard.next();
+				String numString = keyboard.nextLine();
 	    		num = Integer.parseInt(numString);
 	    		if (num <= 0) {
 	    			System.out.println("Please enter a number greater than 0.");

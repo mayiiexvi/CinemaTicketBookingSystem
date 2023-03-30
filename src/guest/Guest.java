@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import cinemaTicketBookingSystem.CinemaTicketBookingSystem;
+import common.Constant;
 import common.DataValidation;
 import common.DatabaseConnection;
 import common.Movie;
@@ -28,16 +29,7 @@ public class Guest {
 	 * @param args
 	 */
 	static Connection connection;
-	// Text color in console 
-	public static final String ANSI_RESET = "\u001B[0m";
-	public static final String ANSI_BLACK = "\u001B[30m";
-	public static final String ANSI_RED = "\u001B[31m";
-	public static final String ANSI_GREEN = "\u001B[32m";
-	public static final String ANSI_YELLOW = "\u001B[33m";
-	public static final String ANSI_BLUE = "\u001B[34m";
-	public static final String ANSI_PURPLE = "\u001B[35m";
-	public static final String ANSI_CYAN = "\u001B[36m";
-	public static final String ANSI_WHITE = "\u001B[37m";
+
 	public static ArrayList<Showtime> showtimes;
 	
 	public static void main(String[] args) throws Exception{
@@ -85,14 +77,14 @@ public class Guest {
 			System.out.println(    "             *******            ");
 			
 			for (Showtime showtime : showtimes) {
-				System.out.println("Showtime Id\t" + ANSI_BLUE + showtime.getId() + ANSI_RESET);
+				System.out.println("Showtime Id\t" + Constant.ANSI_BLUE + showtime.getId() + Constant.ANSI_RESET);
 				System.out.println("Showtime:\t" + showtime.getShowTimeFormatted());
 				//System.out.println("Movie Id:\t" + showtime.getMovie().getId());
 				System.out.println("Movie Name:\t" + showtime.getMovie().getMovieName());
 				//System.out.println("Release Date:\t" + showtime.getMovie().getReleaseDate());
 				System.out.println("Hall:\t\t" + showtime.getHall().getName());
-				System.out.println("Price:\t\t" + ANSI_BLUE+ "$" + String.format("%.2f", showtime.getPrice()) + ANSI_RESET );
-				System.out.println("Avalable Seats: " + ANSI_GREEN + showtime.getAvailableSeats() +ANSI_RESET);
+				System.out.println("Price:\t\t" + Constant.ANSI_BLUE+ "$" + String.format("%.2f", showtime.getPrice()) + Constant.ANSI_RESET );
+				System.out.println("Avalable Seats: " + Constant.ANSI_GREEN + showtime.getAvailableSeats() + Constant.ANSI_RESET);
 				// Show more here
 				System.out.println();
 			}
@@ -149,13 +141,13 @@ public class Guest {
             for (int j = 0; j < numCols; j++) {
             	String seatCode = (char) ('A' + i)+String.valueOf(j+1);
                 if (Ticket.isBookedSeat(seatsBooked,seatCode )) {
-                    System.out.print(ANSI_RED + fixedLengthString(seatCode, 5) + ANSI_RESET);
+                    System.out.print(Constant.ANSI_RED + fixedLengthString(seatCode, 5) + Constant.ANSI_RESET);
                 } else {
                 	if(isHidenSeat(hidenSeats, seatCode)) {
                 		System.out.print(fixedLengthString(" ", 5));
                 	} else {
                 		if(Arrays.asList(selectedSeats).contains(seatCode)) {
-                			System.out.print(ANSI_GREEN + fixedLengthString(seatCode, 5) + ANSI_RESET);
+                			System.out.print(Constant.ANSI_GREEN + fixedLengthString(seatCode, 5) + Constant.ANSI_RESET);
                 		} else {
                 		System.out.print(fixedLengthString(seatCode, 5));
                 		}

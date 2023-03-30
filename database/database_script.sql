@@ -22,7 +22,6 @@ CREATE TABLE `movies` (
   `movie_name` varchar(100) DEFAULT NULL,
   `synopsis` varchar(100) DEFAULT NULL,
   `release_date` varchar(100) DEFAULT NULL,
-  `price` float(10,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -75,8 +74,8 @@ CREATE TABLE `tickets` (
 INSERT INTO `users` (`id`,`first_name`,`last_name`,`user_name`,`password`,`role`,`email`,`phone`) VALUES (1,'Administrator',NULL,'admin','java2','java2','admin@gmail.com',NULL);
 INSERT INTO `users` (`id`,`first_name`,`last_name`,`user_name`,`password`,`role`,`email`,`phone`) VALUES (2,'User Test',NULL,'user','password','USER','user@gmail.com','22695245192');
 
-INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`price`) VALUES (1,'John Wick 4','With the price on his head ever increasing, legendary hit man John Wick takes his fight against...','1/1/2024',90000.00);
-INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`price`) VALUES (2,'Strange Things','In 1980s Indiana, a group of young friends witness supernatural forces and secret government exploit','2/2/2024',190.00);
+INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`) VALUES (1,'John Wick 4','With the price on his head ever increasing, legendary hit man John Wick takes his fight against...','1/1/2024');
+INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`) VALUES (2,'Strange Things','In 1980s Indiana, a group of young friends witness supernatural forces and secret government exploit','2/2/2024');
 
 INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`,`hidenseats`) VALUES (1,'Galaxy 1',5,16,'A5,A6,A7,A8,A9,A10,A11,B5,C5,D5,E5,B11,C11,D11,E11,D1,E1,D16,E16');
 INSERT INTO `halls` (`id`,`name`,`seating_rows`,`seating_cols`,`hidenseats`) VALUES (2,'Galaxy 2',8,11,'E1,F1,H1,G1,E11,F11,G11,H11,E2,E3,E4,E5,E6,E7,E8,E9,E10');
