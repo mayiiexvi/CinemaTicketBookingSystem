@@ -106,13 +106,11 @@ public class DatabaseConnection {
 				+ "  `movie_name` varchar(100) DEFAULT NULL,\r\n"
 				+ "  `synopsis` varchar(100) DEFAULT NULL,\r\n"
 				+ "  `release_date` varchar(100) DEFAULT NULL,\r\n"
-				+ "  `price` float(10,2) DEFAULT NULL,\r\n"
 				+ "  PRIMARY KEY (`id`)\r\n"
-				+ ");"
-				+ "";
+				+ ");";
 		sql= new ArrayList<>();
-		sql.add("INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`price`) VALUES (1,'John Wick 4','With the price on his head ever increasing, legendary hit man John Wick takes his fight against...','1/1/2024',90000.00);");
-		sql.add("INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`price`) VALUES (2,'Strange Things','In 1980s Indiana, a group of young friends witness supernatural forces and secret government exploit','2/2/2024',190.00);");
+		sql.add("INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`) VALUES (1,'John Wick 4','With the price on his head ever increasing, legendary hit man John Wick takes his fight against...','1/1/2024');");
+		sql.add("INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`) VALUES (2,'Strange Things','In 1980s Indiana, a group of young friends witness supernatural forces and secret government exploit','2/2/2024');");
 		tbl = new Table(tableName, sqlCreate, sql);
 		tables.add(tbl);
 		
@@ -169,18 +167,18 @@ public class DatabaseConnection {
 		tables.add(tbl);
 		
 		// seatreservation
-		tableName = "seatreservation";
-		sqlCreate = "CREATE TABLE `seatreservation`(\r\n"
-				+ "	`id` int NOT NULL AUTO_INCREMENT,\r\n"
-				+ "    `movie_id` int NOT NULL,\r\n"
-				+ "    `movie_time` datetime,\r\n"
-				+ "    `seat_number` varchar(5) NOT NULL,\r\n"
-				+ "    `reserved` boolean NOT NULL DEFAULT false,\r\n"
-				+ "    PRIMARY KEY (`id`)\r\n"
-				+ ");";
-		sql= new ArrayList<>();
-		tbl = new Table(tableName, sqlCreate, sql);
-		tables.add(tbl);
+//		tableName = "seatreservation";
+//		sqlCreate = "CREATE TABLE `seatreservation`(\r\n"
+//				+ "	`id` int NOT NULL AUTO_INCREMENT,\r\n"
+//				+ "    `movie_id` int NOT NULL,\r\n"
+//				+ "    `movie_time` datetime,\r\n"
+//				+ "    `seat_number` varchar(5) NOT NULL,\r\n"
+//				+ "    `reserved` boolean NOT NULL DEFAULT false,\r\n"
+//				+ "    PRIMARY KEY (`id`)\r\n"
+//				+ ");";
+//		sql= new ArrayList<>();
+//		tbl = new Table(tableName, sqlCreate, sql);
+//		tables.add(tbl);
 		
 		return tables;
 	}

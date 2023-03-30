@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import common.Constant;
 import common.DataValidation;
 import common.DatabaseConnection;
 import common.Hall;
@@ -38,17 +39,8 @@ public class Admin {
 	static Connection connection;
 	static User userLogin;
 	static Scanner keyboard = new Scanner(System.in);
-	static final String DATE_FORMAT = "MM/dd/yyyy";
-	// Text color in console 
-	public static final String ANSI_RESET = "\u001B[0m";
-	public static final String ANSI_BLACK = "\u001B[30m";
-	public static final String ANSI_RED = "\u001B[31m";
-	public static final String ANSI_GREEN = "\u001B[32m";
-	public static final String ANSI_YELLOW = "\u001B[33m";
-	public static final String ANSI_BLUE = "\u001B[34m";
-	public static final String ANSI_PURPLE = "\u001B[35m";
-	public static final String ANSI_CYAN = "\u001B[36m";
-	public static final String ANSI_WHITE = "\u001B[37m";
+	
+
 	public static String mainMenu() {
 		System.out.println("\n         CINEMA MANAGEMENT MENU         ");
 		System.out.println("----------------------------------------------");
@@ -179,13 +171,14 @@ public class Admin {
 		int showtimeID = DataValidation.readPositiveInt("Please choose a showtime: ");
 		Showtime showtime = Showtime.showtimeCheckExists(showtimes, showtimeID);
 		if(showtime != null){
+			
 			/*Update the movie*/
 			while(true) {
 				try {
         			for (Movie movie : movies) {
-        				System.out.println(ANSI_GREEN + movie.getId() + ". " + movie.getMovieName() + ANSI_RESET);
+        				System.out.println(Constant.ANSI_GREEN + movie.getId() + ". " + movie.getMovieName() + Constant.ANSI_RESET);
         			}
-        			System.out.println("Current show [" + ANSI_BLUE + showtime.getMovie().getMovieName() + ANSI_RESET +"] ");
+        			System.out.println("Current show [" + Constant.ANSI_BLUE + showtime.getMovie().getMovieName() + Constant.ANSI_RESET +"] ");
             		System.out.print("Please choose a new movie or leave it empty to skip: ");
         			String input = keyboard.nextLine();
         			if (!input.isEmpty()) {
@@ -204,13 +197,14 @@ public class Admin {
 	            	System.out.println("Invalid input format!");
 	            }
 			}
+			
 			/*Update the hall*/
 			while(true) {
 				try {
         			for (Hall hall : halls) {
-        				System.out.println(ANSI_GREEN + hall.getId() + ". " + hall.getName() + ANSI_RESET);
+        				System.out.println(Constant.ANSI_GREEN + hall.getId() + ". " + hall.getName() + Constant.ANSI_RESET);
         			}
-        			System.out.println("Current show at [" + ANSI_BLUE + showtime.getHall().getName() + ANSI_RESET +"] ");
+        			System.out.println("Current show at [" + Constant.ANSI_BLUE + showtime.getHall().getName() + Constant.ANSI_RESET +"] ");
             		System.out.print("Please choose a new hall or leave it empty to skip: ");
         			String input = keyboard.nextLine();
         			if (!input.isEmpty()) {
@@ -229,47 +223,73 @@ public class Admin {
 	            	System.out.println("Invalid input format!");
 	            }
 			}
-			/*The rest information */
-			SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+			
+			/*The showtime date & time information */
+			SimpleDateFormat formatter ;
 			Date date = showtime.getShowtime();
+			Date showDateTime;
+			boolean hasUpdate = false;
 			while(true) {
 				try {
-					System.out.println("Showtime [" + ANSI_BLUE + formatter.format(showtime.getShowtime()) + ANSI_RESET + "] Enter date (" + DATE_FORMAT+ "): ");
-					String input = keyboard.nextLine();
-					if (!input.isEmpty()) {
-			        	date = formatter.parse(input);
-			            break;
-        	        } else {
-        	            System.out.println("Skipping update date");
-        	            break;
-        	        }
+					while(true) {
+						try {
+							formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
+							System.out.println("Showtime [" + Constant.ANSI_BLUE + formatter.format(showtime.getShowtime()) + Constant.ANSI_RESET + "] Enter date (" + Constant.DATE_FORMAT+ "): ");
+							String input = keyboard.nextLine();
+							if (!input.isEmpty()) {
+					        	date = formatter.parse(input);
+					        	hasUpdate = true;
+					            break;
+		        	        } else {
+		        	            System.out.println("Skipping update date");
+		        	            break;
+		        	        }
+						} catch (Exception e) {
+			            	System.out.println("Invalid input format!");
+			            }
+					}
+					Date time = showtime.getShowtime();
+					while(true) {
+						try {
+							formatter = new SimpleDateFormat("HH:mm");
+							System.out.println("Showtime [" + Constant.ANSI_BLUE + formatter.format(showtime.getShowtime()) + Constant.ANSI_RESET + "] Enter time (HH:mm) 24-Hour Format: ");
+							String input = keyboard.nextLine();
+							if (!input.isEmpty()) {
+					        	time = formatter.parse(input);
+					        	hasUpdate = true;
+					            break;
+		        	        } else {
+		        	            System.out.println("Skipping update time");
+		        	            break;
+		        	        }
+						} catch (Exception e) {
+			            	System.out.println("Invalid input format!");
+			            }
+					}
+					if(hasUpdate) {
+						showDateTime = new Date(date.getYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds());
+						Date now = new Date();
+						long oneHourLaterMillis = now.getTime() + (60 * 60 * 1000);
+				        Date oneHourLater = new Date(oneHourLaterMillis);
+				        if(showDateTime.after(oneHourLater)) { // is equal to or is later than
+				        	showtime.setShowtime(new Timestamp(showDateTime.getTime()));
+				        	break;
+				        } else {
+				        	System.out.println("Showtime must be an hour later or more");
+				        }
+					} else {
+						break; // No update
+					}
+					
 				} catch (Exception e) {
 	            	System.out.println("Invalid input format!");
 	            }
 			}
-			formatter = new SimpleDateFormat("HH:mm");
-			Date time = showtime.getShowtime();
+			
+			/* The showtime price */
 			while(true) {
 				try {
-					System.out.println("Showtime [" + ANSI_BLUE + formatter.format(showtime.getShowtime()) + ANSI_RESET + "] Enter time (HH:mm): ");
-					String input = keyboard.nextLine();
-					if (!input.isEmpty()) {
-			        	time = formatter.parse(input);
-			            break;
-        	        } else {
-        	            System.out.println("Skipping update time");
-        	            break;
-        	        }
-				} catch (Exception e) {
-	            	System.out.println("Invalid input format!");
-	            }
-			}
-			Date showDateTime = new Date(date.getYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds());
-			showtime.setShowtime(new Timestamp(showDateTime.getTime()));
-			/////
-			while(true) {
-				try {
-					System.out.println("Price for a ticket["+ ANSI_BLUE + showtime.getPrice() + ANSI_RESET +"]: ");
+					System.out.println("Price for a ticket["+ Constant.ANSI_BLUE + showtime.getPrice() + Constant.ANSI_RESET +"]: ");
 					String input = keyboard.nextLine();
 					if (!input.isEmpty()) {
 			        	double price = Double.parseDouble(input);
@@ -312,7 +332,22 @@ public class Admin {
 			}
 			int selectedHall = DataValidation.readPositiveInt("Your choice: ");
 			if(Hall.checkHallExist(halls, selectedHall)) {
-				Date showDateTime = inputShowTimeDateTime();
+				Date showDateTime;
+				while(true) {
+					try {
+						showDateTime = inputShowTimeDateTime();
+						Date now = new Date();
+						long oneHourLaterMillis = now.getTime() + (60 * 60 * 1000);
+				        Date oneHourLater = new Date(oneHourLaterMillis);
+				        if(showDateTime.after(oneHourLater)) { // is equal to or is later than
+				        	break;
+				        } else {
+				        	System.out.println("Showtime must be an hour later or more");
+				        }
+					} catch (Exception e) {
+		            	System.out.println("Invalid input format!");
+		            }
+				}
 				double price = DataValidation.readPositiveDouble("Price for a ticket: ");
 				Movie movie = new Movie(selectedMovie);
 				Hall hall = new Hall(selectedHall);
@@ -327,7 +362,7 @@ public class Admin {
 		
 	}
 	private static ArrayList<Showtime> viewAllShowtimes() throws SQLException {
-		ArrayList<Showtime> showtimes = Showtime.getAvailableShowtimes(connection);
+		ArrayList<Showtime> showtimes = Showtime.getAllShowtimes(connection);
 		Showtime.displayShowtimes(showtimes);
 		return showtimes;
 	}
@@ -338,7 +373,7 @@ public class Admin {
 			
 			String movieName = DataValidation.inputStringNotEmpty("\nEnter movie name: ");    		
 			String synopsis = DataValidation.inputStringNotEmpty("Enter synopsis: ");
-    		String releaseDateString = formatter.format(DataValidation.readPositiveDate("Enter release date ("+DATE_FORMAT+"): "));
+    		String releaseDateString = formatter.format(DataValidation.readPositiveDate("Enter release date ("+Constant.DATE_FORMAT+"): "));
 
     		movie = new Movie(movieName, synopsis, releaseDateString);    		
 			
@@ -542,7 +577,7 @@ public class Admin {
 	public static Timestamp inputShowTimeDateTime() {
         
         System.out.print("");
-        Date date = DataValidation.readPositiveDate("Enter date ("+DATE_FORMAT+"): ");
+        Date date = DataValidation.readPositiveDate("Enter date ("+Constant.DATE_FORMAT+"): ");
         Date time = DataValidation.readPositiveTime("Enter time (HH:mm): ");
         Date dateTime = new Date(date.getYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds());
         Timestamp timestamp = new Timestamp(dateTime.getTime());
@@ -551,12 +586,12 @@ public class Admin {
 	
 	@SuppressWarnings("deprecation")
 	public static Date inputShowTimeDateTime(Date showtime) {
-		SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+		SimpleDateFormat formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
 		
         System.out.print("");
-        Date date = DataValidation.readPositiveDate("Enter date ("+DATE_FORMAT+") [" + ANSI_BLUE+ formatter.format(showtime) + ANSI_RESET + "]: ");
+        Date date = DataValidation.readPositiveDate("Enter date ("+Constant.DATE_FORMAT+") [" + Constant.ANSI_BLUE+ formatter.format(showtime) + Constant.ANSI_RESET + "]: ");
         formatter = new SimpleDateFormat("hh:mm");
-        Date time = DataValidation.readPositiveTime("Enter time (HH:mm) [" + ANSI_BLUE+ formatter.format(showtime) + ANSI_RESET + "]: ");
+        Date time = DataValidation.readPositiveTime("Enter time (HH:mm) 24-Hour Format [" + Constant.ANSI_BLUE+ formatter.format(showtime) + Constant.ANSI_RESET + "]: ");
         Date dateTime = new Date(date.getYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds());
         return dateTime;
     }
