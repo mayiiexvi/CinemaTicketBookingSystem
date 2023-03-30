@@ -317,7 +317,7 @@ public class Admin {
 	private static void addShowtime() throws SQLException{
 		viewAllShowtimes();
 		System.out.println("\n          ADD A SHOWTIME            ");
-		System.out.println(  "            *******            ");
+		System.out.println(  "            ***            ");
 		ArrayList<Movie> movies = Movie.listAll(connection);
 		ArrayList<Hall> halls = Hall.listAll(connection);
 		System.out.println("Please choose a movie: ");
