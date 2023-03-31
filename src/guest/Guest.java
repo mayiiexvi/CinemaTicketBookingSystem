@@ -3,6 +3,8 @@
  */
 package guest;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -216,8 +218,9 @@ public class Guest {
 	 * @param showtime
 	 * @param seats
 	 * @throws SQLException
+	 * @throws IOException 
 	 */
-	public static void payment(Showtime showtime, String[] seats)throws SQLException {
+	public static void payment(Showtime showtime, String[] seats)throws SQLException, IOException {
 		boolean isPaid = false;
 		if(showtime.getId() == 0 || seats.length == 0)
 		{
@@ -269,6 +272,7 @@ public class Guest {
 					/* END Adding Ticket stuff*/
 				}
 				printTicketSummary(tickets, total, paid, difference);
+				saveTicketSummary(tickets, total, paid, difference);
 				reloadShowTime(); // load new data from db to ArrayList
 				isPaid = true;
 			}
@@ -310,5 +314,29 @@ public class Guest {
 	    System.out.println("========================================");
 	    System.out.println("Thank you! Enjoy your movie! ");
 	}
+	
+	public static void saveTicketSummary(ArrayList<Ticket> tickets, double total, double received, double changes) throws IOException {
+		String fileName = "ticket" + tickets.get(0).getId() + ".txt";
+		PrintWriter file = new PrintWriter(fileName);
 
+	    file.println("========================================");
+	    file.println("             Ticket Summary             ");
+	    file.println("========================================");
+	    file.printf("%-20s%20s\n", "Movie:", tickets.get(0).getShowtime().getMovie().getMovieName());
+	    file.printf("%-20s%20s\n", "Hall:", tickets.get(0).getShowtime().getHall().getName());
+	    file.printf("%-20s%20s\n", "Showtime:", tickets.get(0).getShowtime().getShowTimeFormatted());
+	    String seats = "";
+	    for (Ticket ticket : tickets) {
+	    	seats += ticket.getSeatCode() +", ";
+		}
+	    seats = seats.substring(0, seats.length()-2);
+	    file.printf("%-20s%20s\n", "Seat Number:", seats);
+	    file.printf("%-20s%20s\n", "Ticket Price:", "$"+String.format("%.2f",tickets.get(0).getShowtime().getPrice()));
+	    file.printf("%-20s%20s\n", "Total Price:", "$"+String.format("%.2f",total));
+	    file.printf("%-20s%20s\n", "Money Received:", "$"+String.format("%.2f",received));
+	    file.printf("%-20s%20s\n", "Change:", "$"+String.format("%.2f",Math.abs(changes)));
+	    file.println("========================================");
+	    
+	    file.close();
+	}
 }
