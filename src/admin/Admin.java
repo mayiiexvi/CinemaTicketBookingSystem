@@ -505,7 +505,7 @@ public class Admin {
 			}
 			
 			if(isValidId) {
-				ArrayList<Showtime> showtimes = Showtime.getAvailableShowtimes(connection);
+				ArrayList<Showtime> showtimes = Showtime.getAllShowtimes(connection);
 				for(Showtime showtime: showtimes) {
 					if(showtime.getMovie().getId() == movieId) {
 						System.out.println(showtime.getMovie().getId());
@@ -516,20 +516,20 @@ public class Admin {
 				
 				if(!dontDelete) {
 					while(true) {
-						try {
-							System.out.println("Are you sure you want to delete the movie " + movieId +" ? y/n");
-							String userInput = keyboard.nextLine();
-							if(userInput.toUpperCase().equals("Y")) {
+						System.out.println("Are you sure you want to delete the movie " + movieId +" ? y/n");
+						String userInput = keyboard.nextLine();
+						if(userInput.toUpperCase().equals("Y")) {
+							try {
 								Movie.delete(connection, movieId);
 								break;
-							}else if (userInput.toUpperCase().equals("N")) {
-								System.out.println("Movie is not deleted.");
-								break;
-							}else {
-								System.out.println("Please enter y for Yes or n for No");
+							}catch(Exception e){
+								System.out.println("An error is encountered. Cannot delete movie. Please try again!");
 							}
-						}catch(Exception e){
-							System.out.println("Invalid input format!");
+						}else if (userInput.toUpperCase().equals("N")) {
+							System.out.println("Movie is not deleted.");
+							break;
+						}else {
+							System.out.println("Please enter y for Yes or n for No");
 						}
 					}
 				}else {
