@@ -150,23 +150,6 @@ public class Ticket {
 		return ticket;
 	}
 	
-	public static ArrayList<Ticket> getTicketsByShowTimeID(Connection connection, int showtimeID) throws SQLException{
-		ArrayList<Ticket> tickets = new ArrayList<>();
-		String query = "SELECT * FROM tickets WHERE showtime_id = ?";
-		PreparedStatement statement = connection.prepareStatement(query);
-		statement.setInt(1, showtimeID);
-		ResultSet resultSet = statement.executeQuery();
-		while (resultSet.next()) {
-			Ticket ticket = new Ticket();
-			ticket.setId(resultSet.getInt("id"));
-			ticket.setSeat_row(resultSet.getInt("seat_row"));
-			ticket.setSeat_col(resultSet.getInt("seat_col"));
-			ticket.setSeatCode(resultSet.getString("seatCode"));
-			tickets.add(ticket);
-		}
-		return tickets;
-	}
-	
 	public static boolean isBookedSeat(ArrayList<Ticket> seatsBooked, String seatCode) {
 		for (Ticket ticket : seatsBooked) {
 			if(ticket.getSeatCode().equals(seatCode)) {
@@ -175,7 +158,7 @@ public class Ticket {
 		}
 		return false;
 	}
-	public static ArrayList<Ticket> getTicketsByShowTimeID_2(Connection connection, int showtimeID) throws SQLException{
+	public static ArrayList<Ticket> getTicketsByShowTimeID(Connection connection, int showtimeID) throws SQLException{
 		ArrayList<Ticket> tickets = new ArrayList<>();
 		String query = "SELECT A.ID, A.USER_ID, A.SEATCODE,\r\n"
 				+ "B.FIRST_NAME, B.LAST_NAME, B.EMAIL, B.PHONE FROM TICKETS A INNER JOIN USERS B ON A.USER_ID = B.ID\r\n"
