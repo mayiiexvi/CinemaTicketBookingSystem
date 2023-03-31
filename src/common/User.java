@@ -144,6 +144,14 @@ public class User {
 		this.email = email;
 		this.phone = phone;
 	}
+	public User(int id, String firstName, String lastName, String email, String phone) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.role = role;
+		this.email = email;
+		this.phone = phone;
+	}
 
 
 	public static User isValidCredentials(Connection connection, String username, String password) throws SQLException {
