@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * @author Tich
- *
+ * Hall class
+ * @author Sylvia Espina C0866311
+ * @author Mufida Andi C0864756
+ * @author Jenil Shivamkumar Varma C0870543
+ * @author Tich Vu Lu C0861736
+ * @author Jay Shah C0868053
  */
 public class Hall {
 	/*----------- Fields ----------- */
@@ -77,18 +81,29 @@ public class Hall {
 	public String getHidenSeats() {
 		return hidenSeats;
 	}
+	
 	/**
 	 * @param hidenSeats the hidenSeats to set
 	 */
-	/*----------- Constructors ----------- */
-	
-	
 	public void setHidenSeats(String hidenSeats) {
 		this.hidenSeats = hidenSeats;
 	}
+	/**
+	 * @param id the id to set
+	 */
 	public Hall(int id) {
 		this.id = id;
 	}
+
+	/*----------- Constructors ----------- */
+	/**
+	 * Constructor with fields
+	 * @param id
+	 * @param name
+	 * @param seatingRows
+	 * @param seatingCols
+	 * @param hidenSeats
+	 */
 	public Hall(int id, String name, int seatingRows, int seatingCols, String hidenSeats) {
 		this.id = id;
 		this.name = name;
@@ -98,6 +113,7 @@ public class Hall {
 	}
 	
 	/**
+	 * Constructor with fields
 	 * @param id
 	 * @param name
 	 * @param seatingRows
@@ -110,19 +126,13 @@ public class Hall {
 		this.seatingCols = seatingCols;
 	}
 	/*----------- Methods ----------- */
-	
-	public static void insert(Connection connection, Hall hall) throws SQLException {
-		//
-	}
 
-	public static void update(Connection connection, Movie movie) throws SQLException {
-		//
-	}
-
-	public static void delete(Connection connection, int hall_id) throws SQLException {
-		//
-	}
-
+	/**
+	 * List all Halls
+	 * @param connection
+	 * @return
+	 * @throws SQLException
+	 */
 	public static ArrayList<Hall> listAll(Connection connection) throws SQLException {
 		String query = "SELECT * FROM halls";
 		PreparedStatement statement = connection.prepareStatement(query);
@@ -138,6 +148,12 @@ public class Hall {
 		}
 		return halls;
 	}
+	/**
+	 * Check if it is a valid hall
+	 * @param halls
+	 * @param selectedHall
+	 * @return
+	 */
 	public static boolean checkHallExist(ArrayList<Hall> halls, int selectedHall) {
 		for (Hall hall : halls) {
 			if(hall.getId() == selectedHall) {

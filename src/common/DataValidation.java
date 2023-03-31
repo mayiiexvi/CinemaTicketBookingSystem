@@ -4,7 +4,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+/**
+ * DataValidation class
+ * @author Sylvia Espina C0866311
+ * @author Mufida Andi C0864756
+ * @author Jenil Shivamkumar Varma C0870543
+ * @author Tich Vu Lu C0861736
+ * @author Jay Shah C0868053
+ */
 public class DataValidation {
+	/**
+	 * allow users input a valid double number only
+	 * @param prompt
+	 * @return
+	 */
 	public static double readPositiveDouble(String prompt) {
 		Scanner keyboard = new Scanner(System.in);
 		Double num = 0.0;
@@ -29,6 +42,11 @@ public class DataValidation {
 		return num;
 	}
 	
+	/**
+	 * allow users input a valid integer number only
+	 * @param prompt
+	 * @return
+	 */
 	public static int readPositiveInt(String prompt) {
 		Scanner keyboard = new Scanner(System.in);
 		int num = 0;
@@ -53,6 +71,11 @@ public class DataValidation {
 		return num;
 	}
     
+	/**
+	 * allow users input a string not empty
+	 * @param prompt
+	 * @return
+	 */
 	public static String inputStringNotEmpty(String prompt) {
 		Scanner keyboard = new Scanner(System.in);
 		boolean isValid = false;
@@ -69,6 +92,13 @@ public class DataValidation {
 		return result;
 	}
 	
+	/**
+	 * allow users input a valid integer number only and limit max value.
+	 * @param prompt
+	 * @param max
+	 * @param alertMessage
+	 * @return
+	 */
 	public static int readPositiveInt(String prompt, int max, String alertMessage) {
 		Scanner keyboard = new Scanner(System.in);
 		int num = 0;
@@ -94,7 +124,7 @@ public class DataValidation {
 	}
 	
 	/**
-	 * 
+	 * allow users input a valid date with a specific format
 	 * @param prompt
 	 * @return
 	 */
@@ -116,6 +146,11 @@ public class DataValidation {
         return date;
     }
 	
+	/**
+	 * allow users input a valid time with a specific format
+	 * @param prompt
+	 * @return
+	 */
 	public static Date readPositiveTime(String prompt) {
         Scanner scanner = new Scanner(System.in);
         SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");

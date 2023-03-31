@@ -1,5 +1,13 @@
 package common;
 
+/**
+ * Constant class
+ * @author Sylvia Espina C0866311
+ * @author Mufida Andi C0864756
+ * @author Jenil Shivamkumar Varma C0870543
+ * @author Tich Vu Lu C0861736
+ * @author Jay Shah C0868053
+ */
 public class Constant {
 	public static final String DATE_FORMAT = "MM/dd/yyyy";
 	public static final String ANSI_RESET = "\u001B[0m";

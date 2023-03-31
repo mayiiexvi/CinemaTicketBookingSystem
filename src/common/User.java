@@ -13,8 +13,14 @@ import java.util.ArrayList;
 
 public class User {
 	/**
-	 * @param args
+	 * User class
+	 * @author Sylvia Espina C0866311
+	 * @author Mufida Andi C0864756
+	 * @author Jenil Shivamkumar Varma C0870543
+	 * @author Tich Vu Lu C0861736
+	 * @author Jay Shah C0868053
 	 */
+	/*----------- Fields ----------- */
 	private int id;
 	private String username;
 	private String password;
@@ -25,7 +31,7 @@ public class User {
 	private String phone;
 	
 	
-	
+	/*----------- Getter Setter ----------- */
 	/**
 	 * @return the id
 	 */
@@ -127,9 +133,15 @@ public class User {
 		this.phone = phone;
 	}
 	
+	/*----------- Constructors ----------- */
+	/**
+	 * Default constructor
+	 */
 	public User() {}
 	
+	
 	/**
+	 * Constructor with fields
 	 * @param firstName
 	 * @param lastName
 	 * @param role
@@ -144,6 +156,14 @@ public class User {
 		this.email = email;
 		this.phone = phone;
 	}
+	/**
+	 * Constructor with fields
+	 * @param id
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @param phone
+	 */
 	public User(int id, String firstName, String lastName, String email, String phone) {
 		this.id = id;
 		this.firstName = firstName;
@@ -153,7 +173,14 @@ public class User {
 		this.phone = phone;
 	}
 
-
+	/**
+	 * Check if it is a valid credential user
+	 * @param connection
+	 * @param username
+	 * @param password
+	 * @return
+	 * @throws SQLException
+	 */
 	public static User isValidCredentials(Connection connection, String username, String password) throws SQLException {
 		String query = "SELECT * FROM users WHERE user_name = ? AND password = ?";
 		PreparedStatement statement = connection.prepareStatement(query);
@@ -178,6 +205,13 @@ public class User {
 		} else { return new User();}
 		
 	}
+	/**
+	 * Insert a new user into database
+	 * @param connection
+	 * @param user
+	 * @return
+	 * @throws SQLException
+	 */
 	public static User insert(Connection connection, User user) throws SQLException {
 		String query = "INSERT INTO users (first_name, last_name, role, email, phone) VALUES (?, ?, ?, ?, ?)";
 		PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);

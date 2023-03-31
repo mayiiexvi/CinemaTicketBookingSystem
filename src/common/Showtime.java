@@ -12,8 +12,12 @@ import java.util.Date;
 import java.util.Optional;
 
 /**
- * @author Tich
- *
+ * Showtime class
+ * @author Sylvia Espina C0866311
+ * @author Mufida Andi C0864756
+ * @author Jenil Shivamkumar Varma C0870543
+ * @author Tich Vu Lu C0861736
+ * @author Jay Shah C0868053
  */
 
 public class Showtime {
@@ -98,17 +102,23 @@ public class Showtime {
 	public void setAvailableSeats(int availableSeats) {
 		this.availableSeats = availableSeats;
 	}
+	/**
+	 * This function is set to format the showtime
+	 * @return
+	 */
 	public String getShowTimeFormatted() {
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 		return formatter.format(showtime);
 	}
 	/*----------- Constructors----------- */
 	/**
-	 * 
+	 * Default constructor
 	 */
 	public Showtime() {
 	}
+	
 	/**
+	 * Constructor with fields
 	 * @param id
 	 * @param movie
 	 * @param hall
@@ -123,6 +133,13 @@ public class Showtime {
 		this.price = price;
 	}
 	
+	/**
+	 * Constructor with fields
+	 * @param movie
+	 * @param hall
+	 * @param showtime
+	 * @param price
+	 */
 	public Showtime(Movie movie, Hall hall, Timestamp showtime, double price) {
 		this.movie = movie;
 		this.hall = hall;
@@ -203,9 +220,6 @@ public class Showtime {
 		return showtimes;
 	}
 	
-	public boolean checkAvailableSeat() {
-		return true;
-	}
 	/**
 	 * This function is set to check whether a specific showtime id exists in the available showtime list.
 	 * @param showtimes
@@ -220,6 +234,7 @@ public class Showtime {
 				return showtime;
 			}
 		}
+		return null;
 		*/
 		
 		// 2. Lambda Expression way
@@ -282,6 +297,10 @@ public class Showtime {
 		System.out.println("Showtime deleted successfully\n");
 	}
 
+	/**
+	 * This function displays a list of Showtimes in table format
+	 * @param showtimes
+	 */
 	public static void displayShowtimes(ArrayList<Showtime> showtimes) {
 	    System.out.println("+-----+--------+------------------+-------+--------------+---------------------+----------+-------------+----------+---------+");
 	    System.out.println("| ID  | Movie  | Movie Name       | Hall  | Hall Name    | Showtime            | Price    | Available   | Duration | Status  |");
@@ -314,6 +333,12 @@ public class Showtime {
 	    }
 	    System.out.println("+-----+--------+------------------+-------+--------------+---------------------+----------+-------------+----------+---------+");
 	}
+	
+	/**
+	 * This function checks if a showtime is possible to update.
+	 * @param showtime
+	 * @return
+	 */
 	public static boolean isPossibleToUpdate(Showtime showtime){
 		Date now = new Date();
     	long finishMillis = showtime.getShowtime().getTime() + (showtime.getMovie().getDuration() * 60 * 1000);
@@ -331,6 +356,12 @@ public class Showtime {
         	return false;
         }
 	}
+	
+	/**
+	 * This function checks if a showtime is possible to delete.
+	 * @param showtime
+	 * @return
+	 */
 	public static boolean isPossibleToDelete(Showtime showtime){
 		Date now = new Date();
     	long finishMillis = showtime.getShowtime().getTime() + (showtime.getMovie().getDuration() * 60 * 1000);
@@ -348,6 +379,12 @@ public class Showtime {
         }
 	}
 	
+	/**
+	 * This function checks if the selected seat is in the hidden seats or not
+	 * @param hidenSeats
+	 * @param seatCode
+	 * @return
+	 */
 	public static boolean isHidenSeat(String[] hidenSeats, String seatCode) {
 		for (String seat : hidenSeats) {
 			if(seat.equals(seatCode)) {
@@ -356,18 +393,30 @@ public class Showtime {
 		}
 		return false;
 	}
+	/**
+	 * fixed length string
+	 * @param string
+	 * @param length
+	 * @return
+	 */
 	public static String fixedLengthString(String string, int length) {
 	    return String.format("%-" + length + "s", string);
 	}
+	
+	/**
+	 * This function displays seats (total seats, available seats and booked seats)
+	 * @param connection
+	 * @param showtime
+	 * @param selectedSeats
+	 * @return
+	 * @throws SQLException
+	 */
 	public static ArrayList<String> viewSeat(Connection connection, Showtime showtime, String[] selectedSeats) throws SQLException {
 		ArrayList<Ticket> seatsBooked = Ticket.getTicketsByShowTimeID(connection, showtime.getId());
 		int numRows = showtime.getHall().getSeatingRows();
 		int numCols = showtime.getHall().getSeatingCols();
 		String[] hidenSeats = showtime.getHall().getHidenSeats().split(",");
 		System.out.print("     ");
-//        for (int i = 1; i <= numCols; i++) {
-//            System.out.print(i + "    ");
-//        }
         System.out.println();
         ArrayList<String> validSeats = new ArrayList<>(); 
         for (int i = 0; i < numRows; i++) {
