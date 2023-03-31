@@ -20,26 +20,16 @@ import java.util.Optional;
  * @author Tich Vu Lu C0861736
  * @author Jay Shah C0868053
  */
-public class Ticket {
+public class Ticket extends Entity{
 	/*----------- Fields ----------- */
-	private int id;
 	private User user;
 	private Showtime showtime;
 	private int seat_row;
 	private int seat_col;
 	private String seatCode;
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+
+	
+	/*----------- Getter Setter ----------- */
 	/**
 	 * @return the user
 	 */
@@ -127,7 +117,7 @@ public class Ticket {
 	 * @param seat_col
 	 */
 	public Ticket(int id, User user, Showtime showtime, int seat_row, int seat_col) {
-		this.id = id;
+		super(id);
 		this.user = user;
 		this.showtime = showtime;
 		this.seat_row = seat_row;

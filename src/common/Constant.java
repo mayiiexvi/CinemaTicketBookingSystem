@@ -10,6 +10,7 @@ package common;
  */
 public class Constant {
 	public static final String DATE_FORMAT = "MM/dd/yyyy";
+	
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_RED = "\u001B[31m";
@@ -19,4 +20,6 @@ public class Constant {
 	public static final String ANSI_PURPLE = "\u001B[35m";
 	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_WHITE = "\u001B[37m";
+	
+	public static enum Status {Closed, Open, Showing}; 
 }

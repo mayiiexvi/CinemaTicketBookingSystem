@@ -18,27 +18,14 @@ import java.util.Date;
  * @author Tich Vu Lu C0861736
  * @author Jay Shah C0868053
  */
-public class Hall {
+public class Hall extends Entity {
 	/*----------- Fields ----------- */
-	private int id;
 	private String name;
 	private int seatingRows;
 	private int seatingCols;
 	private String hidenSeats;
 	
 	/*----------- Getter Setter ----------- */
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
 	/**
 	 * @return the name
 	 */
@@ -88,14 +75,17 @@ public class Hall {
 	public void setHidenSeats(String hidenSeats) {
 		this.hidenSeats = hidenSeats;
 	}
-	/**
-	 * @param id the id to set
-	 */
-	public Hall(int id) {
-		this.id = id;
-	}
+
 
 	/*----------- Constructors ----------- */
+	
+	/**
+	 * Constructor with 1 field
+	 * @param id
+	 */
+	public Hall(int id) {
+		super(id);
+	}
 	/**
 	 * Constructor with fields
 	 * @param id
@@ -105,7 +95,7 @@ public class Hall {
 	 * @param hidenSeats
 	 */
 	public Hall(int id, String name, int seatingRows, int seatingCols, String hidenSeats) {
-		this.id = id;
+		super(id);
 		this.name = name;
 		this.seatingRows = seatingRows;
 		this.seatingCols = seatingCols;
@@ -120,7 +110,7 @@ public class Hall {
 	 * @param seatingCols
 	 */
 	public Hall(int id, String name, int seatingRows, int seatingCols) {
-		this.id = id;
+		super(id);
 		this.name = name;
 		this.seatingRows = seatingRows;
 		this.seatingCols = seatingCols;
