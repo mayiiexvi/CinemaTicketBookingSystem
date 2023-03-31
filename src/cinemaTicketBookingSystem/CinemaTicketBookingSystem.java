@@ -45,7 +45,7 @@ public class CinemaTicketBookingSystem {
         while (number != 3) {
         	try {
         		menu();		
-	        	number = DataValidation.readPositiveInt("Please Select The Option:");
+	        	number = DataValidation.readPositiveInt("Please select the option:");
 	        	if (number == 1) {
 	        		Admin.main(null);      // Calling main method of the Admin class 
 	        	} else if (number == 2) {
@@ -56,7 +56,7 @@ public class CinemaTicketBookingSystem {
 	        		System.exit(0);
 	        	} else {
 	        		// showing the message while selecting the wrong input
-	        		System.out.println("Oops! Wrong Option Selected.");
+	        		System.out.println("Oops! Wrong option selected.");
 	        		System.out.println("Please select the correct option.");
 	        		throw new Exception();
 	        	}

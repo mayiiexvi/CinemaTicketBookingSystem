@@ -136,8 +136,7 @@ public class Movie {
 		return ("ID:\t\t" + id + "\n"
 				+ "Movie name:\t" + movieName + "\n"
 				+ "Synopsis:\t" + synopsis + "\n"
-				+ "Release date:\t" + releaseDate  
-				//+"\n" + "Price: " + price
+				+ "Release date:\t" + releaseDate
 				 );
 	}
 	
