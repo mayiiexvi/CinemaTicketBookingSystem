@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Ticket class
@@ -162,7 +163,29 @@ public class Ticket {
 		return ticket;
 	}
 	
-
+	/**
+	 * Delete a ticket
+	 * @param connection
+	 * @param id
+	 * @throws SQLException
+	 */
+	public static void delete(Connection connection, int id) throws SQLException {
+		String query = "DELETE FROM tickets WHERE id = ?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, id);
+		statement.executeUpdate();
+		System.out.println("Ticket deleted successfully\n");
+	}
+	
+	public static void update(Connection connection, Ticket ticket) throws SQLException {
+		String query = "UPDATE tickets SET SEATCODE = ? WHERE id = ?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setString(1, ticket.getSeatCode());
+		statement.setInt(2, ticket.getId());
+		statement.executeUpdate();
+		System.out.println("Ticket updated successfully\n");
+	}
+	
 	/**
 	 * Check if a seat is booked
 	 * @param seatsBooked
@@ -220,4 +243,19 @@ public class Ticket {
                     ticket.getUser().getLastName(), ticket.getUser().getPhone(), ticket.getUser().getEmail());
         }
     }
+	
+	/**
+	 * check if it's a valid ticket
+	 * @param tickets
+	 * @param id
+	 * @return
+	 */
+	public static Ticket ticketCheckExists(ArrayList<Ticket> tickets, int id) {
+		for (Ticket ticket : tickets) {
+			if(ticket.getId() == id) {
+				return ticket;
+			}
+		}
+		return null;
+	}
 }

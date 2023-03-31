@@ -22,7 +22,7 @@ public class DatabaseConnection {
 
 	private static DatabaseConnection instance;
 	private Connection connection;
-	private String url = "jdbc:mysql://localhost:3306/cinematicketbookingsystem";
+	private String url = "jdbc:mysql://localhost:3306/java2";
 	private String user = "java2";
 	private String password = "java2";
 
