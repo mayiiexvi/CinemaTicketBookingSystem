@@ -179,14 +179,14 @@ public class Showtime {
 				+ "C.ID AS MOVIE_ID, C.MOVIE_NAME, C.synopsis, C.release_date,\r\n"
 				+ "((SELECT SEATING_ROWS * SEATING_COLS FROM HALLS WHERE ID = B.ID) - (SELECT COUNT(*) AS SEATBOOKED FROM TICKETS WHERE SHOWTIME_ID = A.ID)) \r\n"
 				+ "- (SELECT (LENGTH(B.HIDENSEATS) - LENGTH(REPLACE(HIDENSEATS, ',', ''))) - 1) AS AVAILABLE_SEATS,\r\n"
-				+ "B.SEATING_ROWS, B.SEATING_COLS, HIDENSEATS\r\n"
+				+ "B.SEATING_ROWS, B.SEATING_COLS, HIDENSEATS, C.DURATION\r\n"
 				+ "FROM SHOWTIME A INNER JOIN HALLS B ON A.HALL_ID = B.ID\r\n"
 				+ "INNER JOIN MOVIES C ON A.MOVIE_ID = C.ID\r\n"
 				+ "ORDER BY A.ID DESC;";
 		PreparedStatement statement = connection.prepareStatement(query);
 		ResultSet resultSet = statement.executeQuery();
 		while (resultSet.next()) {
-			Movie mv = new Movie(resultSet.getInt("MOVIE_ID"), resultSet.getString("MOVIE_NAME"), resultSet.getString("synopsis"), resultSet.getString("release_date"));
+			Movie mv = new Movie(resultSet.getInt("MOVIE_ID"), resultSet.getString("MOVIE_NAME"), resultSet.getString("synopsis"), resultSet.getString("release_date"), resultSet.getInt("DURATION"));
 			Hall hall = new Hall(resultSet.getInt("HALL_ID"), resultSet.getString("HALL_NAME"), resultSet.getInt("SEATING_ROWS"), resultSet.getInt("SEATING_COLS"), resultSet.getString("HIDENSEATS") );
 			Showtime showtime = new Showtime();
 			showtime.setId(resultSet.getInt("ID"));
@@ -284,30 +284,69 @@ public class Showtime {
 	}
 
 	public static void displayShowtimes(ArrayList<Showtime> showtimes) {
-	    System.out.println("+-----+--------+------------------+-------+--------------+---------------------+----------+-------------+--------+");
-	    System.out.println("| ID  | Movie  | Movie Name       | Hall  | Hall Name    | Showtime            | Price    | Available   | Status |");
-	    System.out.println("|     | ID     |                  | ID    |              |                     |          | Seats       |        |");
-	    System.out.println("+-----+--------+------------------+-------+--------------+---------------------+----------+-------------+--------+");
+	    System.out.println("+-----+--------+------------------+-------+--------------+---------------------+----------+-------------+----------+---------+");
+	    System.out.println("| ID  | Movie  | Movie Name       | Hall  | Hall Name    | Showtime            | Price    | Available   | Duration | Status  |");
+	    System.out.println("|     | ID     |                  | ID    |              |                     |          | Seats       | (min)    |         |");
+	    System.out.println("+-----+--------+------------------+-------+--------------+---------------------+----------+-------------+----------+---------+");
 	    for (Showtime showtime : showtimes) {
 	    	Date now = new Date();
-			long oneHourLaterMillis = now.getTime() + (60 * 60 * 1000);
-	        Date oneHourLater = new Date(oneHourLaterMillis);
-	        if(showtime.getShowtime().after(oneHourLater)) { // is equal to or is later than
+			//long oneHourLaterMillis = now.getTime() + (60 * 60 * 1000);
+	    	long finishMillis = showtime.getShowtime().getTime() + (showtime.getMovie().getDuration() * 60 * 1000);
+	        Date finishTime = new Date(finishMillis);
+	        if(now.after(showtime.getShowtime()) && now.before(finishTime)) { // It's showing
 	        	// Now showing
-	        	System.out.println(Constant.ANSI_GREEN + String.format("| %-3d | %-6d | %-16s | %-5d | %-12s | %-19s | $%-7.2f | %-11d | %-6s |",
+	        	System.out.println(Constant.ANSI_RED + String.format("| %-3d | %-6d | %-16s | %-5d | %-12s | %-19s | $%-7.2f | %-11d | %-8d | %-7s |",
 		                showtime.getId(), showtime.getMovie().getId(), showtime.getMovie().getMovieName(),
 		                showtime.getHall().getId(), showtime.getHall().getName(), showtime.getShowTimeFormatted(),
-		                showtime.getPrice(), showtime.getAvailableSeats(), "Open  ") + Constant.ANSI_RESET);
+		                showtime.getPrice(), showtime.getAvailableSeats(), showtime.getMovie().getDuration(), "Showing") + Constant.ANSI_RESET);
+	        } else if(now.before(showtime.getShowtime())){
+	        	// Open
+	        	System.out.println(Constant.ANSI_GREEN + String.format("| %-3d | %-6d | %-16s | %-5d | %-12s | %-19s | $%-7.2f | %-11d | %-8d | %-7s |",
+		                showtime.getId(), showtime.getMovie().getId(), showtime.getMovie().getMovieName(),
+		                showtime.getHall().getId(), showtime.getHall().getName(), showtime.getShowTimeFormatted(),
+		                showtime.getPrice(), showtime.getAvailableSeats(), showtime.getMovie().getDuration(), "Open  ") + Constant.ANSI_RESET);
 	        } else {
-	        	// Done
-	        	System.out.println(String.format("| %-3d | %-6d | %-16s | %-5d | %-12s | %-19s | $%-7.2f | %-11d | %-6s |",
+	        	// Closed
+	        	System.out.println(String.format("| %-3d | %-6d | %-16s | %-5d | %-12s | %-19s | $%-7.2f | %-11d | %-8d | %-7s |",
 		                showtime.getId(), showtime.getMovie().getId(), showtime.getMovie().getMovieName(),
 		                showtime.getHall().getId(), showtime.getHall().getName(), showtime.getShowTimeFormatted(),
-		                showtime.getPrice(), showtime.getAvailableSeats(), "Closed"));
+		                showtime.getPrice(), showtime.getAvailableSeats(), showtime.getMovie().getDuration(), "Closed"));
 	        }
 	        
 	    }
-	    System.out.println("+-----+----------+----------------+-------+----------------+---------------------+-------+--------------+--------+");
+	    System.out.println("+-----+--------+------------------+-------+--------------+---------------------+----------+-------------+----------+---------+");
 	}
-
+	public static boolean isPossibleToUpdate(Showtime showtime){
+		Date now = new Date();
+    	long finishMillis = showtime.getShowtime().getTime() + (showtime.getMovie().getDuration() * 60 * 1000);
+        Date finishTime = new Date(finishMillis);
+        if(now.after(showtime.getShowtime()) && now.before(finishTime)) { // It's showing
+        	// Now showing
+        	System.out.println("This show is in progress and cannot be updated.");
+        	return false;
+        } else if(now.before(showtime.getShowtime())){
+        	// Open
+        	return true;
+        } else {
+        	// Closed
+        	System.out.println("This show is closed and cannot be updated.");
+        	return false;
+        }
+	}
+	public static boolean isPossibleToDelete(Showtime showtime){
+		Date now = new Date();
+    	long finishMillis = showtime.getShowtime().getTime() + (showtime.getMovie().getDuration() * 60 * 1000);
+        Date finishTime = new Date(finishMillis);
+        if(now.after(showtime.getShowtime()) && now.before(finishTime)) { // It's showing
+        	// Now showing
+        	System.out.println("This show is in progress and cannot be deleted.");
+        	return false;
+        } else if(now.before(showtime.getShowtime())){
+        	// Open
+        	return true;
+        } else {
+        	// Closed
+        	return true;
+        }
+	}
 }

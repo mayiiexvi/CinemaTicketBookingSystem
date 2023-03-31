@@ -138,7 +138,10 @@ public class Admin {
 		System.out.println(  "            *******            ");
 		int showtimeID = DataValidation.readPositiveInt("Please choose a showtime: ");
 		Showtime showtime = Showtime.showtimeCheckExists(showtimes, showtimeID);		
-		if(showtime != null) {			
+		if(showtime != null) {
+			if(!Showtime.isPossibleToDelete(showtime)) {
+				return;
+			}
 			while(true) {
 				try {
 					System.out.println("Are you sure you want to delete the showtime " + showtimeID +" ? y/n");
@@ -171,7 +174,9 @@ public class Admin {
 		int showtimeID = DataValidation.readPositiveInt("Please choose a showtime: ");
 		Showtime showtime = Showtime.showtimeCheckExists(showtimes, showtimeID);
 		if(showtime != null){
-			
+			if(!Showtime.isPossibleToUpdate(showtime)) {
+				return;
+			}
 			/*Update the movie*/
 			while(true) {
 				try {

@@ -106,11 +106,13 @@ public class DatabaseConnection {
 				+ "  `movie_name` varchar(100) DEFAULT NULL,\r\n"
 				+ "  `synopsis` varchar(100) DEFAULT NULL,\r\n"
 				+ "  `release_date` varchar(100) DEFAULT NULL,\r\n"
+				+ "  `duration` int DEFAULT 120,\r\n"
 				+ "  PRIMARY KEY (`id`)\r\n"
 				+ ");";
 		sql= new ArrayList<>();
-		sql.add("INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`) VALUES (1,'John Wick 4','With the price on his head ever increasing, legendary hit man John Wick takes his fight against...','1/1/2024');");
-		sql.add("INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`) VALUES (2,'Strange Things','In 1980s Indiana, a group of young friends witness supernatural forces and secret government exploit','2/2/2024');");
+		sql.add("INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`duration`) VALUES (1,'John Wick 4','With the price on his head ever increasing, legendary hit man John Wick takes his fight against...','1/1/2024',120);");
+		sql.add("INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`duration`) VALUES (2,'Strange Things','In 1980s Indiana, a group of young friends witness supernatural forces and secret government exploit','2/2/2024',180);");
+		sql.add("INSERT INTO `movies` (`id`,`movie_name`,`synopsis`,`release_date`,`duration`) VALUES (3,'Interstellar','A group of explorers make use of a newly discovered wormhole to surpass the limitations on.','2/6/2014',120);");
 		tbl = new Table(tableName, sqlCreate, sql);
 		tables.add(tbl);
 		
@@ -159,10 +161,11 @@ public class DatabaseConnection {
 				+ "  CONSTRAINT `showtime_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `movies` (`id`)\r\n"
 				+ ");";
 		sql= new ArrayList<>();
-		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (1,1,1,DATE_ADD(NOW(), INTERVAL 3 HOUR),60.00);");
-		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (2,1,2,DATE_ADD(NOW(), INTERVAL 4 HOUR),30.00);");
-		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (3,2,1,DATE_ADD(NOW(), INTERVAL 4 HOUR),25.00);");
-		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (4,2,3,'2023-05-10 21:10:00',98.00);");
+		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (1,1,1,DATE_SUB(NOW(), INTERVAL 5 HOUR),60.00);");
+		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (2,1,2,DATE_SUB(NOW(), INTERVAL 1 HOUR),30.00);");
+		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (3,2,1,DATE_ADD(NOW(), INTERVAL 3 HOUR),25.00);");
+		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (4,2,3,DATE_ADD(NOW(), INTERVAL 4 HOUR),98.00);");
+		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (5,3,2,DATE_ADD(NOW(), INTERVAL 5 HOUR),85.00);");
 		tbl = new Table(tableName, sqlCreate, sql);
 		tables.add(tbl);
 		
