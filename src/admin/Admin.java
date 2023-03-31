@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import common.Constant;
 import common.DataValidation;
@@ -22,6 +23,7 @@ import common.DatabaseConnection;
 import common.Hall;
 import common.Movie;
 import common.Showtime;
+import common.Ticket;
 import common.User;
 /**
  * @author Sylvia Espina C0866311
@@ -47,7 +49,8 @@ public class Admin {
         System.out.println("Please select an option:");
 		System.out.println("1. Movies Management");
 		System.out.println("2. Showtimes Management");
-		System.out.println("3. Exit");
+		System.out.println("3. Tickets Management");
+		System.out.println("4. Exit");
 		System.out.print("Your choice: ");
 		return keyboard.nextLine();
 	}
@@ -84,7 +87,9 @@ public class Admin {
 	        			moviesProcess();
 	        		} else if(choice.equals("2")) { // showtimes main process
 	        			showtimesProcess();
-	        		} else if(choice.equals("3")) { // main program exit
+	        		} else if(choice.equals("3")) {
+	        			ticketsProcess();
+	        		} else if(choice.equals("4")) { // main program exit
 	        			CinemaTicketBookingSystem.main(null);
 	        		} else {
 	        			System.out.println("Bad input! Please try again!");
@@ -600,4 +605,81 @@ public class Admin {
         Date dateTime = new Date(date.getYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds());
         return dateTime;
     }
+	/*------------------------------------TICKETS----------------------------------------*/
+	public static void updateTicket() throws SQLException {
+		System.out.println("\n          UPDATE TICKETS            ");
+		System.out.println(  "            *******            ");
+		ArrayList<Showtime> showtimes = viewAllShowtimes();
+		int showtimeID = DataValidation.readPositiveInt("Please choose a showtime: ");
+		Showtime showtime = Showtime.showtimeCheckExists(showtimes, showtimeID);
+		if(showtime != null) {
+			if(!Showtime.isPossibleToUpdate(showtime)) {
+				return;
+			}
+			// Update ticket here
+		} else {
+			System.out.println("The showtime ID provided does not exist.");
+		}
+	}
+	public static void deleteTicket() throws SQLException {
+		System.out.println("\n          VIEW TICKETS            ");
+		System.out.println(  "            *******            ");
+		ArrayList<Showtime> showtimes = viewAllShowtimes();
+		int showtimeID = DataValidation.readPositiveInt("Please choose a showtime: ");
+		Showtime showtime = Showtime.showtimeCheckExists(showtimes, showtimeID);
+		if(showtime != null) {
+			if(!Showtime.isPossibleToDelete(showtime)) {
+				return;
+			}
+			// Delete ticket here
+		} else {
+			System.out.println("The showtime ID provided does not exist.");
+		}
+	}
+	public static void viewTickets() throws SQLException {
+		System.out.println("\n          VIEW TICKETS            ");
+		System.out.println(  "            *******            ");
+		ArrayList<Showtime> showtimes = viewAllShowtimes();
+		int showtimeID = DataValidation.readPositiveInt("Please choose a showtime: ");
+		Showtime showtime = Showtime.showtimeCheckExists(showtimes, showtimeID);
+		if(showtime != null) {
+			ArrayList<Ticket> tickets = Ticket.getTicketsByShowTimeID_2(connection, showtimeID);
+			String[] seats = new String[tickets.size()];
+			for(int i=0;i<seats.length;i++) {
+				seats[i] = tickets.get(i).getSeatCode();
+			}
+			Showtime.viewSeat(connection, showtime, seats);
+			System.out.println("List of tickets");
+			Ticket.displayTickets(tickets);
+		} else {
+			System.out.println("The showtime ID provided does not exist.");
+		}
+	}
+	public static String ticketsMenu() {
+		System.out.println("\n         TICKETS MENU         ");
+		System.out.println("----------------------------------------------");
+		System.out.println("1 - View tickets");
+		System.out.println("2 - Update ticket");
+		System.out.println("3 - Delete ticket");
+		System.out.println("4 - Exit");
+		System.out.print("Your choice: ");
+		return keyboard.nextLine();
+	}
+	public static void ticketsProcess() throws SQLException {
+		String choice = "";
+    	do {
+    		choice = ticketsMenu();
+    		if(choice.equals("1")) {
+    			viewTickets();
+    		} else if(choice.equals("2")) {
+    			updateTicket();
+    		} else if(choice.equals("3")) {
+    			deleteTicket();
+    		} else if(choice.equals("4")) {
+    			// go back
+    		} else {
+    			System.out.println("Bad input! Please try again!");
+    		}
+    	} while(!choice.equals("4"));
+	}
 }

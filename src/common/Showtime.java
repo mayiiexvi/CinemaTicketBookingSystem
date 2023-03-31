@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 
@@ -348,5 +349,57 @@ public class Showtime {
         	// Closed
         	return true;
         }
+	}
+	
+	public static boolean isHidenSeat(String[] hidenSeats, String seatCode) {
+		for (String seat : hidenSeats) {
+			if(seat.equals(seatCode)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public static String fixedLengthString(String string, int length) {
+	    return String.format("%-" + length + "s", string);
+	}
+	public static ArrayList<String> viewSeat(Connection connection, Showtime showtime, String[] selectedSeats) throws SQLException {
+		ArrayList<Ticket> seatsBooked = Ticket.getTicketsByShowTimeID(connection, showtime.getId());
+		int numRows = showtime.getHall().getSeatingRows();
+		int numCols = showtime.getHall().getSeatingCols();
+		String[] hidenSeats = showtime.getHall().getHidenSeats().split(",");
+		System.out.print("     ");
+//        for (int i = 1; i <= numCols; i++) {
+//            System.out.print(i + "    ");
+//        }
+        System.out.println();
+        ArrayList<String> validSeats = new ArrayList<>(); 
+        for (int i = 0; i < numRows; i++) {
+        	System.out.print("   ");
+            for (int j = 0; j < numCols; j++) {
+            	String seatCode = (char) ('A' + i)+String.valueOf(j+1);
+                if (Ticket.isBookedSeat(seatsBooked,seatCode )) {
+                    System.out.print(Constant.ANSI_RED + fixedLengthString(seatCode, 5) + Constant.ANSI_RESET);
+                } else {
+                	if(isHidenSeat(hidenSeats, seatCode)) {
+                		System.out.print(fixedLengthString(" ", 5));
+                	} else {
+                		if(Arrays.asList(selectedSeats).contains(seatCode)) {
+                			System.out.print(Constant.ANSI_GREEN + fixedLengthString(seatCode, 5) + Constant.ANSI_RESET);
+                		} else {
+                		System.out.print(fixedLengthString(seatCode, 5));
+                		}
+                		validSeats.add(seatCode);
+                	}
+                }
+            }
+            System.out.println();
+        }
+        String screen1 = "____________________________________________";
+        String screen2 = "|                  Screen                    |";
+        int tmp = ((numCols*5 + 3) - screen1.length()) /2 ;
+        System.out.println(Character.toString(' ').repeat(tmp+1) + screen1 + Character.toString(' ').repeat(tmp));
+        System.out.println(Character.toString(' ').repeat(tmp) + screen2 + Character.toString(' ').repeat(tmp));
+		System.out.println();
+		return validSeats;
 	}
 }

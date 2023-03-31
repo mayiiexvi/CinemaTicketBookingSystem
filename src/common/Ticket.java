@@ -175,4 +175,35 @@ public class Ticket {
 		}
 		return false;
 	}
+	public static ArrayList<Ticket> getTicketsByShowTimeID_2(Connection connection, int showtimeID) throws SQLException{
+		ArrayList<Ticket> tickets = new ArrayList<>();
+		String query = "SELECT A.ID, A.USER_ID, A.SEATCODE,\r\n"
+				+ "B.FIRST_NAME, B.LAST_NAME, B.EMAIL, B.PHONE FROM TICKETS A INNER JOIN USERS B ON A.USER_ID = B.ID\r\n"
+				+ "WHERE A.SHOWTIME_ID = ?";
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, showtimeID);
+		ResultSet resultSet = statement.executeQuery();
+		while (resultSet.next()) {
+			Ticket ticket = new Ticket();
+			User user = new User(resultSet.getInt("USER_ID"), resultSet.getString("FIRST_NAME"), resultSet.getString("LAST_NAME"), resultSet.getString("EMAIL"), resultSet.getString("PHONE"));
+			ticket.setUser(user);
+			ticket.setId(resultSet.getInt("ID"));
+			ticket.setSeatCode(resultSet.getString("SEATCODE"));
+			tickets.add(ticket);
+		}
+		return tickets;
+	}
+	public static void displayTickets(ArrayList<Ticket> tickets) {
+
+        // Display the list of tickets
+        System.out.format("%-10s %-12s %-10s %-15s %-15s %-15s %-25s\n",
+                "Ticket ID", "Seat Number", "User ID", "First Name", "Last Name", "Phone", "Email");
+        System.out.println("--------------------------------------------------------------------------------------------");
+
+        for (Ticket ticket : tickets) {
+            System.out.format("%-10d %-12s %-10d %-15s %-15s %-15s %-25s\n",
+                    ticket.getId(), ticket.getSeatCode(), ticket.getUser().getId(), ticket.getUser().getFirstName(),
+                    ticket.getUser().getLastName(), ticket.getUser().getPhone(), ticket.getUser().getEmail());
+        }
+    }
 }

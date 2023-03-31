@@ -102,7 +102,7 @@ public class Guest {
 			    if(showtime != null) {
 			    	System.out.println(showtime.getMovie());
 					//viewSeat(showtime.getMovie().getId());
-			    	ArrayList<String> validSeats = viewSeat(showtime, new String[0]);
+			    	ArrayList<String> validSeats = Showtime.viewSeat(connection, showtime, new String[0]);
 					String[] numOfSeats = chooseSeat(showtime, validSeats, showtime.getMovie().getId());
 					review(showtime, numOfSeats);
 			    	flag = false;
@@ -111,62 +111,6 @@ public class Guest {
 			    }
 		    }
 		}
-	}
-	
-	
-	public static boolean isHidenSeat(String[] hidenSeats, String seatCode) {
-		for (String seat : hidenSeats) {
-			if(seat.equals(seatCode)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	public static String fixedLengthString(String string, int length) {
-	    return String.format("%-" + length + "s", string);
-	}
-	public static ArrayList<String> viewSeat(Showtime showtime, String[] selectedSeats) throws SQLException {
-		ArrayList<Ticket> seatsBooked = Ticket.getTicketsByShowTimeID(connection, showtime.getId());
-		int numRows = showtime.getHall().getSeatingRows();
-		int numCols = showtime.getHall().getSeatingCols();
-		String[] hidenSeats = showtime.getHall().getHidenSeats().split(",");
-		System.out.print("     ");
-//        for (int i = 1; i <= numCols; i++) {
-//            System.out.print(i + "    ");
-//        }
-        System.out.println();
-        ArrayList<String> validSeats = new ArrayList<>(); 
-        for (int i = 0; i < numRows; i++) {
-        	System.out.print("   ");
-            for (int j = 0; j < numCols; j++) {
-            	String seatCode = (char) ('A' + i)+String.valueOf(j+1);
-                if (Ticket.isBookedSeat(seatsBooked,seatCode )) {
-                    System.out.print(Constant.ANSI_RED + fixedLengthString(seatCode, 5) + Constant.ANSI_RESET);
-                } else {
-                	if(isHidenSeat(hidenSeats, seatCode)) {
-                		System.out.print(fixedLengthString(" ", 5));
-                	} else {
-                		if(Arrays.asList(selectedSeats).contains(seatCode)) {
-                			System.out.print(Constant.ANSI_GREEN + fixedLengthString(seatCode, 5) + Constant.ANSI_RESET);
-                		} else {
-                		System.out.print(fixedLengthString(seatCode, 5));
-                		}
-                		validSeats.add(seatCode);
-                	}
-                }
-            }
-            System.out.println();
-        }
-        //int tmp = (numCols*5 + 3 -6)/2;
-        //System.out.println(Character.toString('_').repeat(numCols*5 + 3));
-		//System.out.println("|" + Character.toString(' ').repeat(tmp) + "Screen" + Character.toString(' ').repeat(tmp) + "|");
-        String screen1 = "____________________________________________";
-        String screen2 = "|                  Screen                    |";
-        int tmp = ((numCols*5 + 3) - screen1.length()) /2 ;
-        System.out.println(Character.toString(' ').repeat(tmp+1) + screen1 + Character.toString(' ').repeat(tmp));
-        System.out.println(Character.toString(' ').repeat(tmp) + screen2 + Character.toString(' ').repeat(tmp));
-		System.out.println();
-		return validSeats;
 	}
 	
 
@@ -191,7 +135,7 @@ public class Guest {
 				seats[i] = keyboard.next().toUpperCase();
 			}
 		}
-		viewSeat(showtime, seats);
+		Showtime.viewSeat(connection, showtime, seats);
 		String tmp = "";
 		for (String seat : seats) {
 			tmp += seat + ", ";
