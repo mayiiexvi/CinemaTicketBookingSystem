@@ -697,6 +697,45 @@ public class Admin {
 				return;
 			}
 			// Update ticket here
+			ArrayList<Ticket> tickets = Ticket.getTicketsByShowTimeID(connection, showtimeID);
+			Ticket.displayTickets(tickets);
+			int ticketID = DataValidation.readPositiveInt("Please choose a ticket: ");
+			Ticket ticket = Ticket.ticketCheckExists(tickets, ticketID);
+			String currentSeat = ticket.getSeatCode();
+			if(ticket != null) {
+				// show seats screen 
+				String[] selectedSeat = new String[] {ticket.getSeatCode()};
+				ArrayList<String> validSeats = Showtime.viewSeat(connection, showtime, selectedSeat);
+				
+				// Update seat number
+				boolean hasUpdate = false;
+				while(true) {
+					try {
+						System.out.println("Seat Number ["+ Constant.ANSI_BLUE + ticket.getSeatCode() + Constant.ANSI_RESET +"] or leave it empty to skip: ");
+						String input = keyboard.nextLine().toUpperCase();
+						if (!input.isEmpty()) {
+							if(validSeats.contains(input)) {
+								ticket.setSeatCode(input);
+								hasUpdate = true;
+								break;
+							} else {
+								System.out.println("Please Enter Valid Seat Number: ");
+							}
+	        	        } else {
+	        	            System.out.println("Skipping update price");
+	        	            break;
+	        	        }
+					} catch (Exception e) {
+		            	System.out.println("Invalid input format!");
+		            }
+				}
+				if(hasUpdate) {
+					Ticket.update(connection, ticket);
+					System.out.println("Seat Number has changed from " + currentSeat + " to " + ticket.getSeatCode());
+				}
+			} else {
+				System.out.println("The ticket ID provided does not exist.");
+			}
 		} else {
 			System.out.println("The showtime ID provided does not exist.");
 		}
@@ -707,7 +746,7 @@ public class Admin {
 	 * @throws SQLException
 	 */
 	public static void deleteTicket() throws SQLException {
-		System.out.println("\n          VIEW TICKETS            ");
+		System.out.println("\n          DELETE TICKETS            ");
 		System.out.println(  "            *******            ");
 		ArrayList<Showtime> showtimes = viewAllShowtimes();
 		int showtimeID = DataValidation.readPositiveInt("Please choose a showtime: ");
@@ -717,6 +756,32 @@ public class Admin {
 				return;
 			}
 			// Delete ticket here
+			ArrayList<Ticket> tickets = Ticket.getTicketsByShowTimeID(connection, showtimeID);
+			Ticket.displayTickets(tickets);
+			int ticketID = DataValidation.readPositiveInt("Please choose a ticket: ");
+			Ticket ticket = Ticket.ticketCheckExists(tickets, ticketID);
+			if(ticket != null) {
+				while(true) {
+					try {
+						System.out.println("Are you sure you want to delete this ticket ID " + ticketID +" ? y/n");
+						String userInput = keyboard.nextLine();
+						if(userInput.toUpperCase().equals("Y")) {
+							Ticket.delete(connection, ticketID);
+							break;
+						}else if (userInput.toUpperCase().equals("N")) {
+							System.out.println("Ticket is not deleted.");
+							break;
+						}else {
+							System.out.println("Please enter y for Yes or n for No");
+						}
+					}catch(Exception e){
+						System.out.println("Invalid input format!");
+					}
+				}
+			} else {
+				System.out.println("The ticket ID provided does not exist.");
+			}
+			
 		} else {
 			System.out.println("The showtime ID provided does not exist.");
 		}

@@ -119,7 +119,7 @@ public class Guest {
 			    Showtime showtime = Showtime.showtimeCheckExists(showtimes, showtimeID);
 			    if(showtime != null) {
 			    	System.out.println(showtime.getMovie());
-					//viewSeat(showtime.getMovie().getId());
+			    	
 			    	ArrayList<String> validSeats = Showtime.viewSeat(connection, showtime, new String[0]);
 					String[] numOfSeats = chooseSeat(showtime, validSeats, showtime.getMovie().getId());
 					review(showtime, numOfSeats);

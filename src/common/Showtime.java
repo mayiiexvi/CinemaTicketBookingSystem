@@ -195,7 +195,7 @@ public class Showtime {
 		String query = "SELECT A.ID, A.SHOWTIME, A.PRICE, B.ID AS HALL_ID, B.NAME AS HALL_NAME,\r\n"
 				+ "C.ID AS MOVIE_ID, C.MOVIE_NAME, C.synopsis, C.release_date,\r\n"
 				+ "((SELECT SEATING_ROWS * SEATING_COLS FROM HALLS WHERE ID = B.ID) - (SELECT COUNT(*) AS SEATBOOKED FROM TICKETS WHERE SHOWTIME_ID = A.ID)) \r\n"
-				+ "- (SELECT (LENGTH(B.HIDENSEATS) - LENGTH(REPLACE(HIDENSEATS, ',', ''))) - 1) AS AVAILABLE_SEATS,\r\n"
+				+ "- (SELECT (LENGTH(B.HIDENSEATS) - LENGTH(REPLACE(HIDENSEATS, ',', '')) + 1) ) AS AVAILABLE_SEATS,\r\n"
 				+ "B.SEATING_ROWS, B.SEATING_COLS, HIDENSEATS, C.DURATION\r\n"
 				+ "FROM SHOWTIME A INNER JOIN HALLS B ON A.HALL_ID = B.ID\r\n"
 				+ "INNER JOIN MOVIES C ON A.MOVIE_ID = C.ID\r\n"
@@ -423,8 +423,10 @@ public class Showtime {
         	System.out.print("   ");
             for (int j = 0; j < numCols; j++) {
             	String seatCode = (char) ('A' + i)+String.valueOf(j+1);
-                if (Ticket.isBookedSeat(seatsBooked,seatCode )) {
-                    System.out.print(Constant.ANSI_RED + fixedLengthString(seatCode, 5) + Constant.ANSI_RESET);
+                if (Ticket.isBookedSeat(seatsBooked,seatCode ) && Arrays.asList(selectedSeats).contains(seatCode)) {
+                	System.out.print(Constant.ANSI_BLUE + fixedLengthString(seatCode, 5) + Constant.ANSI_RESET);
+                } else if(Ticket.isBookedSeat(seatsBooked,seatCode )) {
+                	System.out.print(Constant.ANSI_RED + fixedLengthString(seatCode, 5) + Constant.ANSI_RESET);
                 } else {
                 	if(isHidenSeat(hidenSeats, seatCode)) {
                 		System.out.print(fixedLengthString(" ", 5));
@@ -437,6 +439,8 @@ public class Showtime {
                 		validSeats.add(seatCode);
                 	}
                 }
+                // Override with blue color 
+                
             }
             System.out.println();
         }
