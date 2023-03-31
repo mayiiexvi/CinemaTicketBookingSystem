@@ -20,9 +20,8 @@ import java.util.Optional;
  * @author Jay Shah C0868053
  */
 
-public class Showtime {
+public class Showtime extends Entity{
 	/*----------- Fields ----------- */
-	private int id;
 	private Movie movie;
 	private Hall hall;
 	private Timestamp showtime;
@@ -30,18 +29,6 @@ public class Showtime {
 	private int availableSeats;
 	
 	/*----------- Getter Setter ----------- */
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
 	/**
 	 * @return the movie
 	 */
@@ -126,7 +113,7 @@ public class Showtime {
 	 * @param price
 	 */
 	public Showtime(int id, Movie movie, Hall hall, Timestamp showtime, double price) {
-		this.id = id;
+		super(id);
 		this.movie = movie;
 		this.hall = hall;
 		this.showtime = showtime;
@@ -315,19 +302,19 @@ public class Showtime {
 	        	System.out.println(Constant.ANSI_RED + String.format("| %-3d | %-6d | %-16s | %-5d | %-12s | %-19s | $%-7.2f | %-11d | %-8d | %-7s |",
 		                showtime.getId(), showtime.getMovie().getId(), showtime.getMovie().getMovieName(),
 		                showtime.getHall().getId(), showtime.getHall().getName(), showtime.getShowTimeFormatted(),
-		                showtime.getPrice(), showtime.getAvailableSeats(), showtime.getMovie().getDuration(), "Showing") + Constant.ANSI_RESET);
+		                showtime.getPrice(), showtime.getAvailableSeats(), showtime.getMovie().getDuration(), Constant.Status.Showing) + Constant.ANSI_RESET);
 	        } else if(now.before(showtime.getShowtime())){
 	        	// Open
 	        	System.out.println(Constant.ANSI_GREEN + String.format("| %-3d | %-6d | %-16s | %-5d | %-12s | %-19s | $%-7.2f | %-11d | %-8d | %-7s |",
 		                showtime.getId(), showtime.getMovie().getId(), showtime.getMovie().getMovieName(),
 		                showtime.getHall().getId(), showtime.getHall().getName(), showtime.getShowTimeFormatted(),
-		                showtime.getPrice(), showtime.getAvailableSeats(), showtime.getMovie().getDuration(), "Open  ") + Constant.ANSI_RESET);
+		                showtime.getPrice(), showtime.getAvailableSeats(), showtime.getMovie().getDuration(), Constant.Status.Open) + Constant.ANSI_RESET);
 	        } else {
 	        	// Closed
 	        	System.out.println(String.format("| %-3d | %-6d | %-16s | %-5d | %-12s | %-19s | $%-7.2f | %-11d | %-8d | %-7s |",
 		                showtime.getId(), showtime.getMovie().getId(), showtime.getMovie().getMovieName(),
 		                showtime.getHall().getId(), showtime.getHall().getName(), showtime.getShowTimeFormatted(),
-		                showtime.getPrice(), showtime.getAvailableSeats(), showtime.getMovie().getDuration(), "Closed"));
+		                showtime.getPrice(), showtime.getAvailableSeats(), showtime.getMovie().getDuration(), Constant.Status.Closed));
 	        }
 	        
 	    }

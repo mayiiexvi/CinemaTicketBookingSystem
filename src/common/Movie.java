@@ -17,29 +17,15 @@ import java.util.ArrayList;
  * @author Tich Vu Lu C0861736
  * @author Jay Shah C0868053
  */
-public class Movie {
+public class Movie extends Entity {
 	
 	/*----------- Fields ----------- */
-	private int id;
 	private String movieName;
 	private String synopsis;
 	private String releaseDate;
 	private int duration;
 	
 	/*----------- Getter Setter ----------- */
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-  
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
   
 	/**
 	 * @return the movieName
@@ -103,7 +89,7 @@ public class Movie {
 	 * @param id the id to set
 	 */
 	public Movie(int id) {
-		this.id = id;
+		super(id);
 	}
 	/*----------- Constructors ----------- */
 	/**
@@ -124,7 +110,7 @@ public class Movie {
 	 * @param releaseDate
 	 */
 	public Movie(int id, String movieName, String synopsis, String releaseDate) {
-		this.id = id;
+		super(id);
 		this.movieName = movieName;
 		this.synopsis = synopsis;
 		this.releaseDate = releaseDate;
@@ -149,7 +135,7 @@ public class Movie {
 	 * @param duration
 	 */
 	public Movie(int id, String movieName, String synopsis, String releaseDate, int duration) {
-		this.id = id;
+		super(id);
 		this.movieName = movieName;
 		this.synopsis = synopsis;
 		this.releaseDate = releaseDate;
@@ -160,7 +146,7 @@ public class Movie {
 	 * Override toString() method
 	 */
 	public String toString() {
-		return ("ID:\t\t" + id + "\n"
+		return ("ID:\t\t" + super.getId() + "\n"
 				+ "Movie name:\t" + movieName + "\n"
 				+ "Synopsis:\t" + synopsis + "\n"
 				+ "Release date:\t" + releaseDate

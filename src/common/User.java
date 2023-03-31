@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 
-public class User {
+public class User extends Entity {
 	/**
 	 * User class
 	 * @author Sylvia Espina C0866311
@@ -21,7 +21,6 @@ public class User {
 	 * @author Jay Shah C0868053
 	 */
 	/*----------- Fields ----------- */
-	private int id;
 	private String username;
 	private String password;
 	private String firstName;
@@ -32,21 +31,6 @@ public class User {
 	
 	
 	/*----------- Getter Setter ----------- */
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
 
 	/**
 	 * @return the username
@@ -165,7 +149,7 @@ public class User {
 	 * @param phone
 	 */
 	public User(int id, String firstName, String lastName, String email, String phone) {
-		this.id = id;
+		super(id);
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.role = role;
