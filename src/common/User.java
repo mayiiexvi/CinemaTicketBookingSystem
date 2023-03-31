@@ -186,7 +186,6 @@ public class User {
 		statement.setString(3, user.getRole());
 		statement.setString(4, user.getEmail());
 		statement.setString(5, user.getPhone());
-//		statement.executeUpdate();
 		int affectedRows = statement.executeUpdate();
         if (affectedRows == 0) {
             throw new SQLException("Creating user failed, no rows affected.");

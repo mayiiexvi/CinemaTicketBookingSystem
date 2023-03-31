@@ -79,9 +79,7 @@ public class Guest {
 			for (Showtime showtime : showtimes) {
 				System.out.println("Showtime Id\t" + Constant.ANSI_BLUE + showtime.getId() + Constant.ANSI_RESET);
 				System.out.println("Showtime:\t" + showtime.getShowTimeFormatted());
-				//System.out.println("Movie Id:\t" + showtime.getMovie().getId());
 				System.out.println("Movie Name:\t" + showtime.getMovie().getMovieName());
-				//System.out.println("Release Date:\t" + showtime.getMovie().getReleaseDate());
 				System.out.println("Hall:\t\t" + showtime.getHall().getName());
 				System.out.println("Price:\t\t" + Constant.ANSI_BLUE+ "$" + String.format("%.2f", showtime.getPrice()) + Constant.ANSI_RESET );
 				System.out.println("Avalable Seats: " + Constant.ANSI_GREEN + showtime.getAvailableSeats() + Constant.ANSI_RESET);
@@ -90,7 +88,6 @@ public class Guest {
 			}
 
 		}
-		/*To add print where user is asked if they want to proceed with choosing movie or exit*/
 	}
 	public static void chooseAMovie() throws SQLException{
 	    viewNowShowing(showtimes);
@@ -113,6 +110,7 @@ public class Guest {
 		}
 	}
 	
+
 
 	public static String[] chooseSeat(Showtime showtime, ArrayList<String> validSeats, int movieId) throws SQLException {
 

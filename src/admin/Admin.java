@@ -60,16 +60,16 @@ public class Admin {
 		do {
 			System.out.println("Login Details");
 			System.out.println("------------------");
-			System.out.print("Enter Username: ");
+			System.out.print("Enter username: ");
 	        username = keyboard.nextLine();
-	        System.out.print("Enter Password: ");
+	        System.out.print("Enter password: ");
 	        password = keyboard.nextLine();
 	        userLogin = User.isValidCredentials(connection, username, password);
 	        if(userLogin.getId() != 0) {
 	        	return true;
 	        }
 	        else {
-	        	System.out.println("Invalid Username/Password. Please try again\n");
+	        	System.out.println("Invalid username/password. Please try again!\n");
 	        }
 		} while(userLogin.getId() == 0);
 		return false;
@@ -137,7 +137,6 @@ public class Admin {
     	} while(!choice.equals("5"));
 	}
 	private static void deleteShowtime() throws SQLException{
-		// TODO Auto-generated method stub
 		ArrayList<Showtime> showtimes = viewAllShowtimes();
 		System.out.println("\n          Delete A SHOWTIME            ");
 		System.out.println(  "            *******            ");
