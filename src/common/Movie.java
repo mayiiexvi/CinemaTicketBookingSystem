@@ -16,6 +16,7 @@ public class Movie {
 	private String movieName;
 	private String synopsis;
 	private String releaseDate;
+	private int duration;
 	
 	/*----------- Getter Setter ----------- */
 	/**
@@ -75,6 +76,20 @@ public class Movie {
 		this.releaseDate = releaseDate;
 	}
 	
+	/**
+	 * @return the duration
+	 */
+	public int getDuration() {
+		return duration;
+	}
+
+	/**
+	 * @param duration the duration to set
+	 */
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
 	/*----------- Constructors ----------- */
 	/**
 	 * Default constructor
@@ -83,6 +98,7 @@ public class Movie {
 		this.movieName = "";
 		this.synopsis = "";
 		this.releaseDate = "";
+		
 	}
 	
 	/**
@@ -103,6 +119,13 @@ public class Movie {
 		this.movieName = movieName;
 		this.synopsis = synopsis;
 		this.releaseDate = releaseDate;
+	}
+	public Movie(int id, String movieName, String synopsis, String releaseDate, int duration) {
+		this.id = id;
+		this.movieName = movieName;
+		this.synopsis = synopsis;
+		this.releaseDate = releaseDate;
+		this.duration = duration;
 	}
 	
 	public Movie(int id) {
