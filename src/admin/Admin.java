@@ -733,7 +733,7 @@ public class Admin {
 		int showtimeID = DataValidation.readPositiveInt("Please choose a showtime: ");
 		Showtime showtime = Showtime.showtimeCheckExists(showtimes, showtimeID);
 		if(showtime != null) {
-			ArrayList<Ticket> tickets = Ticket.getTicketsByShowTimeID_2(connection, showtimeID);
+			ArrayList<Ticket> tickets = Ticket.getTicketsByShowTimeID(connection, showtimeID);
 			String[] seats = new String[tickets.size()];
 			for(int i=0;i<seats.length;i++) {
 				seats[i] = tickets.get(i).getSeatCode();
