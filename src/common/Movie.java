@@ -9,6 +9,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Movie class
+ * @author Sylvia Espina C0866311
+ * @author Mufida Andi C0864756
+ * @author Jenil Shivamkumar Varma C0870543
+ * @author Tich Vu Lu C0861736
+ * @author Jay Shah C0868053
+ */
 public class Movie {
 	
 	/*----------- Fields ----------- */
@@ -90,6 +98,13 @@ public class Movie {
 		this.duration = duration;
 	}
 
+	/**
+	 * 
+	 * @param id the id to set
+	 */
+	public Movie(int id) {
+		this.id = id;
+	}
 	/*----------- Constructors ----------- */
 	/**
 	 * Default constructor
@@ -102,7 +117,7 @@ public class Movie {
 	}
 	
 	/**
-	 * Constructor with full fields
+	 * Constructor with fields
 	 * @param id
 	 * @param movieName
 	 * @param synopsis
@@ -114,12 +129,25 @@ public class Movie {
 		this.synopsis = synopsis;
 		this.releaseDate = releaseDate;
 	}
-	
+	/**
+	 * Constructor with fields
+	 * @param movieName
+	 * @param synopsis
+	 * @param releaseDate
+	 */
 	public Movie(String movieName, String synopsis, String releaseDate) {
 		this.movieName = movieName;
 		this.synopsis = synopsis;
 		this.releaseDate = releaseDate;
 	}
+	/**
+	 * Constructor with fields
+	 * @param id
+	 * @param movieName
+	 * @param synopsis
+	 * @param releaseDate
+	 * @param duration
+	 */
 	public Movie(int id, String movieName, String synopsis, String releaseDate, int duration) {
 		this.id = id;
 		this.movieName = movieName;
@@ -128,10 +156,9 @@ public class Movie {
 		this.duration = duration;
 	}
 	
-	public Movie(int id) {
-		this.id = id;
-	}
-	
+	/**
+	 * Override toString() method
+	 */
 	public String toString() {
 		return ("ID:\t\t" + id + "\n"
 				+ "Movie name:\t" + movieName + "\n"
@@ -140,6 +167,12 @@ public class Movie {
 				 );
 	}
 	
+	/**
+	 * Insert a new movie to database
+	 * @param connection
+	 * @param movie
+	 * @throws SQLException
+	 */
 	public static void insert(Connection connection, Movie movie) throws SQLException {
 		String query = "INSERT INTO movies (movie_name, synopsis, release_date) VALUES (?, ?, ?)";
 		PreparedStatement statement = connection.prepareStatement(query);
@@ -150,6 +183,12 @@ public class Movie {
 		System.out.println("Movie inserted successfully");
 	}
 
+	/**
+	 * Update a movie on database
+	 * @param connection
+	 * @param movie
+	 * @throws SQLException
+	 */
 	public static void update(Connection connection, Movie movie) throws SQLException {
 		String query = "UPDATE movies SET movie_name = ?, synopsis = ?, release_date = ? WHERE id = ?";
 		PreparedStatement statement = connection.prepareStatement(query);
@@ -161,6 +200,12 @@ public class Movie {
 		System.out.println("Movie updated successfully");
 	}
 
+	/**
+	 * Delete a movie on database
+	 * @param connection
+	 * @param movie_id
+	 * @throws SQLException
+	 */
 	public static void delete(Connection connection, int movie_id) throws SQLException {
 		String query = "DELETE FROM movies WHERE id = ?";
 		PreparedStatement statement = connection.prepareStatement(query);
@@ -169,6 +214,12 @@ public class Movie {
 		System.out.println("Movie deleted successfully");
 	}
 
+	/**
+	 * list all movies from database
+	 * @param connection
+	 * @return
+	 * @throws SQLException
+	 */
 	public static ArrayList<Movie> listAll(Connection connection) throws SQLException {
 		String query = "SELECT * FROM movies";
 		PreparedStatement statement = connection.prepareStatement(query);
@@ -185,6 +236,13 @@ public class Movie {
 		return movies;
 	}
 	
+	/**
+	 * Get detail information of a movie
+	 * @param connection
+	 * @param movie_id
+	 * @return
+	 * @throws SQLException
+	 */
 	public static ArrayList<Movie> listMovieDetails(Connection connection, int movie_id) throws SQLException {
 		String query = "SELECT * FROM movies WHERE id =?";
 		PreparedStatement statement = connection.prepareStatement(query);
@@ -202,37 +260,13 @@ public class Movie {
 		return movies;
 	}
 	
-	public static ArrayList<Movie> selectedSeats(Connection connection, int movie_id) throws SQLException {
-		String query = "SELECT * FROM seatselection WHERE movie_id =?";
-		PreparedStatement statement = connection.prepareStatement(query);
-		statement.setInt(1, movie_id);
-		ResultSet resultSet = statement.executeQuery();
-		ArrayList<Movie> movies = new ArrayList<>();
-		while(resultSet.next()) {
-			String name = resultSet.getString("movie_name");
-			String synopsis = resultSet.getString("synopsis");
-			String release_date = resultSet.getString("release_date");
-			Movie mv = new Movie(movie_id, name, synopsis, release_date);
-			movies.add(mv);
-		}
-		
-		return movies;
-	}
 	
-	public static Movie getByID(Connection connection, int movieId) throws SQLException {
-		String query = "SELECT * FROM movies WHERE id =? ";
-		PreparedStatement statement = connection.prepareStatement(query);
-		ResultSet resultSet = statement.executeQuery();
-		Movie mv = new Movie();
-		while (resultSet.next()) {
-			int id = resultSet.getInt("id");
-			String name = resultSet.getString("movie_name");
-			String synopsis = resultSet.getString("synopsis");
-			String release_date = resultSet.getString("release_date");
-			mv = new Movie(id, name, synopsis, release_date);
-		}
-		return mv;
-	}
+	/**
+	 * check if it is a valid movie
+	 * @param movies
+	 * @param selectedMovie
+	 * @return
+	 */
 	public static boolean checkMovieExist(ArrayList<Movie> movies, int selectedMovie) {
 		for (Movie movie : movies) {
 			if(movie.getId() == selectedMovie) {

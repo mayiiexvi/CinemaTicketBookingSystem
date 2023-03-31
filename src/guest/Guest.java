@@ -20,8 +20,12 @@ import common.User;
 
 
 /**
- * @author 
- *
+ * DatabaseConnection class
+ * @author Sylvia Espina C0866311
+ * @author Mufida Andi C0864756
+ * @author Jenil Shivamkumar Varma C0870543
+ * @author Tich Vu Lu C0861736
+ * @author Jay Shah C0868053
  */
 public class Guest {
 
@@ -29,9 +33,13 @@ public class Guest {
 	 * @param args
 	 */
 	static Connection connection;
-
 	public static ArrayList<Showtime> showtimes;
 	
+	/**
+	 * main method
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception{
 		connection = DatabaseConnection.getInstance().getConnection();
 		showtimes = Showtime.getAvailableShowtimes(connection);
@@ -60,6 +68,9 @@ public class Guest {
         };
 	}
 	
+	/**
+	 * Main menu
+	 */
 	public static void menu() {
 		System.out.println("\nWelcome Guest!");
 		System.out.println("--------------------------------------------");
@@ -68,6 +79,11 @@ public class Guest {
 		System.out.println("3 - Exit");
 	}
 	
+	/**
+	 * List of movie now showing
+	 * @param showtimes
+	 * @throws SQLException
+	 */
 	public static void viewNowShowing(ArrayList<Showtime> showtimes) throws SQLException {
 		
 		if (showtimes.isEmpty()) {
@@ -89,6 +105,11 @@ public class Guest {
 
 		}
 	}
+	
+	/**
+	 * Choose a movie
+	 * @throws SQLException
+	 */
 	public static void chooseAMovie() throws SQLException{
 	    viewNowShowing(showtimes);
 	    boolean flag = true;
@@ -111,7 +132,14 @@ public class Guest {
 	}
 	
 
-
+	/**
+	 * Choose seats
+	 * @param showtime
+	 * @param validSeats
+	 * @param movieId
+	 * @return
+	 * @throws SQLException
+	 */
 	public static String[] chooseSeat(Showtime showtime, ArrayList<String> validSeats, int movieId) throws SQLException {
 
 		if(movieId == 0)
@@ -145,6 +173,11 @@ public class Guest {
 		
 	}
 	
+	/**
+	 * Review order
+	 * @param showtime
+	 * @param seats
+	 */
 	public static void review(Showtime showtime, String[] seats) {
 		int number = 0;
 		double subtotal = showtime.getPrice() *seats.length ;
@@ -177,6 +210,13 @@ public class Guest {
         };
 		
 	}
+	
+	/**
+	 * Do a payment
+	 * @param showtime
+	 * @param seats
+	 * @throws SQLException
+	 */
 	public static void payment(Showtime showtime, String[] seats)throws SQLException {
 		boolean isPaid = false;
 		if(showtime.getId() == 0 || seats.length == 0)
@@ -233,13 +273,23 @@ public class Guest {
 				isPaid = true;
 			}
 		}
-		
 	}
 	
+	/**
+	 * reload a list of showtime in the database
+	 * @throws SQLException
+	 */
 	public static void reloadShowTime() throws SQLException {
 		showtimes = Showtime.getAvailableShowtimes(connection);
 	}
 	
+	/**
+	 * Print tickets summary
+	 * @param tickets
+	 * @param total
+	 * @param received
+	 * @param changes
+	 */
 	public static void printTicketSummary(ArrayList<Ticket> tickets, double total, double received, double changes) {
 	    System.out.println("========================================");
 	    System.out.println("             Ticket Summary             ");

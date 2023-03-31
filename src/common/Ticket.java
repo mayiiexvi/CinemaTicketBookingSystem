@@ -12,8 +12,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 /**
- * @author Tich
- *
+ * Ticket class
+ * @author Sylvia Espina C0866311
+ * @author Mufida Andi C0864756
+ * @author Jenil Shivamkumar Varma C0870543
+ * @author Tich Vu Lu C0861736
+ * @author Jay Shah C0868053
  */
 public class Ticket {
 	/*----------- Fields ----------- */
@@ -98,12 +102,13 @@ public class Ticket {
 	}
 	/*----------- Constructors ----------- */
 	/**
-	 * 
+	 * Default constructor
 	 */
 	public Ticket() {
 	}
 	
 	/**
+	 * Constructor with fields
 	 * @param user
 	 * @param showtime
 	 */
@@ -113,6 +118,7 @@ public class Ticket {
 		this.seatCode = seatCode;
 	}
 	/**
+	 * Constructor with fields
 	 * @param id
 	 * @param user
 	 * @param showtime
@@ -128,13 +134,19 @@ public class Ticket {
 	}
 	/*----------- Methods ----------- */
 	
+	/**
+	 * Insert a new ticket into database
+	 * @param connection
+	 * @param ticket
+	 * @return
+	 * @throws SQLException
+	 */
 	public static Ticket insert(Connection connection, Ticket ticket) throws SQLException {
 		String query = "INSERT INTO tickets (user_id, showtime_id, seatCode) VALUES (?, ?, ?)";
 		PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		statement.setInt(1, ticket.getUser().getId());
 		statement.setInt(2, ticket.getShowtime().getId());
 		statement.setString(3, ticket.getSeatCode());
-//		statement.executeUpdate();
 		int affectedRows = statement.executeUpdate();
         if (affectedRows == 0) {
             throw new SQLException("Creating ticket failed, no rows affected.");
@@ -150,6 +162,13 @@ public class Ticket {
 		return ticket;
 	}
 	
+	/**
+	 * List all tickets by showtime
+	 * @param connection
+	 * @param showtimeID
+	 * @return
+	 * @throws SQLException
+	 */
 	public static ArrayList<Ticket> getTicketsByShowTimeID(Connection connection, int showtimeID) throws SQLException{
 		ArrayList<Ticket> tickets = new ArrayList<>();
 		String query = "SELECT * FROM tickets WHERE showtime_id = ?";
@@ -167,6 +186,12 @@ public class Ticket {
 		return tickets;
 	}
 	
+	/**
+	 * Check if a seat is booked
+	 * @param seatsBooked
+	 * @param seatCode
+	 * @return
+	 */
 	public static boolean isBookedSeat(ArrayList<Ticket> seatsBooked, String seatCode) {
 		for (Ticket ticket : seatsBooked) {
 			if(ticket.getSeatCode().equals(seatCode)) {
@@ -175,6 +200,13 @@ public class Ticket {
 		}
 		return false;
 	}
+	/**
+	 * List all tickets by showtime, get more user information
+	 * @param connection
+	 * @param showtimeID
+	 * @return
+	 * @throws SQLException
+	 */
 	public static ArrayList<Ticket> getTicketsByShowTimeID_2(Connection connection, int showtimeID) throws SQLException{
 		ArrayList<Ticket> tickets = new ArrayList<>();
 		String query = "SELECT A.ID, A.USER_ID, A.SEATCODE,\r\n"
@@ -193,6 +225,11 @@ public class Ticket {
 		}
 		return tickets;
 	}
+	
+	/**
+	 * Display a list of tickets in list format
+	 * @param tickets
+	 */
 	public static void displayTickets(ArrayList<Ticket> tickets) {
 
         // Display the list of tickets

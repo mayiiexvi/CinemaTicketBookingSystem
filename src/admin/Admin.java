@@ -43,6 +43,10 @@ public class Admin {
 	static Scanner keyboard = new Scanner(System.in);
 	
 
+	/**
+	 * Main menu of admin management
+	 * @return
+	 */
 	public static String mainMenu() {
 		System.out.println("\n         CINEMA MANAGEMENT MENU         ");
 		System.out.println("----------------------------------------------");
@@ -54,6 +58,12 @@ public class Admin {
 		System.out.print("Your choice: ");
 		return keyboard.nextLine();
 	}
+	
+	/**
+	 * Login function
+	 * @return
+	 * @throws SQLException
+	 */
 	public static boolean doLogin() throws SQLException {
 		String username;
 		String password;
@@ -75,6 +85,10 @@ public class Admin {
 		return false;
 	}
 	
+	/**
+	 * Main method
+	 * @param args
+	 */
 	public static void main(String[] args){
 		try {
 			connection = DatabaseConnection.getInstance().getConnection();
@@ -106,6 +120,11 @@ public class Admin {
 		}
 		
 	}
+	
+	/**
+	 * SHOWTIME menu
+	 * @return
+	 */
 	public static String showtimesMenu() {
 		System.out.println("\n         SHOWTIMES MENU         ");
 		System.out.println("----------------------------------------------");
@@ -117,6 +136,11 @@ public class Admin {
 		System.out.print("Your choice: ");
 		return keyboard.nextLine();
 	}
+	
+	/**
+	 * Showtime main process
+	 * @throws SQLException
+	 */
 	public static void showtimesProcess() throws SQLException {
 		String choice = "";
     	do {
@@ -136,6 +160,11 @@ public class Admin {
     		}
     	} while(!choice.equals("5"));
 	}
+	
+	/**
+	 * Delete a showtime
+	 * @throws SQLException
+	 */
 	private static void deleteShowtime() throws SQLException{
 		ArrayList<Showtime> showtimes = viewAllShowtimes();
 		System.out.println("\n          Delete A SHOWTIME            ");
@@ -169,6 +198,10 @@ public class Admin {
 		}
 		
 	}
+	/**
+	 * Update a showtime
+	 * @throws SQLException
+	 */
 	private static void updateShowtime() throws SQLException{
 		ArrayList<Showtime> showtimes = viewAllShowtimes();
 		System.out.println("\n          UPDATE A SHOWTIME            ");
@@ -319,10 +352,12 @@ public class Admin {
 		} else {
 			System.out.println("The showtime ID provided does not exist.");
 		}
-		
-		
-		
 	}
+	
+	/**
+	 * 
+	 * @throws SQLException
+	 */
 	private static void addShowtime() throws SQLException{
 		viewAllShowtimes();
 		System.out.println("\n          ADD A SHOWTIME            ");
@@ -370,11 +405,21 @@ public class Admin {
 		}
 		
 	}
+	/**
+	 * List all showtimes
+	 * @return
+	 * @throws SQLException
+	 */
 	private static ArrayList<Showtime> viewAllShowtimes() throws SQLException {
 		ArrayList<Showtime> showtimes = Showtime.getAllShowtimes(connection);
 		Showtime.displayShowtimes(showtimes);
 		return showtimes;
 	}
+	
+	/**
+	 * Create a new instance of movie
+	 * @return
+	 */
 	public static Movie takeMovieDetails() {
 		Movie movie = new Movie();
 		Format formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -392,6 +437,10 @@ public class Admin {
 		return movie;	
 	}
 	
+	/**
+	 * Movies main menu
+	 * @return
+	 */
 	public static String moviesMenu() {
 		System.out.println("\n         MOVIES MENU         ");
 		System.out.println("----------------------------------------------");
@@ -404,6 +453,10 @@ public class Admin {
 		return keyboard.nextLine(); 
 	}
 	
+	/**
+	 * Movie main process
+	 * @throws SQLException
+	 */
 	public static void moviesProcess() throws SQLException {
 		String choice = "";
     	do {
@@ -424,6 +477,10 @@ public class Admin {
     	} while(!choice.equals("5"));
 	}
 	
+	/**
+	 * Delete a movie
+	 * @throws SQLException
+	 */
 	private static void deleteMovie() throws SQLException {
 		ArrayList<Movie> movies = Movie.listAll(connection);
 		
@@ -483,6 +540,10 @@ public class Admin {
 			}
 		}		
 	}
+	/**
+	 * Update a movie
+	 * @throws SQLException
+	 */
 	private static void updateMovie() throws SQLException{
 		Date releaseDateFormat;
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -560,6 +621,10 @@ public class Admin {
 		
 	}
 	
+	/**
+	 * Add a movie
+	 * @throws SQLException
+	 */
 	private static void addMovie() throws SQLException {
 		System.out.println("\n          ADD A MOVIE            ");
 		System.out.println(  "            *******            ");
@@ -568,6 +633,10 @@ public class Admin {
 		
 	}
 	
+	/**
+	 * View all movies 
+	 * @throws SQLException
+	 */
 	private static void viewAllMovies() throws SQLException {
 		ArrayList<Movie> movies = Movie.listAll(connection);
 		if (movies.isEmpty()) {
@@ -582,6 +651,10 @@ public class Admin {
 		
 	}
 
+	/**
+	 * input a valid date with a specific format
+	 * @return
+	 */
 	@SuppressWarnings("deprecation")
 	public static Timestamp inputShowTimeDateTime() {
         
@@ -593,6 +666,10 @@ public class Admin {
         return timestamp;
     }
 	
+	/**
+	 * input a valid time with a specific format
+	 * @return
+	 */
 	@SuppressWarnings("deprecation")
 	public static Date inputShowTimeDateTime(Date showtime) {
 		SimpleDateFormat formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
@@ -605,6 +682,10 @@ public class Admin {
         return dateTime;
     }
 	/*------------------------------------TICKETS----------------------------------------*/
+	/**
+	 * Update a ticket
+	 * @throws SQLException
+	 */
 	public static void updateTicket() throws SQLException {
 		System.out.println("\n          UPDATE TICKETS            ");
 		System.out.println(  "            *******            ");
@@ -620,6 +701,11 @@ public class Admin {
 			System.out.println("The showtime ID provided does not exist.");
 		}
 	}
+	
+	/**
+	 * Delete a ticket
+	 * @throws SQLException
+	 */
 	public static void deleteTicket() throws SQLException {
 		System.out.println("\n          VIEW TICKETS            ");
 		System.out.println(  "            *******            ");
@@ -635,6 +721,11 @@ public class Admin {
 			System.out.println("The showtime ID provided does not exist.");
 		}
 	}
+	
+	/**
+	 * View all tickets
+	 * @throws SQLException
+	 */
 	public static void viewTickets() throws SQLException {
 		System.out.println("\n          VIEW TICKETS            ");
 		System.out.println(  "            *******            ");
@@ -654,6 +745,11 @@ public class Admin {
 			System.out.println("The showtime ID provided does not exist.");
 		}
 	}
+	
+	/**
+	 * Ticket main menu
+	 * @return
+	 */
 	public static String ticketsMenu() {
 		System.out.println("\n         TICKETS MENU         ");
 		System.out.println("----------------------------------------------");
@@ -664,6 +760,11 @@ public class Admin {
 		System.out.print("Your choice: ");
 		return keyboard.nextLine();
 	}
+	
+	/**
+	 * Ticket main process
+	 * @throws SQLException
+	 */
 	public static void ticketsProcess() throws SQLException {
 		String choice = "";
     	do {

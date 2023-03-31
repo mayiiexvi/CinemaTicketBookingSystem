@@ -9,9 +9,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 /**
- * @author Tich
- *
+ * DatabaseConnection class
+ * @author Sylvia Espina C0866311
+ * @author Mufida Andi C0864756
+ * @author Jenil Shivamkumar Varma C0870543
+ * @author Tich Vu Lu C0861736
+ * @author Jay Shah C0868053
  */
 public class DatabaseConnection {
 
@@ -21,6 +26,10 @@ public class DatabaseConnection {
 	private String user = "java2";
 	private String password = "java2";
 
+	/**
+	 * Create a connection to database
+	 * @throws SQLException
+	 */
 	private DatabaseConnection() throws SQLException {
 		try {
 			//Class.forName("com.mysql.jdbc.Driver");
@@ -29,11 +38,20 @@ public class DatabaseConnection {
 			System.out.println("Database Connection Creation Failed : " + ex.getMessage());
 		}
 	}
-
+	
+	/**
+	 * return the connection
+	 * @return
+	 */
 	public Connection getConnection() {
 		return connection;
 	}
-
+	
+	/**
+	 * return a instance of connection
+	 * @return
+	 * @throws SQLException
+	 */
 	public static DatabaseConnection getInstance() throws SQLException {
 		if (instance == null) {
 			instance = new DatabaseConnection();
@@ -44,6 +62,12 @@ public class DatabaseConnection {
 		return instance;
 	}
 	
+	/**
+	 * This function will check all tables needed. 
+	 * It will create tables and it's data if that table does not exist in database
+	 * @param connection
+	 * @throws SQLException
+	 */
 	public static void checkAndInitializeDatabase(Connection connection) throws SQLException {
 		try {
 			DatabaseMetaData meta = connection.getMetaData();
@@ -72,7 +96,10 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
 	}
-	
+	/**
+	 * List of tables and it's data for the program
+	 * @return
+	 */
 	public static ArrayList<Table> initializeData(){
 		ArrayList<Table> tables = new ArrayList<>();
 		Table tbl;
@@ -188,6 +215,11 @@ public class DatabaseConnection {
 
 }
 
+/**
+ * 
+ * This class is used for checkAndInitializeDatabase method
+ *
+ */
 class Table {
 	public String tableName;
 	public String sqlCreate;

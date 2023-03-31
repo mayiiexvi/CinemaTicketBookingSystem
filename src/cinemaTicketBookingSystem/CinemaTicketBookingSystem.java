@@ -67,6 +67,9 @@ public class CinemaTicketBookingSystem {
 
 	}
 	
+	/**
+	 * Show main menu of the program
+	 */
 	public static void menu() {        
 		System.out.println("Welcome to our Cinema Ticket Booking System!");
 		System.out.println("--------------------------------------------");
