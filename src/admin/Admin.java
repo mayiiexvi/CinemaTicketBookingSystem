@@ -699,6 +699,10 @@ public class Admin {
 			// Update ticket here
 			ArrayList<Ticket> tickets = Ticket.getTicketsByShowTimeID(connection, showtimeID);
 			Ticket.displayTickets(tickets);
+			if(tickets.size() == 0) {
+				System.out.println("There is no ticket to update");
+				return;
+			}
 			int ticketID = DataValidation.readPositiveInt("Please choose a ticket: ");
 			Ticket ticket = Ticket.ticketCheckExists(tickets, ticketID);
 			String currentSeat = ticket.getSeatCode();
@@ -758,6 +762,10 @@ public class Admin {
 			// Delete ticket here
 			ArrayList<Ticket> tickets = Ticket.getTicketsByShowTimeID(connection, showtimeID);
 			Ticket.displayTickets(tickets);
+			if(tickets.size() == 0) {
+				System.out.println("There is no ticket to delete");
+				return;
+			}
 			int ticketID = DataValidation.readPositiveInt("Please choose a ticket: ");
 			Ticket ticket = Ticket.ticketCheckExists(tickets, ticketID);
 			if(ticket != null) {
