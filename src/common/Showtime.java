@@ -155,7 +155,6 @@ public class Showtime {
 			Showtime showtime = new Showtime();
 			showtime.setId(resultSet.getInt("ID"));
 			showtime.setPrice(resultSet.getDouble("PRICE"));
-			//showtime.setShowtime(resultSet.getDate("SHOWTIME"));
 			Timestamp timestamp = resultSet.getTimestamp("SHOWTIME");
 			if (timestamp != null) {
 				showtime.setShowtime(timestamp);
@@ -191,7 +190,6 @@ public class Showtime {
 			Showtime showtime = new Showtime();
 			showtime.setId(resultSet.getInt("ID"));
 			showtime.setPrice(resultSet.getDouble("PRICE"));
-			//showtime.setShowtime(resultSet.getDate("SHOWTIME"));
 			Timestamp timestamp = resultSet.getTimestamp("SHOWTIME");
 			if (timestamp != null) {
 				showtime.setShowtime(timestamp);
@@ -290,8 +288,7 @@ public class Showtime {
 	    System.out.println("+-----+--------+------------------+-------+--------------+---------------------+----------+-------------+----------+---------+");
 	    for (Showtime showtime : showtimes) {
 	    	Date now = new Date();
-			//long oneHourLaterMillis = now.getTime() + (60 * 60 * 1000);
-	    	long finishMillis = showtime.getShowtime().getTime() + (showtime.getMovie().getDuration() * 60 * 1000);
+			long finishMillis = showtime.getShowtime().getTime() + (showtime.getMovie().getDuration() * 60 * 1000);
 	        Date finishTime = new Date(finishMillis);
 	        if(now.after(showtime.getShowtime()) && now.before(finishTime)) { // It's showing
 	        	// Now showing
