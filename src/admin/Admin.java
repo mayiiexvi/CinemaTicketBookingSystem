@@ -589,28 +589,35 @@ public class Admin {
 		String movieName = keyboard.nextLine();
 		if(movieName.isEmpty()) {
 			movieName = movieDetails.get(0).getMovieName();
+			System.out.println("Skipping update movie name");
 		}
-		System.out.println("Skipping update movie name");
+		
 		
 		System.out.print("Enter new synopsis or leave it empty to skip: ");
 		String synopsis = keyboard.nextLine();
 		if(synopsis.isEmpty()) {
 			synopsis = movieDetails.get(0).getSynopsis();
+			System.out.println("Skipping update synopsis");
 		}
-		System.out.println("Skipping update synopsis");
 		
-		System.out.println("Enter new release date or leave it empty to skip: ");
-		String releaseDate = keyboard.nextLine();
-		if(releaseDate.isEmpty()) {
-			releaseDate = movieDetails.get(0).getReleaseDate();
-			System.out.println("Skipping update releases date");
-		}else {
+		String releaseDate;
+		while(true) {
 			try {
-				releaseDateFormat = dateFormatter.parse(releaseDate);
-				releaseDate = formatter.format(releaseDateFormat);
+				formatter = new SimpleDateFormat(Constant.DATE_FORMAT);
+				System.out.println("Enter new release date or leave it empty to skip: ");
+				releaseDate = keyboard.nextLine();
+				if (!releaseDate.isEmpty()) {
+					releaseDateFormat = dateFormatter.parse(releaseDate);
+					releaseDate = formatter.format(releaseDateFormat);
+					break;
+    	        } else {
+    	        	releaseDate = movieDetails.get(0).getReleaseDate();
+    	            System.out.println("Skipping update releases date");
+    	            break;
+    	        }
 			} catch (Exception e) {
-				System.out.println(e.toString());
-			}
+            	System.out.println("Invalid input format!");
+            }
 		}
 		updateMovie.setMovieName(movieName);
 		updateMovie.setSynopsis(synopsis);
@@ -849,7 +856,7 @@ public class Admin {
     		} else if(choice.equals("3")) {
     			deleteTicket();
     		} else if(choice.equals("4")) {
-    			// go back
+    			mainMenu();
     		} else {
     			System.out.println("Bad input! Please try again!");
     		}
