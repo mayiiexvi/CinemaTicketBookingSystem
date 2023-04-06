@@ -84,11 +84,9 @@ public class DatabaseConnection {
 				 if(!isExists) {
 		            PreparedStatement statement = connection.prepareStatement(table.getSqlCreate());
 		            statement.executeUpdate();
-		            System.out.println(table + " table created successfully!");
 		            for (String sql : table.getSqls()) {
 		            	statement = connection.prepareStatement(sql);
 			            statement.executeUpdate();
-			            System.out.println("1 row inserted");
 					}
 				 }
 			}
@@ -131,7 +129,7 @@ public class DatabaseConnection {
 		sqlCreate = "CREATE TABLE `movies` (\r\n"
 				+ "  `id` int NOT NULL AUTO_INCREMENT,\r\n"
 				+ "  `movie_name` varchar(100) DEFAULT NULL,\r\n"
-				+ "  `synopsis` varchar(100) DEFAULT NULL,\r\n"
+				+ "  `synopsis` varchar(500) DEFAULT NULL,\r\n"
 				+ "  `release_date` varchar(100) DEFAULT NULL,\r\n"
 				+ "  `duration` int DEFAULT 120,\r\n"
 				+ "  PRIMARY KEY (`id`)\r\n"
@@ -195,20 +193,6 @@ public class DatabaseConnection {
 		sql.add("INSERT INTO `showtime` (`id`,`movie_id`,`hall_id`,`showtime`,`price`) VALUES (5,3,2,DATE_ADD(NOW(), INTERVAL 5 HOUR),85.00);");
 		tbl = new Table(tableName, sqlCreate, sql);
 		tables.add(tbl);
-		
-		// seatreservation
-//		tableName = "seatreservation";
-//		sqlCreate = "CREATE TABLE `seatreservation`(\r\n"
-//				+ "	`id` int NOT NULL AUTO_INCREMENT,\r\n"
-//				+ "    `movie_id` int NOT NULL,\r\n"
-//				+ "    `movie_time` datetime,\r\n"
-//				+ "    `seat_number` varchar(5) NOT NULL,\r\n"
-//				+ "    `reserved` boolean NOT NULL DEFAULT false,\r\n"
-//				+ "    PRIMARY KEY (`id`)\r\n"
-//				+ ");";
-//		sql= new ArrayList<>();
-//		tbl = new Table(tableName, sqlCreate, sql);
-//		tables.add(tbl);
 		
 		return tables;
 	}
